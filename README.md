@@ -4,7 +4,7 @@
 
 This repository contains the code for the Java EE Security API (JSR-375).
 
-[Online JavaDoc](https://javaee.github.io/security-api/apidocs/index.html)
+[Online JavaDoc](https://javadoc.io/doc/javax.security.enterprise/javax.security.enterprise-api/1.0)
 
 Building
 --------
