@@ -1,7 +1,5 @@
 # JSR-375 API Code Repository
 
-[![Build Status](https://travis-ci.org/javaee/security-api.svg?branch=master)](https://travis-ci.org/javaee/security-api)
-
 This repository contains the code for the Java EE Security API (JSR-375).
 
 [Online JavaDoc](https://javadoc.io/doc/javax.security.enterprise/javax.security.enterprise-api/)
