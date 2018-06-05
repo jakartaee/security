@@ -31,7 +31,7 @@ import java.security.BasicPermission;
  */
 public class IdentityStorePermission extends BasicPermission {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1254057022829640365L;
 
     /**
      * Create an IdentityStorePermission with the specified name.
