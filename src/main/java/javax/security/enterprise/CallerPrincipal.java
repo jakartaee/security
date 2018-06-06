@@ -18,23 +18,21 @@ package javax.security.enterprise;
 
 import java.security.Principal;
 
-import javax.servlet.http.HttpServletRequest;
-
 /**
- * Principal that represents the caller principal associated with the invocation being 
+ * Principal that represents the caller principal associated with the invocation being
  * processed by the container (e.g. the current HTTP request).
  */
 public class CallerPrincipal implements Principal {
-    
+
     private final String name;
-    
+
     public CallerPrincipal(String name) {
         this.name = name;
     }
-    
+
     /**
      * The name of the caller
-     * 
+     *
      * @return The name of the caller
      */
     @Override

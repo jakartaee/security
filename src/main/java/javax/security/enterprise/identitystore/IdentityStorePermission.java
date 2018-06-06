@@ -31,9 +31,11 @@ import java.security.BasicPermission;
  */
 public class IdentityStorePermission extends BasicPermission {
 
+    private static final long serialVersionUID = 1254057022829640365L;
+
     /**
      * Create an IdentityStorePermission with the specified name.
-     * 
+     *
      * @param name Name of the permission.
      * @throws NullPointerException If name is null.
      * @throws IllegalArgumentException If name is empty.
@@ -46,7 +48,7 @@ public class IdentityStorePermission extends BasicPermission {
      * Create an IdentityStorePermission with the specified name.
      * No actions are defined for this permission; the action parameter
      * should be specified as {code}null{code}.
-     * 
+     *
      * @param name Name of the permission.
      * @param action Action for the permission; always null.
      * @throws NullPointerException If name is null.
