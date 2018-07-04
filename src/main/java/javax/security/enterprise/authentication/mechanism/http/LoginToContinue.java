@@ -68,7 +68,7 @@ public @interface LoginToContinue {
         private final String useForwardToLoginExpression;
         private final String errorPage;
 
-        public static LiteralBuilder of() {
+        public static LiteralBuilder builder() {
             return new LiteralBuilder();
         }
 
