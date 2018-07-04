@@ -23,6 +23,7 @@ import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+import javax.enterprise.util.AnnotationLiteral;
 import javax.interceptor.InterceptorBinding;
 
 /**
@@ -56,4 +57,17 @@ import javax.interceptor.InterceptorBinding;
 @Retention(RUNTIME)
 @Target(TYPE)
 public @interface AutoApplySession {
+    
+    /**
+     * A default literal for the {@link AutoApplySession} annotation.
+     *
+     * @since 1.1
+     */
+    public final static class Literal extends AnnotationLiteral<AutoApplySession> implements AutoApplySession {
+        
+        private static final long serialVersionUID = 1L;
+
+        public static final Literal INSTANCE = new Literal();
+
+    }
 }
