@@ -103,7 +103,7 @@ public @interface RememberMe {
         private final boolean isRememberMe;
         private final String isRememberMeExpression;
 
-        public static LiteralBuilder of() {
+        public static LiteralBuilder builder() {
             return new LiteralBuilder();
         }
 

@@ -40,7 +40,7 @@ public class AnnotationLiteralTest {
 
     @Test
     public void testRememberMeDefault() {
-        RememberMe literal = RememberMe.Literal.of().build();
+        RememberMe literal = RememberMe.Literal.builder().build();
 
         assertEquals(86400, literal.cookieMaxAgeSeconds());
         assertEquals("JREMEMBERMEID", literal.cookieName());
@@ -48,7 +48,7 @@ public class AnnotationLiteralTest {
 
     @Test
     public void testRememberMe() {
-        RememberMe literal = RememberMe.Literal.of()
+        RememberMe literal = RememberMe.Literal.builder()
                                        .cookieMaxAgeSeconds(100)
                                        .cookieSecureOnly(false)
                                        .cookieHttpOnly(false)
@@ -62,7 +62,7 @@ public class AnnotationLiteralTest {
 
     @Test
     public void testLoginToContinueDefault() {
-        LoginToContinue literal = LoginToContinue.Literal.of().build();
+        LoginToContinue literal = LoginToContinue.Literal.builder().build();
 
         assertEquals("/login", literal.loginPage());
         assertEquals("/login-error", literal.errorPage());
@@ -70,7 +70,7 @@ public class AnnotationLiteralTest {
 
     @Test
     public void testLoginToContinue() {
-        LoginToContinue literal = LoginToContinue.Literal.of()
+        LoginToContinue literal = LoginToContinue.Literal.builder()
                                                  .loginPage("/mylogin")
                                                  .useForwardToLogin(false)
                                                  .useForwardToLoginExpression("#{bar.foo}")
