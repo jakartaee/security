@@ -77,57 +77,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>3.1.0</version>
-            <scope>compile</scope>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.interceptor</groupId>
-            <artifactId>javax.interceptor-api</artifactId>
-            <version>1.2</version>
-            <scope>compile</scope>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.el</groupId>
-            <artifactId>javax.el-api</artifactId>
-            <version>3.0.0</version>
-            <scope>compile</scope>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.ejb</groupId>
-            <artifactId>javax.ejb-api</artifactId>
-            <version>3.2</version>
-            <scope>compile</scope>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.enterprise</groupId>
-            <artifactId>cdi-api</artifactId>
-            <version>1.1</version>
-            <scope>compile</scope>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.security.auth.message</groupId>
-            <artifactId>javax.security.auth.message-api</artifactId>
-            <version>1.1.1</version>
-            <scope>compile</scope>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.security.jacc</groupId>
-            <artifactId>javax.security.jacc-api</artifactId>
-            <version>1.5</version>
+            <groupId>javax.javaee-api</groupId>
+            <artifactId>javaee-api</artifactId>
+            <version>8.0</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
@@ -350,9 +302,9 @@
                                         </goals>
                                     </pluginExecutionFilter>
                                     <action>
-	                                    <execute>
-	                                    	<runOnConfiguration>true</runOnConfiguration>
-	                                    </execute>
+	                                <execute>
+                                            <ignore />
+	                                </execute>
                                     </action>
                                 </pluginExecution>
                             </pluginExecutions>
