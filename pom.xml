@@ -77,7 +77,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>javax.javaee-api</groupId>
+            <groupId>javax</groupId>
             <artifactId>javaee-api</artifactId>
             <version>8.0</version>
             <scope>provided</scope>
