@@ -120,6 +120,19 @@
                     </instructions>
                 </configuration>
             </plugin>
+            <!-- Provide a stable automatic module name so other artifacts can depend on project -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Automatic-Module-Name>java.security.enterprise</Automatic-Module-Name>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
             <!-- Configure the jar with the sources (or rather, convince Maven that
             we want sources at all) -->
             <plugin>
