@@ -19,7 +19,6 @@ package javax.security.enterprise;
 import java.security.Principal;
 import java.util.Set;
 
-import javax.ejb.SessionContext;
 import javax.security.enterprise.authentication.mechanism.http.AuthenticationParameters;
 import javax.security.enterprise.authentication.mechanism.http.HttpAuthenticationMechanism;
 import javax.servlet.http.HttpServletRequest;
@@ -77,7 +76,7 @@ public interface SecurityContext {
 	 * Should code in either such Servlet or EJB bean wish to take such mapped (aka referenced, linked) roles into
 	 * account, the facilities for that specific container should be used instead. For instance for Servlet that would
 	 * be {@link HttpServletRequest#isUserInRole(String)} and for EJB beans that would be
-	 * {@link SessionContext#isCallerInRole(String)}.
+	 * {@link javax.ejb.SessionContext#isCallerInRole(String)}.
 	 *
 	 *
 	 * @param role a <code>String</code> specifying the name of the logical application role
