@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.eclipse.ee4j</groupId>
         <artifactId>project</artifactId>
-        <version>1.0.1</version>
+        <version>1.0.5</version>
     </parent>
 
     <groupId>jakarta.security.enterprise</groupId>
@@ -184,22 +184,6 @@
                         <Export-Package>${packages.export}</Export-Package>
                     </instructions>
                 </configuration>
-            </plugin>
-            
-            <!-- Configure the jar with the sources (or rather, convince Maven that
-            we want sources at all) -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>3.0.1</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar-no-fork</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             
             <!-- Configure the jar with the javadoc (or rather, convince Maven that
