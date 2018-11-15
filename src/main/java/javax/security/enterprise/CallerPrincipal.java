@@ -16,13 +16,14 @@
 
 package javax.security.enterprise;
 
+import java.io.Serializable;
 import java.security.Principal;
 
 /**
  * Principal that represents the caller principal associated with the invocation being
  * processed by the container (e.g. the current HTTP request).
  */
-public class CallerPrincipal implements Principal {
+public class CallerPrincipal implements Principal, Serializable {
 
     private final String name;
 
