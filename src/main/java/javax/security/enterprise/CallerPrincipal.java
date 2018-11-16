@@ -25,6 +25,8 @@ import java.security.Principal;
  */
 public class CallerPrincipal implements Principal, Serializable {
 
+    private static final long serialVersionUID = -6951555039431667786L;
+
     private final String name;
 
     public CallerPrincipal(String name) {
