@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.eclipse.ee4j</groupId>
         <artifactId>project</artifactId>
-        <version>1.0.4</version>
+        <version>1.0.5</version>
     </parent>
 
     <groupId>jakarta.security.enterprise</groupId>
@@ -109,7 +109,7 @@
         <dependency>
             <groupId>jakarta.security.jacc</groupId>
             <artifactId>jakarta.security.jacc-api</artifactId>
-            <version>1.7</version>
+            <version>1.6.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -121,6 +121,17 @@
     </dependencies>
 
     <build>
+    	<resources>
+			<resource>
+				<directory>${project.basedir}</directory>
+				<includes>
+					<include>LICENSE.md</include>
+					<include>NOTICE.md</include>
+				</includes>
+				<targetPath>META-INF</targetPath>
+			</resource>
+		</resources>
+    
         <plugins>
             <plugin>
                 <groupId>org.glassfish.build</groupId>
