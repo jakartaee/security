@@ -2,7 +2,8 @@ language: java
 jdk:
   - oraclejdk8
 
-script: mvn clean package -Pstaging
+script:
+  - mvn clean package -Pstaging
 
 # no longer deploying via travis
 
