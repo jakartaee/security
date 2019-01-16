@@ -8,5 +8,8 @@ cache:
   directories:
     - $HOME/.m2
 
+install:
+  - echo 'Skipping installation step'
+
 script:
   - mvn clean package -Pstaging
