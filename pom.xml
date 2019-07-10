@@ -28,7 +28,7 @@
 
     <groupId>jakarta.security.enterprise</groupId>
     <artifactId>jakarta.security.enterprise-api</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.0.2-SNAPSHOT</version>
     <packaging>bundle</packaging>
 
     <name>Enterprise Security API</name>
@@ -121,6 +121,7 @@
         </dependency>
     </dependencies>
 
+
     <build>
         <resources>
             <resource>
@@ -134,6 +135,9 @@
         </resources>
     
         <plugins>
+            <!-- 
+                First sets properties for the maven-bundle-plugin and later checks if they are indeed used. 
+            -->
             <plugin>
                 <groupId>org.glassfish.build</groupId>
                 <artifactId>spec-version-maven-plugin</artifactId>
@@ -146,34 +150,6 @@
                         <specVersion>${spec.version}</specVersion>
                         <specImplVersion>${project.version}</specImplVersion>
                         <apiPackage>${extension.name}</apiPackage>
-                    </spec>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>set-spec-properties</goal>
-                            <goal>check-module</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            
-            <!-- First sets properties for the maven-bundle-plugin and later checks if they are indeed used. -->
-            <plugin>
-                <groupId>org.glassfish.build</groupId>
-                <artifactId>spec-version-maven-plugin</artifactId>
-                <version>1.5</version>
-                <configuration>
-                    <specMode>jakarta</specMode>
-                    <spec>
-                        <nonFinal>${non_final}</nonFinal>
-                        <jarType>api</jarType>
-                        <specVersion>${spec_version}</specVersion>
-                        <specImplVersion>${project.version}</specImplVersion>
-                        <apiPackage>${api_package}</apiPackage>
-                        
-                        <newSpecVersion>${new_spec_version}</newSpecVersion>
-                        <specBuild>${spec_build}</specBuild>
                     </spec>
                 </configuration>
                 <executions>
@@ -199,14 +175,13 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <Automatic-Module-Name>java.security.enterprise</Automatic-Module-Name>
                         <Bundle-Version>${spec.bundle.version}</Bundle-Version>
                         <Bundle-SymbolicName>${spec.bundle.symbolic-name}</Bundle-SymbolicName>
                         <Extension-Name>${spec.extension.name}</Extension-Name>
                         <Implementation-Version>${spec.implementation.version}</Implementation-Version>
                         <Specification-Version>${spec.specification.version}</Specification-Version>
                         <Bundle-Description>
-                            EE Security API ${spec.version} Design Specification
+                            EE Security API ${spec.version} Specification
                         </Bundle-Description>
                         <Specification-Vendor>Oracle Corporation</Specification-Vendor>
                         <Implementation-Vendor>${project.organization.name}</Implementation-Vendor>
@@ -214,7 +189,6 @@
                     </instructions>
                 </configuration>
             </plugin>
-
            
             <!-- 
                 Configure the jar with the javadoc (or rather, convince Maven that
@@ -225,7 +199,7 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.0.1</version>
                 <configuration>
-                    <javadocVersion>1.8</javadocVersion>
+                    <source>1.8</source>
                     <notimestamp>true</notimestamp>
                     <splitindex>true</splitindex>
                     <doctitle>${project.name} ${project.version}</doctitle>
@@ -250,6 +224,7 @@
                     </execution>
                 </executions>
             </plugin>
+
 
             <!-- This plugin's configuration is used to store Eclipse m2e settings only.
                  It has no influence on the Maven build itself. -->
@@ -277,6 +252,7 @@
                 </configuration>
             </plugin>
         </plugins>
+        
         
         <pluginManagement>
             <plugins>
