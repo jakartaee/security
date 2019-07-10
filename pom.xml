@@ -1,6 +1,6 @@
 <!--
 
-    Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2015, 2019 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -36,12 +36,9 @@
     <inceptionYear>2015</inceptionYear>
 
     <properties>
-        <api_package>javax.security.enterprise</api_package>
-
-        <non_final>true</non_final>
-        <spec_version>1.0</spec_version>
-        <new_spec_version>1.1</new_spec_version>
-        <spec_build>01</spec_build>
+        <non_final>false</non_final>
+        <extension.name>javax.security.enterprise</extension.name>
+        <spec.version>1.0</spec.version>
 
         <packages.export>javax.security.enterprise.*</packages.export>
 
@@ -50,8 +47,6 @@
 
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-
-        <copyright-plugin.version>1.44</copyright-plugin.version>
     </properties>
 
     <licenses>
@@ -76,47 +71,48 @@
 
     <dependencies>
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>4.0.1</version>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>4.0.2</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>javax.interceptor</groupId>
-            <artifactId>javax.interceptor-api</artifactId>
-            <version>1.2.2</version>
+            <groupId>jakarta.interceptor</groupId>
+            <artifactId>jakarta.interceptor-api</artifactId>
+            <version>1.2.4</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>javax.el</groupId>
-            <artifactId>javax.el-api</artifactId>
-            <version>3.0.1-b06</version>
+            <groupId>jakarta.el</groupId>
+            <artifactId>jakarta.el-api</artifactId>
+            <version>3.0.2</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>javax.ejb</groupId>
-            <artifactId>javax.ejb-api</artifactId>
-            <version>3.2.2</version>
+            <groupId>jakarta.ejb</groupId>
+            <artifactId>jakarta.ejb-api</artifactId>
+            <version>3.2.4</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>javax.enterprise</groupId>
-            <artifactId>cdi-api</artifactId>
-            <version>2.0.SP1</version>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-api</artifactId>
+            <version>2.0.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>javax.security.auth.message</groupId>
-            <artifactId>javax.security.auth.message-api</artifactId>
-            <version>1.1.1</version>
+            <groupId>jakarta.security.auth.message</groupId>
+            <artifactId>jakarta.security.auth.message-api</artifactId>
+            <version>1.1.2</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>javax.security.jacc</groupId>
-            <artifactId>javax.security.jacc-api</artifactId>
-            <version>1.6</version>
+            <groupId>jakarta.security.jacc</groupId>
+            <artifactId>jakarta.security.jacc-api</artifactId>
+            <version>1.6.1</version>
             <scope>provided</scope>
         </dependency>
+        
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -126,11 +122,40 @@
     </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <directory>${project.basedir}</directory>
+                <includes>
+                    <include>LICENSE.md</include>
+                    <include>NOTICE.md</include>
+                </includes>
+                <targetPath>META-INF</targetPath>
+            </resource>
+        </resources>
+    
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.18.1</version>
+                <groupId>org.glassfish.build</groupId>
+                <artifactId>spec-version-maven-plugin</artifactId>
+                <version>1.5</version>
+                <configuration>
+                    <specMode>jakarta</specMode>
+                    <spec>
+                        <nonFinal>${non.final}</nonFinal>
+                        <jarType>api</jarType>
+                        <specVersion>${spec.version}</specVersion>
+                        <specImplVersion>${project.version}</specImplVersion>
+                        <apiPackage>${extension.name}</apiPackage>
+                    </spec>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>set-spec-properties</goal>
+                            <goal>check-module</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             
             <!-- First sets properties for the maven-bundle-plugin and later checks if they are indeed used. -->
@@ -163,7 +188,7 @@
             
             <!--
                 This plugin is responsible for packaging artifacts
-                as OSGi bundles.  Please refer to
+                as OSGi bundles. Please refer to
                 http://felix.apache.org/site/apache-felix-maven-bundle-plugin-bnd.html
                 for more information about how to use this plugin.
             -->
@@ -180,14 +205,21 @@
                         <Extension-Name>${spec.extension.name}</Extension-Name>
                         <Implementation-Version>${spec.implementation.version}</Implementation-Version>
                         <Specification-Version>${spec.specification.version}</Specification-Version>
+                        <Bundle-Description>
+                            EE Security API ${spec.version} Design Specification
+                        </Bundle-Description>
                         <Specification-Vendor>Oracle Corporation</Specification-Vendor>
+                        <Implementation-Vendor>${project.organization.name}</Implementation-Vendor>
                         <Export-Package>${packages.export}</Export-Package>
                     </instructions>
                 </configuration>
             </plugin>
-            
-            <!-- Configure the jar with the javadoc (or rather, convince Maven that
-            we want javadoc at all) -->
+
+           
+            <!-- 
+                Configure the jar with the javadoc (or rather, convince Maven that
+                we want javadoc at all) 
+            -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
@@ -218,50 +250,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--
-            <plugin>
-                <groupId>org.glassfish.copyright</groupId>
-                <artifactId>glassfish-copyright-maven-plugin</artifactId>
-                <version>${copyright-plugin.version}</version>
-                <configuration>
-                    <scm>git</scm>
-                    <scmOnly>true</scmOnly>
-                    <excludeFile>
-                        ${basedir}/copyright-exclude
-                    </excludeFile>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>check-copyright</id>
-                        <phase>process-test-sources</phase>
-                        <goals>
-                            <goal>copyright</goal>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
--->
-        
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.5.3</version>
-                <configuration>
-                    <mavenExecutorId>forked-path</mavenExecutorId>
-                    <useReleaseProfile>false</useReleaseProfile>
-                    <tagNameFormat>@{project.version}</tagNameFormat>
-                    <arguments>${release.arguments}</arguments>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.apache.maven.scm</groupId>
-                        <artifactId>maven-scm-provider-gitexe</artifactId>
-                        <version>1.10.0</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
 
             <!-- This plugin's configuration is used to store Eclipse m2e settings only.
                  It has no influence on the Maven build itself. -->
@@ -288,19 +276,8 @@
                     </lifecycleMappingMetadata>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-scm-publish-plugin</artifactId>
-                <version>3.0.0</version>
-                <configuration>
-                    <checkoutDirectory>${project.build.directory}/javadoc-scm</checkoutDirectory>
-                    <checkinComment>Publishing Javadoc for ${project.artifactId}:${project.version}</checkinComment>
-                    <content>${project.reporting.outputDirectory}/apidocs</content>
-                    <pubScmUrl>scm:git:git@github.com:eclipse-ee4j/security-api.git</pubScmUrl>
-                    <scmBranch>gh-pages</scmBranch>
-                </configuration>
-            </plugin>
         </plugins>
+        
         <pluginManagement>
             <plugins>
                 <!-- This plugin's configuration is used to store Eclipse m2e settings only.
