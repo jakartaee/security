@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * The SecurityContext provides an access point for programmatic security; an injectable type that is intended to be
- * used by application code to query and interact with the Java EE Security API.
+ * used by application code to query and interact with Jakarta Security.
  *
  * <p>
  * Unless otherwise indicated, this type must be usable in all Java EE containers, specifically the Servlet

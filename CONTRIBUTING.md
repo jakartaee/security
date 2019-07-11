@@ -4,7 +4,7 @@ Thanks for your interest in this project.
 
 ## Project description
 
-The Java EE security provides a set of required security functionalities
+Jakarta Security provides a set of required security functionalities
 including authentication, authorization, data integrity, and transport security.
 
  * https://projects.eclipse.org/projects/ee4j.es

@@ -15,7 +15,7 @@
  */
 
 /**
- * The main Java EE Security API package. This package contains classes and interfaces that span authentication, 
+ * The main Jakarta Security package. This package contains classes and interfaces that span authentication, 
  * authorization and identity concerns.
  * 
  * <h2>EL Support in annotations</h2>
@@ -24,7 +24,7 @@
  * 
  * <h3>...Definition annotations</h3>
  * 
- * The Java EE Security API features several annotations, with names that end with <code>Definition</code>,
+ * Jakarta Security features several annotations, with names that end with <code>Definition</code>,
  * which, when used, make CDI beans available. For completeness, this concerns the following annotations:
  * 
  *  <ul>
@@ -57,7 +57,7 @@
  * 
  * <h3>Interceptor annotations</h3>
  * 
- * The Java EE Security API features several annotations with attributes that denote interceptor spec interceptors. 
+ * Jakarta Security features several annotations with attributes that denote interceptor spec interceptors. 
  * For completeness, this concerns the following annotations:
  * 
  * <ul>
