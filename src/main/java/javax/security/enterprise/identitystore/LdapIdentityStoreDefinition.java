@@ -63,7 +63,7 @@ public @interface LdapIdentityStoreDefinition {
      * <p>
      * This user needs search permission in the LDAP for persons and/or groups.
      * <p>
-     * E.g.: <code>uid=ldap,ou=apps,dc=jsr375,dc=net</code>
+     * E.g.: <code>uid=ldap,ou=apps,dc=eclipse,dc=net</code>
      *
      * @return The distinguished name for the application user.
      */
@@ -79,7 +79,7 @@ public @interface LdapIdentityStoreDefinition {
 
     /**
      * Base distinguished name for callers in the LDAP store
-     * (e.g., "<code>ou=caller,dc=jsr375,dc=net</code>").
+     * (e.g., "<code>ou=caller,dc=eclipse,dc=net</code>").
      * <p>
      * When this member value is specified, and callerSearchBase is not, direct binding is attempted.
      * <p>
@@ -105,7 +105,7 @@ public @interface LdapIdentityStoreDefinition {
      * The following gives an example in ldif format:
      * <pre>
      * <code>
-     * dn: uid=peter,ou=caller,dc=jsr375,dc=net
+     * dn: uid=peter,ou=caller,dc=eclipse,dc=net
      * objectclass: top
      * objectclass: uidObject
      * objectclass: person
@@ -122,7 +122,7 @@ public @interface LdapIdentityStoreDefinition {
 
     /**
      * Search base for looking up callers
-     * (e.g., "<code>ou=caller,dc=jsr375,dc=net</code>").
+     * (e.g., "<code>ou=caller,dc=eclipse,dc=net</code>").
      * <p>
      * Overrides callerBaseDn, if configured, causing caller search
      * to be used instead of direct binding.
@@ -150,16 +150,16 @@ public @interface LdapIdentityStoreDefinition {
     LdapSearchScope callerSearchScope() default LdapSearchScope.SUBTREE;
 
     /**
-     * Allow callerSearchScope to be specified as an EL expression.
+     * Allow callerSearchScope to be specified as a Jakarta Expression Language expression.
      * If set, overrides any value set with callerSearchScope.
      * 
-     * @return the callerSearchScope EL expression
+     * @return the callerSearchScope Jakarta Expression Language expression
      */
     String callerSearchScopeExpression() default "";
 
     /**
      * Search base for looking up groups
-     * (e.g., "<code>ou=group,dc=jsr375,dc=net</code>").
+     * (e.g., "<code>ou=group,dc=eclipse,dc=net</code>").
      * <p>
      * Needed only for a store that performs group lookup.
      * Requires that the bindDn member be filled in.
@@ -186,10 +186,10 @@ public @interface LdapIdentityStoreDefinition {
     LdapSearchScope groupSearchScope() default LdapSearchScope.SUBTREE;
 
     /**
-     * Allow groupSearchScope to be specified as an EL expression.
+     * Allow groupSearchScope to be specified as a Jakarta Expression Language expression.
      * If set, overrides any value set with groupSearchScope.
      * 
-     * @return the groupSearchScope EL expression
+     * @return the groupSearchScope Jakarta Expression Language expression
      */
     String groupSearchScopeExpression() default "";
 
@@ -210,12 +210,12 @@ public @interface LdapIdentityStoreDefinition {
      * entry in ldif format:
      * <pre>
      * <code>
-     * dn: cn=foo,ou=group,dc=jsr375,dc=net
+     * dn: cn=foo,ou=group,dc=eclipse,dc=net
      * objectclass: top
      * objectclass: groupOfNames
      * cn: foo
-     * member: uid=pete,ou=caller,dc=jsr375,dc=net
-     * member: uid=john,ou=caller,dc=jsr375,dc=net
+     * member: uid=pete,ou=caller,dc=eclipse,dc=net
+     * member: uid=john,ou=caller,dc=eclipse,dc=net
      * </code>
      * </pre>
      *
@@ -240,14 +240,14 @@ public @interface LdapIdentityStoreDefinition {
      * entry in ldif format:
      * <pre>
      * <code>
-     * dn: uid=peter,ou=caller,dc=jsr375,dc=net
+     * dn: uid=peter,ou=caller,dc=eclipse,dc=net
      * objectclass: top
      * objectclass: uidObject
      * objectclass: person
      * uid: peter
      * cn: Peter Smith
-     * memberOf: cn=foo,ou=group,dc=jsr375,dc=net
-     * memberOf: cn=bar,ou=group,dc=jsr375,dc=net
+     * memberOf: cn=foo,ou=group,dc=eclipse,dc=net
+     * memberOf: cn=bar,ou=group,dc=eclipse,dc=net
      * </code>
      * </pre>
      *
@@ -268,10 +268,10 @@ public @interface LdapIdentityStoreDefinition {
     int readTimeout() default 0;
 
     /**
-     * Allow readTimeout to be specified as an EL expression.
+     * Allow readTimeout to be specified as an Jakarta Expression Language expression.
      * If set, overrides any value set with readTimeout.
      * 
-     * @return The readTimeout EL expression
+     * @return The readTimeout Jakarta Expression Language expression
      */
     String readTimeoutExpression() default "";
 
@@ -292,10 +292,10 @@ public @interface LdapIdentityStoreDefinition {
     int maxResults() default 1000;
 
     /**
-     * Allow maxResults to be specified as an EL expression.
+     * Allow maxResults to be specified as Jakarta Expression Language expression.
      * If set, overrides any value set with maxResults.
      * 
-     * @return The maxResults EL expression
+     * @return The maxResults Jakarta Expression Language expression
      */
     String maxResultsExpression() default "";
 
@@ -306,10 +306,10 @@ public @interface LdapIdentityStoreDefinition {
     int priority() default 80;
 
     /**
-     * Allow priority to be specified as an EL expression.
+     * Allow priority to be specified as a Jakarta Expression Language expression.
      * If set, overrides any value set with priority.
      * 
-     * @return The priority EL expression
+     * @return The priority Jakarta Expression Language expression
      */
     String priorityExpression() default "";
 
@@ -321,10 +321,10 @@ public @interface LdapIdentityStoreDefinition {
     ValidationType[] useFor() default {VALIDATE, PROVIDE_GROUPS};
 
     /**
-     * Allow useFor to be specified as an EL expression.
+     * Allow useFor to be specified as a Jakarta Expression Language expression.
      * If set, overrides any value set with useFor.
      * 
-     * @return The useFor EL expression
+     * @return The useFor Jakarta Expression Language expression
      */
     String useForExpression() default "";
 

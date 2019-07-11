@@ -117,7 +117,7 @@ public @interface DatabaseIdentityStoreDefinition {
      * <i>Algorithm.param2=32</i>
      * </pre></blockquote>
      * <p>
-     * This attribute supports immediate EL expressions (${} syntax) for both the
+     * This attribute supports immediate Jakarta Expression Language expressions (${} syntax) for both the
      * <code>parameterValue</code> as well as for a full array element. If an EL
      * expression is used for a full array element, the expression must evaluate
      * to either a single string, a string array or a string {@link Stream} where
@@ -135,10 +135,10 @@ public @interface DatabaseIdentityStoreDefinition {
     int priority() default 70;
 
     /**
-     * Allow priority to be specified as an EL expression.
-     * If set, overrides any value set with priority.
+     * Allow <code>priority</code> to be specified as a Jakarta Expression Language expression.
+     * If set, overrides any value set with <code>priority</code>.
      * 
-     * @return the priority EL expression
+     * @return the <code>priority</code> Jakarta Expression Language expression
      */
     String priorityExpression() default "";
 
@@ -150,10 +150,10 @@ public @interface DatabaseIdentityStoreDefinition {
     ValidationType[] useFor() default {VALIDATE, PROVIDE_GROUPS};
 
     /**
-     * Allow useFor to be specified as an EL expression.
+     * Allow <code>useFor</code> to be specified as an Jakarta Expression Language expression.
      * If set, overrides any value set with useFor.
      * 
-     * @return the useFor EL expression
+     * @return the <code>useFor</code> Jakarta Expression Language expression
      */
     String useForExpression() default "";
 

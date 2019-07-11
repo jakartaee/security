@@ -157,7 +157,7 @@ public @interface LoginToContinue {
     boolean useForwardToLogin() default true;
 
     /**
-     * EL expression variant of <code>useForwardToLogin()</code>.
+     * Jakarta Expression Language expression variant of <code>useForwardToLogin()</code>.
      * The expression needs to evaluate to a boolean outcome. All named CDI beans are available
      * to the expression. If both this attribute and <code>useForwardToLogin()</code> are specified, this
      * attribute take precedence.

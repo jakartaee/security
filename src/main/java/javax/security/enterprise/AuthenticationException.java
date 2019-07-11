@@ -23,9 +23,10 @@ import javax.security.enterprise.authentication.mechanism.http.HttpAuthenticatio
 /**
  * A generic authentication exception.
  * 
- * This exception corresponds to the JASPIC (JSR 196) AuthException in that whenever a method
- * from the {@link HttpAuthenticationMechanism} throws this exception, the JASPIC bridge
- * has to throw an AuthException back to the JASPIC runtime wrapping this exception.
+ * This exception corresponds to the Jakarta Authentication <code>AuthException</code> in that whenever a 
+ * method from the {@link HttpAuthenticationMechanism} throws this exception, the Jakarta Authentication 
+ * bridge has to throw an <code>AuthException</code> back to the Jakarta Authentication runtime wrapping 
+ * this exception.
  *
  */
 public class AuthenticationException extends GeneralSecurityException {

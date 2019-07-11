@@ -34,8 +34,8 @@ import javax.security.enterprise.credential.Credential;
 /**
  * <code>IdentityStore</code> is a mechanism for validating a caller's credentials
  * and accessing a caller's identity attributes. It can be used by an
- * authentication mechanism, such as a JSR 375 {@link HttpAuthenticationMechanism}
- * or a JSR 196 (JASPIC) {@link ServerAuthModule}.
+ * authentication mechanism, such as a Jakarta Security {@link HttpAuthenticationMechanism}
+ * or a Jakarta Authentication {@link ServerAuthModule}.
  * <p>
  * Stores which do only validation or only group lookup are allowed.
  * <p>
