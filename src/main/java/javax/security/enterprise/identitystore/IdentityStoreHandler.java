@@ -26,14 +26,15 @@ import javax.security.enterprise.credential.Credential;
  * a set of one or more {@link IdentityStore}s.
  * <p>
  * It is intended for use by an authentication mechanism, such as an
- * {@link HttpAuthenticationMechanism} (JSR 375) or a {@link ServerAuthModule}
- * (JSR 196/JASPIC).
+ * {@link HttpAuthenticationMechanism} (Jakarta Security) or a {@link ServerAuthModule}
+ * (Jakarta Authentication).
  * <p>
  * Beans should inject only this handler, and not {@link IdentityStore}
  * directly, as multiple stores may exist.
  * <p>
- * Implementations of JSR 375 must supply a default implementation of {@code IdentityStoreHandler}
- * that behaves as described in the JSR 375 specification document.
+ * Implementations of Jakarta Security must supply a default implementation of 
+ * {@code IdentityStoreHandler} that behaves as described in the Jakarta Security 
+ * specification document.
  * Applications do not need to supply an {@code IdentityStoreHandler}
  * unless application-specific behavior is desired.
  */

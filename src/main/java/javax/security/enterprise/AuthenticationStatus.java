@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletRequest;
  * 
  * <p>
  * For the result from {@link HttpAuthenticationMechanism#validateRequest(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, javax.security.enterprise.authentication.mechanism.http.HttpMessageContext)} 
- * an AuthenticationStatus must be transformed by the Java EE server into the corresponding JASPIC (JSR 196) AuthStatus
+ * an AuthenticationStatus must be transformed by the Jakarta EE server into the corresponding Jakarta Authentication <code>AuthStatus</code>
  * according to the following rules:
  * 
  * <ul>
@@ -37,13 +37,13 @@ import javax.servlet.http.HttpServletRequest;
  * </ul>
  * 
  * <p>
- * After the transformation as outlined above the transformed result has to be processed by the Java EE server as 
- * specified by the Servlet Container Profile of the JASPIC 1.1 spec (chapter 3).
+ * After the transformation as outlined above the transformed result has to be processed by the Jakarta EE server as 
+ * specified by the Servlet Container Profile of the Jakarta Authentication spec.
  * 
  * <p>
- * <b>Implementation note:</b> while the JASPIC Servlet Container Profile is the authoritative
+ * <b>Implementation note:</b> while the Jakarta Authentication Servlet Container Profile is the authoritative
  * source on how to process the <code>AuthStatus.SUCCESS</code> result and this specification puts no constraints 
- * of any kind on that, the expectation is that Java EE servers in practice will mainly look at the 
+ * of any kind on that, the expectation is that Jakarta EE servers in practice will mainly look at the 
  * result being <code>AuthStatus.SUCCESS</code> or not <code>AuthStatus.SUCCESS</code>. Simply said, if the result is 
  * <code>AuthStatus.SUCCESS</code> the authenticated identity (if any) must be set (established) for the current HTTP request, 
  * otherwise not.
@@ -51,7 +51,7 @@ import javax.servlet.http.HttpServletRequest;
  * <p>
  * The return value of {@link SecurityContext#authenticate(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, javax.security.enterprise.authentication.mechanism.http.AuthenticationParameters)}
  * , which is also of type AuthenticationStatus, strongly relates to the outcome of the <code>HttpAuthenticationMechanism#validateRequest</code>
- * method as described above, but must be transformed by the Java EE server from the corresponding outcome of the
+ * method as described above, but must be transformed by the Jakarta EE server from the corresponding outcome of the
  * {@link HttpServletRequest#authenticate(javax.servlet.http.HttpServletResponse)} call as follows:
  * 
  * <ul>
@@ -65,9 +65,9 @@ import javax.servlet.http.HttpServletRequest;
  * the value returned by <code>HttpAuthenticationMechanism#validateRequest</code>.
  * 
  * <p>
- * When a JASPIC ServerAuthModule (SAM) was used and an <code>HttpAuthenticationMechanism</code> was <em>not</em> used 
- * Java EE servers are encouraged, but not required, to set <code>[last status]</code> to the value returned by
- * <code>ServerAuthModule#validateRequest</code> transformed as follows:
+ * When a Jakarta Authentication ServerAuthModule (SAM) was used and an <code>HttpAuthenticationMechanism</code> 
+ * was <em>not</em> used Jakarta EE servers are encouraged, but not required, to set <code>[last status]</code> 
+ * to the value returned by <code>ServerAuthModule#validateRequest</code> transformed as follows:
  * 
  * <ul>
  *   <li> AuthStatus.SEND_CONTINUE to AuthenticationStatus.SEND_CONTINUE </li>
@@ -77,9 +77,9 @@ import javax.servlet.http.HttpServletRequest;
  * </ul>
  * 
  * <p>
- * When a Java EE Server proprietary identity store equivalent was used and an 
+ * When a Jakarta EE Server proprietary identity store equivalent was used and an 
  * <code>HttpAuthenticationMechanism</code> was <em>not</em> used 
- * Java EE servers are encouraged, but not required, to set <code>[last status]</code> to a value
+ * Jakarta EE servers are encouraged, but not required, to set <code>[last status]</code> to a value
  * that logically corresponds to the description of each enum constant of AuthenticationStatus. This outcome
  * should never be depended on by application code as being portable.
  * 
@@ -108,13 +108,13 @@ public enum AuthenticationStatus {
 	
 	/**
 	 * The authentication mechanism was called and the caller was successfully authenticated. After the
-	 * Java EE server has processed this outcome, the caller principal is available.
+	 * Jakarta EE server has processed this outcome, the caller principal is available.
 	 */
 	SUCCESS,
 	
 	/**
 	 * The authentication mechanism was called but the caller was <em>not</em> successfully authenticated and
-	 * therefor the caller principal will not be made available.
+	 * therefore the caller principal will not be made available.
 	 * <p>
 	 * Note that this status should be used to indicate a logical problem (such as a credential not matching or a caller
 	 * ID that can not be found). Exceptions should be used for system level problems (such as a database connection timing out).

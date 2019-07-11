@@ -18,7 +18,7 @@ package javax.security.enterprise.credential;
 
 /**
  * <code>RememberMeCredential</code> represents a credential presented as a token,
- * for the explicit usage with the JSR 375 provided remember me function.
+ * for the explicit usage with the Jakarta Security provided remember me function.
  *
  */
 public class RememberMeCredential implements Credential {

@@ -27,11 +27,11 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * The SecurityContext provides an access point for programmatic security; an injectable type that is intended to be
- * used by application code to query and interact with the Java EE Security API.
+ * used by application code to query and interact with Jakarta Security.
  *
  * <p>
- * Unless otherwise indicated, this type must be usable in all Java EE containers, specifically the Servlet
- * and EJB containers.
+ * Unless otherwise indicated, this type must be usable in all Jakarta EE containers, specifically the Jakarta Servlet
+ * and Jakarta Enterprise Beans containers.
  *
  *
  */
@@ -69,14 +69,14 @@ public interface SecurityContext {
 	 * If the caller is not authenticated, this always returns <code>false</code>.
 	 *
 	 * <p>
-	 * This method <em>can not</em> be used to test for roles that are mapped to specific named Servlets or
-	 * named EJB beans. For a Servlet an example of this would be the <code>role-name</code> nested in a
+	 * This method <em>can not</em> be used to test for roles that are mapped to specific named Jakarta Servlets or
+	 * named Jakarta Enterprise Beans. For a Servlet an example of this would be the <code>role-name</code> nested in a
 	 * <code>security-role-ref</code> element nested in a <code>servlet</code> element in <code>web.xml</code>.
 	 *
 	 * <p>
-	 * Should code in either such Servlet or EJB bean wish to take such mapped (aka referenced, linked) roles into
-	 * account, the facilities for that specific container should be used instead. For instance for Servlet that would
-	 * be {@link HttpServletRequest#isUserInRole(String)} and for EJB beans that would be
+	 * Should code in either such Jakarta Servlet or Jakarta Enterprise Bean wish to take such mapped (aka referenced, linked) 
+	 * roles into account, the facilities for that specific container should be used instead. For instance for Servlet that 
+	 * would be {@link HttpServletRequest#isUserInRole(String)} and for Jakarta Enterprise Beans that would be
 	 * {@link SessionContext#isCallerInRole(String)}.
 	 *
 	 *

@@ -1,13 +1,13 @@
-# JSR-375 API Code Repository
+# Jakarta Security
 
-This repository contains the code for the Java EE Security API (JSR-375).
+This repository contains the code for Jakarta Security.
 
 [Online JavaDoc](https://javadoc.io/doc/javax.security.enterprise/javax.security.enterprise-api/)
 
 Building
 --------
 
-JSR 375 API can be built by executing the following from the project root:
+Jakarta Security can be built by executing the following from the project root:
 
 ``mvn clean package``
 
@@ -18,7 +18,7 @@ Making Changes
 
 To make changes, fork this repository, make your changes, and submit a pull request.
 
-About JSR-375
+About Jakarta Security
 -------------
 
-For more information about JSR-375, see the project web site at [https://javaee.github.io/security-spec/](https://javaee.github.io/security-spec/).
+For more information about Jakarta Security, see the project web site at [github.com/eclipse-ee4j/security-api](https://github.com/eclipse-ee4j/security-api).

@@ -32,17 +32,18 @@ import javax.servlet.http.HttpServletResponse;
  * credentials in some way, using the HTTP protocol where necessary.
  * 
  * <p>
- * This is used to help in securing Servlet endpoints, including
- * endpoints that may be build on top of Servlet like JAX-RS endpoints and JSF views.
- * It specifically <b>is not</b> used for endpoints such as remote EJB beans or (JMS) message driven beans.
+ * This is used to help in securing Jakarta Servlet endpoints, including
+ * endpoints that may be build on top of Jakarta Servlets like Jakarta RESTful Web Services endpoints and 
+ * Jakarta Faces views. It specifically <b>is not</b> used for endpoints such as remote Jakarta Enterprise Beans
+ * or (Jakarta Messaging) message driven beans.
  * 
  * <p>
- * A <code>HttpAuthenticationMechanism</code> is essentially a Servlet specific and CDI enabled version of
- * the {@link ServerAuthModule} that adheres to the Servlet Container Profile. See the JASPIC spec for further
- * details on this.
+ * A <code>HttpAuthenticationMechanism</code> is essentially a Jakarta Servlet specific and CDI enabled version of
+ * the {@link ServerAuthModule} that adheres to the Servlet Container Profile. See the Jakarta Authentication spec for 
+ * further details on this.
  * 
  * <p>
- * Implementations of this class can notify the Servlet container about a successful authentication by using the
+ * Implementations of this class can notify the Jakarta Servlet container about a successful authentication by using the
  * {@link HttpMessageContext#notifyContainerAboutLogin(java.security.Principal, java.util.Set)} method.
  * 
  * <p>

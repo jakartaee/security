@@ -32,10 +32,10 @@ import javax.interceptor.InterceptorBinding;
  * and auto applies this for every request.
  *
  * <p>
- * See the JASPIC 1.1 specification section 3.8.4 for further details on <code>javax.servlet.http.registerSession</code>.
+ * See the Jakarta Authentication spec for further details on <code>javax.servlet.http.registerSession</code>.
  *
  * <p>
- * This support is provided via an implementation of an interceptor spec interceptor that conducts the
+ * This support is provided via an implementation of a Jakarta Interceptors interceptor that conducts the
  * necessary logic.
  *
  * <p>

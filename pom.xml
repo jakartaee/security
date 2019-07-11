@@ -31,8 +31,11 @@
     <version>1.0.2-SNAPSHOT</version>
     <packaging>bundle</packaging>
 
-    <name>Enterprise Security API</name>
-    <description>Security API for Java EE Applications</description>
+    <name>Jakarta Security</name>
+    <description>
+        Jakarta Security defines a standard for creating secure Jakarta EE applications in modern application paradigms.
+        It defines an overarching (end-user targeted) Security API for Jakarta EE Applications.
+    </description>
     <inceptionYear>2015</inceptionYear>
 
     <properties>
@@ -181,7 +184,7 @@
                         <Implementation-Version>${spec.implementation.version}</Implementation-Version>
                         <Specification-Version>${spec.specification.version}</Specification-Version>
                         <Bundle-Description>
-                            EE Security API ${spec.version} Specification
+                            Jakarta Security ${spec.version} Specification
                         </Bundle-Description>
                         <Specification-Vendor>Oracle Corporation</Specification-Vendor>
                         <Implementation-Vendor>${project.organization.name}</Implementation-Vendor>

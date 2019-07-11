@@ -15,10 +15,8 @@
  */
 
 /**
- * The identity store API package. This package
- * contains classes and interfaces associated with the
- * identity store, which validate a Caller's
- * credentials and access a Caller's identity attributes.
+ * The identity store API package. This package contains classes and interfaces associated with the identity store,
+ * which validate a Caller's credentials and access a Caller's identity attributes.
  *
  * @version 1.0
  */

@@ -39,9 +39,9 @@ import javax.servlet.http.HttpServletResponse;
 public interface HttpMessageContext {
 
     /**
-     * Checks if the currently requested resource is protected or not. A protected resource
-     * is a resource (e.g. a Servlet, JSF page, JSP page etc) for which a constraint has been defined
-     * in e.g. <code>web.xml</code>.
+     * Checks if the currently requested resource is protected or not. A protected resource is a resource (e.g. a Jakarta
+     * Servlet, Jakarta Faces page, Jakarta Server Pages page etc) for which a constraint has been defined in e.g.
+     * <code>web.xml</code>.
      * 
      * @return true if a protected resource was requested, false if a public resource was requested.
      */
@@ -79,8 +79,8 @@ public interface HttpMessageContext {
      * Convenience method to clean the subject associated with this context.
      * 
      * <p>
-     * Cleaning this subject is done as defined by the Servlet Container Profile of JASPIC
-     * (JSR 196) for the ServerAuthModule#cleanSubject method and the 
+     * Cleaning this subject is done as defined by the Servlet Container Profile of Jakarta Authentication
+     * for the ServerAuthModule#cleanSubject method and the 
      * {@link HttpAuthenticationMechanism#cleanSubject(HttpServletRequest, HttpServletResponse, HttpMessageContext)} 
      * method defined by this specification.
      */
@@ -94,8 +94,8 @@ public interface HttpMessageContext {
     AuthenticationParameters getAuthParameters();
 
     /**
-     * Returns the low level JSR 196 handler that the runtime provided when creating this {@link HttpMessageContext},
-     * and which this context uses to communicate the authentication details to the runtime.
+     * Returns the low level Jakarta Authentication handler that the runtime provided when creating this 
+     * {@link HttpMessageContext}, and which this context uses to communicate the authentication details to the runtime.
      * 
      * <p>
      * <em>Note:</em> This is a low level object that most higher level code would not need to use directly.
@@ -105,7 +105,7 @@ public interface HttpMessageContext {
     CallbackHandler getHandler();
 
     /**
-     * Returns the the low level JSR 196 message info instance for the current request.
+     * Returns the the low level Jakarta Authentication message info instance for the current request.
      * 
      * <p>
      * <em>Note:</em> This is a low level object that most higher level code would not need to use directly.
@@ -179,7 +179,7 @@ public interface HttpMessageContext {
     AuthenticationStatus redirect(String location);
     
     /**
-     * Forwards to another resource (servlet, JSP file, or HTML file) on the server.
+     * Forwards to another resource (Jakarta Servlet, Jakarta Server Pages file, or HTML file) on the server.
      * 
      * <p>
      * As a convenience this method returns SEND_CONTINUE, so this method can be used in
@@ -297,7 +297,7 @@ public interface HttpMessageContext {
      * Instructs the container to "do nothing".
      * 
      * <p>
-     * When intending to do nothing, a JSR 375 authentication mechanism has to indicate this
+     * When intending to do nothing, a Jakarta Security authentication mechanism has to indicate this
      * explicitly via its return value.
      * 
      * <p>
