@@ -2,7 +2,7 @@
 
 This repository contains the code for Jakarta Security.
 
-[Online JavaDoc](https://javadoc.io/doc/javax.security.enterprise/javax.security.enterprise-api/)
+[Online JavaDoc](https://javadoc.io/doc/jakarta.security.enterprise/jakarta.security.enterprise-api/)
 
 Building
 --------
