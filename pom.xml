@@ -19,7 +19,8 @@
     <artifactId>security.enterprise-api-parent</artifactId>
     <packaging>pom</packaging>
     <version>1.0.2-SNAPSHOT</version>
-    <name>Jakarta Security</name>
+    
+    <name>Jakarta Security Parent</name>
     <description>
         Jakarta Security defines a standard for creating secure Jakarta EE applications in modern application paradigms.
         It defines an overarching (end-user targeted) Security API for Jakarta EE Applications.
