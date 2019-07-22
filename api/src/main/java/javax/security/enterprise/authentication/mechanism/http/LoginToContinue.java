@@ -24,7 +24,6 @@ import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import javax.enterprise.util.AnnotationLiteral;
 import javax.enterprise.util.Nonbinding;
 import javax.interceptor.InterceptorBinding;
 
@@ -52,91 +51,6 @@ import javax.interceptor.InterceptorBinding;
 @Retention(RUNTIME)
 @Target(TYPE)
 public @interface LoginToContinue {
-
-    /**
-     * A default literal type for the {@link LoginToContinue} annotation.
-     *
-     * @since 1.1
-     */
-    @SuppressWarnings("all")
-    public final static class Literal extends AnnotationLiteral<LoginToContinue> implements LoginToContinue {
-
-        private static final long serialVersionUID = 1L;
-
-        private final String loginPage;
-        private final boolean useForwardToLogin;
-        private final String useForwardToLoginExpression;
-        private final String errorPage;
-
-        public static LiteralBuilder builder() {
-            return new LiteralBuilder();
-        }
-
-        public static class LiteralBuilder {
-
-            private String loginPage = "/login";
-            private boolean useForwardToLogin = true;
-            private String useForwardToLoginExpression;
-            private String errorPage = "/login-error";
-
-            public LiteralBuilder loginPage (String loginPage) {
-                this.loginPage = loginPage;
-                return this;
-            }
-
-            public LiteralBuilder useForwardToLogin (boolean useForwardToLogin) {
-                this.useForwardToLogin = useForwardToLogin;
-                return this;
-            }
-
-            public LiteralBuilder useForwardToLoginExpression (String useForwardToLoginExpression) {
-                this.useForwardToLoginExpression = useForwardToLoginExpression;
-                return this;
-            }
-
-            public LiteralBuilder errorPage (String errorPage) {
-                this.errorPage = errorPage;
-                return this;
-            }
-
-            public Literal build() {
-                return new Literal(
-                    loginPage,
-                    useForwardToLogin,
-                    useForwardToLoginExpression,
-                    errorPage);
-            }
-
-        }
-
-        public Literal(String loginPage, boolean useForwardToLogin, String useForwardToLoginExpression, String errorPage) {
-            this.loginPage = loginPage;
-            this.useForwardToLogin = useForwardToLogin;
-            this.useForwardToLoginExpression = useForwardToLoginExpression;
-            this.errorPage = errorPage;
-        }
-
-        @Override
-        public String loginPage() {
-            return loginPage;
-        }
-
-        @Override
-        public boolean useForwardToLogin() {
-            return useForwardToLogin;
-        }
-
-        @Override
-        public String useForwardToLoginExpression() {
-            return useForwardToLoginExpression;
-        }
-
-        @Override
-        public String errorPage() {
-            return errorPage;
-        }
-
-    }
 
     /**
      * The resource (page) a caller should get to see in case the originally requested

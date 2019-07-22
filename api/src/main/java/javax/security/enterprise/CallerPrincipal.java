@@ -23,7 +23,7 @@ import java.security.Principal;
  * Principal that represents the caller principal associated with the invocation being
  * processed by the container (e.g. the current HTTP request).
  */
-public class CallerPrincipal implements Principal, Serializable {
+public class CallerPrincipal implements Principal {
 
     private static final long serialVersionUID = -6951555039431667786L;
 
