@@ -24,6 +24,7 @@
         <groupId>org.eclipse.ee4j</groupId>
         <artifactId>project</artifactId>
         <version>1.0.5</version>
+        <relativePath/>
     </parent>
 
     <groupId>jakarta.security.enterprise</groupId>
@@ -94,7 +95,7 @@
         <dependency>
             <groupId>jakarta.ejb</groupId>
             <artifactId>jakarta.ejb-api</artifactId>
-            <version>3.2.4</version>
+            <version>3.2.6</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
