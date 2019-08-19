@@ -111,9 +111,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>jakarta.security.jacc</groupId>
-            <artifactId>jakarta.security.jacc-api</artifactId>
-            <version>1.6.2</version>
+            <groupId>jakarta.authorization</groupId>
+            <artifactId>jakarta.authorization-api</artifactId>
+            <version>1.5.0</version>
             <scope>provided</scope>
         </dependency>
         
