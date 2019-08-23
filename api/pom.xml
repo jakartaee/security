@@ -29,7 +29,7 @@
 
     <groupId>jakarta.security.enterprise</groupId>
     <artifactId>jakarta.security.enterprise-api</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3-SNAPSHOT</version>
     <packaging>bundle</packaging>
 
     <name>Jakarta Security</name>
