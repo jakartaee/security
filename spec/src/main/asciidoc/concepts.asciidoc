@@ -35,7 +35,7 @@ The following general requirements are defined by this specification.
 
 ==== Group-To-Role Mapping
 
-Various Java EE specifications define how roles are declared for an application, and how access to application resources can be restricted to users that have a specific role. The specifications are largely silent on the question of how users are assigned to roles, however. Most application servers have proprietary mechanisms for determining the roles a user has.
+Various Jakarta EE specifications define how roles are declared for an application, and how access to application resources can be restricted to users that have a specific role. The specifications are largely silent on the question of how users are assigned to roles, however. Most application servers have proprietary mechanisms for determining the roles a user has.
 
 Application servers MUST provide a default mapping from group names to roles. That is, a caller who is a member of group "foo" is considered to have role "foo". This default mapping MAY be overridden by explicit proprietary configuration, but, when not overridden, provides sensible and predictable behavior for portable applications.
 
@@ -43,9 +43,9 @@ An application server MAY provide a default mapping from caller principal names 
 
 ==== Caller Principal Types
 
-This specification defines a principal type called _CallerPrincipal_ to represent the identity of an application caller. Historically, application servers have used different principal types to represent an application's callers, and various Java EE specifications (e.g., JASPIC), provide abstractions to accommodate, "the container's representation of the caller principal".
+This specification defines a principal type called _CallerPrincipal_ to represent the identity of an application caller. Historically, application servers have used different principal types to represent an application's callers, and various Jakarta EE specifications (e.g., JASPIC), provide abstractions to accommodate, "the container's representation of the caller principal".
 
-This specification RECOMMENDS that Java EE application servers that rely on container-specific caller principal types derive those types by extending _CallerPrincipal_, so that portable applications can rely on a consistent representation of the caller principal.
+This specification RECOMMENDS that Jakarta EE application servers that rely on container-specific caller principal types derive those types by extending _CallerPrincipal_, so that portable applications can rely on a consistent representation of the caller principal.
 
 However, we also distinguish here between a "container caller principal" and an "application caller principal", and explicitly allow for each to be represented by a different _Principal_ type.
 
