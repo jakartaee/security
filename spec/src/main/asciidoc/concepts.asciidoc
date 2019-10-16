@@ -20,14 +20,8 @@ Abbreviation for _HttpAuthenticationMechanism_, an interface defined by this spe
 Identity Store::
 An Identity Store is a component that can access application-specific security data such as users, groups, roles, and permissions. It can be thought of as a security-specific DAO (Data Access Object). Synonyms: security provider, repository, store, login module (JAAS), identity manager, service provider, relying party, authenticator, user service. Identity Stores usually have a 1-to-1 correlation with a data source such as a relational database, LDAP directory, file system, or other similar resource. As such, implementations of the _IdentityStore_ interface use data source-specific APIs to discover authorization data (roles, permissions, etc), such as JDBC, File IO, Hibernate or JPA, or any other Data Access API.
 
-JACC::
-JSR-115, "Java Authorization Contract for Containers", version 1.5 [https://jcp.org/aboutJava/communityprocess/mrel/jsr115/index3.html[JACC]].
-
-JASPIC::
-JSR-196, "Java Authentication SPI for Containers", version 1.1 [https://jcp.org/aboutJava/communityprocess/mrel/jsr196/index2.html[JASPIC]].
-
 SAM::
-Abbreviation for _ServerAuthModule_, an interface defined by JASPIC.
+Abbreviation for _ServerAuthModule_, an interface defined by Jakarta Authentication.
 
 === General Requirements
 
@@ -43,7 +37,7 @@ An application server MAY provide a default mapping from caller principal names 
 
 ==== Caller Principal Types
 
-This specification defines a principal type called _CallerPrincipal_ to represent the identity of an application caller. Historically, application servers have used different principal types to represent an application's callers, and various Jakarta EE specifications (e.g., JASPIC), provide abstractions to accommodate, "the container's representation of the caller principal".
+This specification defines a principal type called _CallerPrincipal_ to represent the identity of an application caller. Historically, application servers have used different principal types to represent an application's callers, and various Jakarta EE specifications (e.g., Jakarta Authentication), provide abstractions to accommodate, "the container's representation of the caller principal".
 
 This specification RECOMMENDS that Jakarta EE application servers that rely on container-specific caller principal types derive those types by extending _CallerPrincipal_, so that portable applications can rely on a consistent representation of the caller principal.
 
@@ -80,4 +74,4 @@ Attributes on these annotations can be provided either as actual values, or as E
 
 For more information, see the package javadoc for the javax.security.enterprise package.
  
-Expression Language 3.0 is specified by JSR-341, "Expression Language", version 3.0 [https://jcp.org/aboutJava/communityprocess/final/jsr341/index.html[EL30]]
+Jakarta Expression Language, version 3.0 [https://jakarta.ee/specifications/expression-language/3.0/[EL30]] is a Jakarta EE specification.
