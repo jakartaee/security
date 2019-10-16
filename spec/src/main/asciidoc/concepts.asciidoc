@@ -1,0 +1,83 @@
+[[concepts]]
+
+== Concepts and General Requirements
+
+This chapter provides overview information and terminology related to this specification, and also includes general requirements not specified elsewhere in this document.
+
+=== Terminology And Acronyms
+
+A common understanding of security-related terms is helpful for discussion or specification of security APIs. To that end, we incorporate by reference the excellent Apache Shiro Terminology [https://shiro.apache.org/terminology.html[SHIROTERM]], and define some additional terms used in this document.
+
+Authentication Mechanism ::
+The mechanism by which authentication is performed. This mechanism interacts with the caller to obtain credentials and invokes an identity store to match the given credentials with a known user (identity). If a match is found, the Authentication Mechanism uses the found identity to populate attributes (principals) to build an authenticated Subject. If a match is not found, the Authentication Mechanism reports a failed authentication, the caller is not logged in, and is unable to be given authorization.
+
+Caller, Caller Principal::
+A caller is a user that is making a request to an application, or invoking an application API. A Caller Principal is a Principal object representing that user. This specification uses the term caller in preference to the term user in most contexts.
+
+HAM::
+Abbreviation for _HttpAuthenticationMechanism_, an interface defined by this specification.
+
+Identity Store::
+An Identity Store is a component that can access application-specific security data such as users, groups, roles, and permissions. It can be thought of as a security-specific DAO (Data Access Object). Synonyms: security provider, repository, store, login module (JAAS), identity manager, service provider, relying party, authenticator, user service. Identity Stores usually have a 1-to-1 correlation with a data source such as a relational database, LDAP directory, file system, or other similar resource. As such, implementations of the _IdentityStore_ interface use data source-specific APIs to discover authorization data (roles, permissions, etc), such as JDBC, File IO, Hibernate or JPA, or any other Data Access API.
+
+JACC::
+JSR-115, "Java Authorization Contract for Containers", version 1.5 [https://jcp.org/aboutJava/communityprocess/mrel/jsr115/index3.html[JACC]].
+
+JASPIC::
+JSR-196, "Java Authentication SPI for Containers", version 1.1 [https://jcp.org/aboutJava/communityprocess/mrel/jsr196/index2.html[JASPIC]].
+
+SAM::
+Abbreviation for _ServerAuthModule_, an interface defined by JASPIC.
+
+=== General Requirements
+
+The following general requirements are defined by this specification.
+
+==== Group-To-Role Mapping
+
+Various Java EE specifications define how roles are declared for an application, and how access to application resources can be restricted to users that have a specific role. The specifications are largely silent on the question of how users are assigned to roles, however. Most application servers have proprietary mechanisms for determining the roles a user has.
+
+Application servers MUST provide a default mapping from group names to roles. That is, a caller who is a member of group "foo" is considered to have role "foo". This default mapping MAY be overridden by explicit proprietary configuration, but, when not overridden, provides sensible and predictable behavior for portable applications.
+
+An application server MAY provide a default mapping from caller principal names to roles. That is, a caller with the name "bar" is considered to have role "bar". This default mapping MAY be overridden by proprietary configuration.
+
+==== Caller Principal Types
+
+This specification defines a principal type called _CallerPrincipal_ to represent the identity of an application caller. Historically, application servers have used different principal types to represent an application's callers, and various Java EE specifications (e.g., JASPIC), provide abstractions to accommodate, "the container's representation of the caller principal".
+
+This specification RECOMMENDS that Java EE application servers that rely on container-specific caller principal types derive those types by extending _CallerPrincipal_, so that portable applications can rely on a consistent representation of the caller principal.
+
+However, we also distinguish here between a "container caller principal" and an "application caller principal", and explicitly allow for each to be represented by a different _Principal_ type.
+
+The container caller principal is a _Principal_ that the container uses to represent a caller's identity. An implementation of this specification MAY choose any _Principal_ type for this purpose. The type chosen may carry additional information, or provide unique behaviors.
+
+An application caller principal is a _Principal_ that an application, or an implementation of, e.g., an _HttpAuthenticationMechanism_, uses to represent a caller's identity. An application MAY choose any _Principal_ type for that purpose. The type chosen may carry additional information, or provide unique behaviors.
+
+Because both containers and applications can have legitimate requirements for specific _Principal_ types to represent a caller, and those types may differ, it MUST be possible for the container to establish both the container's and the application's caller principal as the caller's identity; for example, by including both in a Subject representing the caller.
+
+When both a container caller principal and an application caller principal are present, the value obtained by calling _getName()_ on both principals MUST be the same.
+
+When no specific application caller principal is supplied during authentication, the caller's identity should be represented by a single principal, the container's caller principal.
+
+==== Expression Language Support
+
+This specification defines a number of annotations:
+
+[source,java]
+----
+DatabaseIdentityStoreDefinition
+LdapIdentityStoreDefinition
+
+BasicAuthenticationMechanismDefinition
+CustomFormAuthenticationMechanismDefinition
+FormAuthenticationMechanismDefinition
+
+LoginToContinue
+RememberMe
+----
+
+Attributes on these annotations can be provided either as actual values, or as Expression Language 3.0 expressions. In cases where the return type of an attribute is not String, an "EL alternative" attribute is provided, with "Expression" appended to the name. If an "EL alternative" attribute has a non-empty value, it takes precedence over the attribute it's an alternative to, and must contain a valid EL expression that evaluates to the same type as the attribute it's an alternative to.
+
+For more information, see the package javadoc for the javax.security.enterprise package.
+ 
+Expression Language 3.0 is specified by JSR-341, "Expression Language", version 3.0 [https://jcp.org/aboutJava/communityprocess/final/jsr341/index.html[EL30]]

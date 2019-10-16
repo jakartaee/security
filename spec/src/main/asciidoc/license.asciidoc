@@ -1,0 +1,22 @@
+:numbered!:
+["preface",sectnum="0"]
+
+[[license]]
+
+== License
+
+Specification: JSR-375 Java EE Security API ("Specification")
+
+Version: 1.0
+
+Status: Final Release
+
+Specification Lead: Oracle America, Inc. ("Specification Lead")
+
+Release: August 2017
+
+Copyright 2017 Oracle America, Inc. +
+All rights reserved.
+
+
+:numbered:

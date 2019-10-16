@@ -1,0 +1,21 @@
+:sectanchors:
+:doctype: book
+:compat-mode:
+:pdf-page-size: Letter
+= Jakarta Security Specification
+Will Hopkins;Arjan Tijms
+Version 1.0 (Final), August 2017
+include::license.asciidoc[]
+
+include::preface.asciidoc[]
+
+include::concepts.asciidoc[]
+
+include::authenticationMechanism.asciidoc[]
+
+include::identityStore.asciidoc[]
+
+include::securityContext.asciidoc[]
+
+include::bibliography.asciidoc[]
+

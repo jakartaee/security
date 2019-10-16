@@ -25,4 +25,16 @@ include::license-efsl.adoc[]
 
 // == Scope
 :sectnums:
-include::scope.adoc[]
+
+include::preface.asciidoc[]
+
+include::concepts.asciidoc[]
+
+include::authenticationMechanism.asciidoc[]
+
+include::identityStore.asciidoc[]
+
+include::securityContext.asciidoc[]
+
+include::bibliography.asciidoc[]
+
