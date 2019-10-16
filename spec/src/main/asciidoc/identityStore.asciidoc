@@ -8,7 +8,7 @@ This chapter describes the _IdentityStore_ and _IdentityStoreHandler_ interfaces
 
 _IdentityStore_ provides an abstraction of an identity store, which is a database or directory (store) of identity information about a population of users that includes an application's callers. An identity store holds caller names, group membership information, and information sufficient to allow it to validate a caller's credentials. An identity store may also contain other information, such as globally unique caller identifiers (if different from caller name), or other caller attributes.
 
-Implementations of the _IdentityStore_ interface are used to interact with identity stores to authenticate users (i.e., validate their credentials), and to retrieve caller groups. _IdentityStore_ is roughly analogous to the JAAS _LoginModule_ interface, which is often integrated into Java EE products (albeit in vendor-specific ways). Unlike _LoginModule_, _IdentityStore_ is intended specifically for Java EE, and provides only credential validation and group retrieval functions (i.e., functions that require interaction with an identity store). An _IdentityStore_ does not collect caller credentials, or manipulate __Subject__s.
+Implementations of the _IdentityStore_ interface are used to interact with identity stores to authenticate users (i.e., validate their credentials), and to retrieve caller groups. _IdentityStore_ is roughly analogous to the JAAS _LoginModule_ interface, which is often integrated into Jakarta EE products (albeit in vendor-specific ways). Unlike _LoginModule_, _IdentityStore_ is intended specifically for Java EE, and provides only credential validation and group retrieval functions (i.e., functions that require interaction with an identity store). An _IdentityStore_ does not collect caller credentials, or manipulate __Subject__s.
 
 _IdentityStore_ is intended primarily for use by _HttpAuthenticationMechanism_ implementations, but could in theory be used by other types of authentication mechanisms (e.g., a JASPIC _ServerAuthModule_, or a container's built-in authentication mechanisms). _HttpAuthenticationMechanism_ implementations are not required to use _IdentityStore_ -- they can authenticate users in any manner they choose -- but _IdentityStore_ will often be a useful and convenient mechanism.
 
@@ -265,7 +265,7 @@ As described above, in the "<<Declaring Capabilities>>" section, the _IdentitySt
 
 === Annotations and Built-In IdentityStore Beans
 
-A Java EE container MUST support built-in beans for the following _IdentityStore_ types, to be configured and made available via corresponding annotations:
+A Jakarta EE container MUST support built-in beans for the following _IdentityStore_ types, to be configured and made available via corresponding annotations:
 
 * LDAP -- Supports caller data that is stored in an external LDAP server. This bean is activated and configured via the _@LdapIdentityStoreDefinition_ annotation.
 * Database -- Supports caller data that is stored in an external database accessible via a DataSource bound to JNDI. This bean is activated and configured via the _@DatabaseIdentityStoreDefinition_ annotation.

@@ -6,7 +6,7 @@ This chapter describes the _SecurityContext_ interface and contract.
 
 === Introduction
 
-The Java EE platform defines a declarative security model for protecting application resources. The declared constraints on access are then enforced by the container. In some cases the declarative model is not sufficient; for example, when a combination of tests and constraints is needed that is more complex than the declarative model allows for. Programmatic security allows an application to perform tests and grant or deny access to resources. 
+The Jakarta EE platform defines a declarative security model for protecting application resources. The declared constraints on access are then enforced by the container. In some cases the declarative model is not sufficient; for example, when a combination of tests and constraints is needed that is more complex than the declarative model allows for. Programmatic security allows an application to perform tests and grant or deny access to resources. 
 
 This specification provides an access point for programmatic security -- a security context -- represented by the _SecurityContext_ interface.
 
@@ -87,7 +87,7 @@ The _authenticate()_ method allows an application to signal to the container tha
 
 The _SecurityContext_ implementation is a CDI bean, as defined by [https://jcp.org/aboutJava/communityprocess/mrel/jsr346/index.html[CDI12]].
 
-Various specifications in Java EE provide similar or even identical methods to those provided be the _SecurityContext_. It is the intention of this specification to eventually supersede those methods and provide a cross-specification, platform alternative. The following gives an overview:
+Various specifications in Jakarta EE provide similar or even identical methods to those provided be the _SecurityContext_. It is the intention of this specification to eventually supersede those methods and provide a cross-specification, platform alternative. The following gives an overview:
 
 * Servlet - _HttpServletRequest#getUserPrincipal_, _HttpServletRequest#isUserInRole_
 * EJB - _EJBContext#getCallerPrincipal_, _EJBContext#isCallerInRole_

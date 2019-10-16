@@ -5,7 +5,7 @@
 
 == Preface
 
-This document is the Java EE Security API Specification, version 1.0.
+This document is the Jakarta EE Security API Specification, version 1.0.
 
 === Notational Conventions
 
