@@ -1,0 +1,386 @@
+[[identity-store]]
+
+== Identity Store
+
+This chapter describes the _IdentityStore_ and _IdentityStoreHandler_ interfaces and contracts.
+
+=== Introduction
+
+_IdentityStore_ provides an abstraction of an identity store, which is a database or directory (store) of identity information about a population of users that includes an application's callers. An identity store holds caller names, group membership information, and information sufficient to allow it to validate a caller's credentials. An identity store may also contain other information, such as globally unique caller identifiers (if different from caller name), or other caller attributes.
+
+Implementations of the _IdentityStore_ interface are used to interact with identity stores to authenticate users (i.e., validate their credentials), and to retrieve caller groups. _IdentityStore_ is roughly analogous to the JAAS _LoginModule_ interface, which is often integrated into Java EE products (albeit in vendor-specific ways). Unlike _LoginModule_, _IdentityStore_ is intended specifically for Java EE, and provides only credential validation and group retrieval functions (i.e., functions that require interaction with an identity store). An _IdentityStore_ does not collect caller credentials, or manipulate __Subject__s.
+
+_IdentityStore_ is intended primarily for use by _HttpAuthenticationMechanism_ implementations, but could in theory be used by other types of authentication mechanisms (e.g., a JASPIC _ServerAuthModule_, or a container's built-in authentication mechanisms). _HttpAuthenticationMechanism_ implementations are not required to use _IdentityStore_ -- they can authenticate users in any manner they choose -- but _IdentityStore_ will often be a useful and convenient mechanism.
+
+A significant advantage of using _HttpAuthenticationMechanism_ and _IdentityStore_ over container-provided BASIC or FORM implementations is that it allows an application to control the identity stores it will authenticate against, in a standard, portable way.
+
+An _IdentityStore_ is expected to perform only context- and environment-independent processing (for example, verifying usernames and passwords and returning caller data). It should provide a pure _{credentials in, caller data out}_ function. An _IdentityStore_ should not directly interact with the caller, or attempt to examine request context or application state.
+
+The _IdentityStoreHandler_ interface defines a mechanism for invoking on _IdentityStore_ to validate a user credential. An _HttpAuthenticationMechanism_ (or other caller) should not interact directly with an _IdentityStore_, but instead invoke the _IdentityStoreHandler_ to validate credentials. The _IdentityStoreHandler_, in turn, invokes on the _IdentityStore_. An _IdentityStoreHandler_ can also orchestrate an authentication across multiple _IdentityStore_ instances, returning an aggregated result.
+
+A default _IdentityStoreHandler_ implementation is supplied by the container, but applications can also supply their own implementation. The orchestration behavior of the default _IdentityStoreHandler_ is described in the "<<Handling Multiple Identity Stores>>" section below.
+
+=== Interface and Theory of Operation
+
+The _IdentityStore_ interface defines two methods that are used by the runtime to validate a _Credential_ or obtain caller information:
+
+* validate(Credential)
+* getCallerGroups(CredentialValidationResult)
+
+An implementation of _IdentityStore_ can choose to handle either or both of these methods, depending on its capabilities and configuration. It indicates which methods it handles through the set of values returned by its _validationTypes()_ method:
+
+* _VALIDATE_ to indicate that it handles _validate()_
+* _PROVIDE_GROUPS_ to indicate that it handles _getCallerGroups()_
+* Both _VALIDATE_ and _PROVIDE_GROUPS_ to indicate that it handles both methods
+
+This method of declaring capabilities was chosen so that an _IdentityStore_ could be written to support both methods, but configured to support just one or the other in any particular deployment.
+
+The full interface is shown below (without default behaviors; signatures only).
+
+[source,java]
+----
+public interface IdentityStore {
+
+    enum ValidationType { VALIDATE, PROVIDE_GROUPS }
+
+    CredentialValidationResult validate(Credential credential);
+
+    Set<String> getCallerGroups(CredentialValidationResult validationResult);
+
+    int priority();
+
+    Set<ValidationType> validationTypes();
+}
+----
+
+==== Validating Credentials
+
+The _validate()_ method determines whether a _Credential_ is valid, and, if so, returns information about the user identified by the _Credential_. It is an optional method that an _IdentityStore_ may choose not to implement.
+
+[source,java]
+----
+CredentialValidationResult validate(Credential credential);
+----
+
+The result of validation is returned as a _CredentialValidationResult_, which provides methods to obtain the resulting status value, and, for successful validations, the ID of the identity store that validated the credential, the caller principal, the caller's unique ID in the identity store, and the caller's group memberships, if any. Only the caller principal is required to be present for a successful validation.
+
+The identity store ID, caller DN, and caller unique ID are provided to assist implementations of _IdentityStore_ in cooperating across invocations of _validate()_ and _getCallerGroups()_. They can be used to ensure that the correct caller's groups are returned from _getCallerGroups()_ even in environments where caller principal name alone is insufficient to uniquely identify the correct user account.
+
+[source,java]
+----
+public class CredentialValidationResult {
+    
+    public enum Status { NOT_VALIDATED, INVALID, VALID };
+
+    public Status getStatus();
+
+    public String getIdentityStoreId();
+	
+    public CallerPrincipal getCallerPrincipal();
+
+    public String getCallerDn();
+
+    public String getCallerUniqueId();
+
+    public Set<String> getCallerGroups();
+}
+----
+
+The defined status values are:
+
+* _VALID_: Validation succeeded and the user is authenticated. The caller principal and groups (if any) are available ONLY with this result status.
+* _INVALID_: Validation failed. The supplied _Credential_ was invalid, or the corresponding user was not found in the user store.
+* _NOT_VALIDATED_: Validation was not attempted, because the _IdentityStore_ does not handle the supplied _Credential_ type.
+
+The _Credential_ interface is a generic interface capable of representing any kind of token or user credential. An _IdentityStore_ implementation can support multiple concrete _Credential_ types, where a concrete _Credential_ is an implementation of the _Credential_ interface that represents a particular type of credential. It can do so by implementing the _validate(Credential)_ method and testing the type of the _Credential_ that's passed in. As a convenience, the _IdentityStore_ interface provides a default implementation of _validate(Credential)_ that delegates to a method that can handle the provided _Credential_ type, assuming such a method is implemented by the _IdentityStore_:
+
+[source,java]
+----
+default CredentialValidationResult validate(Credential credential) {
+    try {
+        return CredentialValidationResult.class.cast(
+            MethodHandles.lookup()
+                .bind(this, "validate",
+                      methodType(CredentialValidationResult.class,
+                                 credential.getClass()))
+                .invoke(credential));
+    } catch (NoSuchMethodException e) {
+        return NOT_VALIDATED_RESULT;
+    } catch (Throwable e) {
+        throw new IllegalStateException(e);
+    }
+}
+----
+
+So, for example, _validate(Credential)_ would delegate to the following method of _ExampleIdentityStore_ if passed a _UsernamePasswordCredential_:
+
+[source,java]
+----
+public class ExampleIdentityStore implements IdentityStore {
+
+    public CredentialValidationResult validate(
+        UsernamePasswordCredential usernamePasswordCredential) {
+        // Implementation ...
+        return new CredentialValidationResult(...);
+    }
+}
+----
+
+==== Retrieving Caller Information
+
+The _getCallerGroups()_ method retrieves the set of groups associated with a validated caller. It is an optional method that an _IdentityStore_ may choose not to implement.
+
+[source,java]
+----
+Set<String> getCallerGroups(CredentialValidationResult validationResult);
+----
+
+The _getCallerGroups()_ method supports aggregation of identity stores, where one identity store is used to authenticate users, but one or more other stores are used to retrieve additional groups. In such a scenario, it is necessary to query identity stores without validating the caller's credential against the stores.
+
+If an _IdentityStore_ supports both _validate()_ and _getCallerGroups()_, the behavior of both methods should be consistent with respect to groups. That is, for a given user "foo", the set of groups returned when calling _validate()_ to authenticate user "foo" should be the same as the set of groups returned when calling _getCallerGroups()_ for _CallerPrincipal_ "foo". (Assuming no errors occur during either call -- this requirement is intended as a normative description of expected behavior; it does not imply that an implementation must "make it right" if errors or other uncontrollable factors cause results to vary between any two calls.)
+
+As a result, it is never necessary to call _getCallerGroups()_ when there is only one _IdentityStore_, because the same groups are returned by the _validate()_ method.
+
+Note that _getCallerGroups()_ is not intended as a general purpose API for retrieving user groups. It should be called only by an _IdentityStoreHandler_, in the course of orchestrating a _validate()_ call across multiple identity stores.
+
+Because _getCallerGroups()_ enables its callers to access an external store as a privileged user (i.e., as an LDAP or database user with permission to search the store and retrieve information about arbitrary user accounts), it should be protected against unauthorized access.
+
+Implementors of _getCallerGroups()_ are strongly encouraged to check that the calling context has _IdentityStorePermission_, as shown below, before proceeding. (The built-in identity stores are REQUIRED to do so, see <<Annotations and Built-In IdentityStore Beans>>.)
+
+[source,java]
+----
+SecurityManager securityManager = System.getSecurityManager();
+if (securityManager != null) {
+    securityManager.checkPermission(new IdentityStorePermission("getGroups"));
+}
+----
+
+==== Declaring Capabilities
+
+The _IdentityStore_ interface includes methods for an implementation to declare its capabilities and ordinal priority. An _IdentityStore_ implementation may allow these "capabilities" to be configured, so that an application can determine what a store is used for.
+
+[source,java]
+----
+enum ValidationType { VALIDATE, PROVIDE_GROUPS }
+
+Set<ValidationType> DEFAULT_VALIDATION_TYPES = EnumSet.of(VALIDATE, PROVIDE_GROUPS);
+
+default int priority() {
+    return 100;
+}
+
+default Set<ValidationType> validationTypes() {
+    return DEFAULT_VALIDATION_TYPES;
+}
+----
+
+The _priority()_ method allows an _IdentityStore_ to be configured with an ordinal number indicating the order in which it should be consulted when multiple __IdentityStore__s are present (more precisely, when multiple enabled CDI Beans with type _IdentityStore_ are available). Lower numbers represent higher priority, so an _IdentityStore_ with a lower priority value is called before an _IdentityStore_ with a higher priority value.
+
+The _validationTypes()_ method returns a Set of enum constants of type _ValidationType_, indicating the purposes for which an _IdentityStore_ should be used:
+
+* _VALIDATE_, to indicate that it handles _validate()_
+* _PROVIDE_GROUPS_ to indicate that it handles _getCallerGroups()_
+* Both _VALIDATE_ and _PROVIDE_GROUPS_ to indicate that it handles both methods
+
+An __IdentityStore__'s validation types determine whether the store is used for authentication only (meaning any group data it returns must be ignored), for providing groups only (meaning it's not used for authentication, but only to obtain group data for a caller that was authenticated by a different _IdentityStore_), or for both (meaning it's used for authentication and any group data it returns is used).
+
+This method of declaring capabilities was chosen to enable applications to enable or disable _IdentityStore_ capabilities via configuration.
+
+==== Handling Multiple Identity Stores
+
+Access to the _IdentityStore_ is abstracted by the _IdentityStoreHandler_ interface, which provides a single method:
+
+[source,java]
+----
+public interface IdentityStoreHandler {
+    CredentialValidationResult validate(Credential credential);
+}
+----
+
+For the caller, the semantics of the _validate()_ method are as described for the _IdentityStore_ method with the same signature.
+
+The purpose of the _IdentityStoreHandler_ is to allow for multiple identity stores to logically act as a single _IdentityStore_ to the _HttpAuthenticationMechanism_. A compliant implementation of this specification MUST provide a default implementation of the _IdentityStoreHandler_ that is an enabled CDI bean with qualifier @Default, and scope @ApplicationScoped, as defined by the CDI specification.
+
+The _validate()_ method of the default implementation MUST do the following:
+
+* Call the _validate(Credential credential)_ method on all available _IdentityStore_ beans that declared themselves capable of doing validation, in the order induced by the return value of the _getPriority()_ method of each _IdentityStore_. (Lower priority values imply a lower order, causing the corresponding _validate(Credential credential)_ method to be called sooner. The calling order is undefined when two _IdentityStore_ implementations return the same value.)
+** If a call to _validate()_ returns a result with status _INVALID_, remember it, in case no _IdentityStore_ returns a VALID result.
+** If a call to _validate()_ returns a result with status _VALID_, remember this result and stop calling _validate()_.
+* If all _IdentityStore_ beans have been called but no result was returned with status _VALID_, then:
+** If a result was previously returned with status _INVALID_, return that result.
+** Otherwise, return a result with status _NOT_VALIDATED_.
+* If there is a _VALID_ result:
+** Create an empty set of groups.
+** Add any groups returned in the CredentialValidationResult to the set of groups, if and only if the identity store that returned the _VALID_ result declared the _PROVIDE_GROUPS_ validation type. 
+** Call the _getCallerGroups()_ method on all available _IdentityStore_ beans that declared _only_ the _PROVIDE_GROUPS_ validation type, in the order induced by the return value of the _getPriority()_ method of each _IdentityStore_, passing in the _CredentialValidationResult_ obtained during the previous phase. Add the groups returned by each call to the set of accumulated groups.
+* Return a new _CredentialValidationResult_ with status _VALID_; the _CallerPrincipal_, _CallerUniqueId_, _CallerDn_, and _IdentityStoreId_ that were returned from the successful _validate()_; and the accumulated collection of groups.
+
+The default _IdentityStoreHandler_ MUST make all calls to _getCallerGroups()_ in the context of a _PrivilegedAction_. Other implementations of _IdentityStoreHandler_ are strongly encouraged to do so as well.
+
+The necessary permission grants (i.e., for _IdentityStorePermission("getGroups")_) should be configured if running with a _SecurityManager_.
+
+See javadoc for additional information.
+
+==== State
+
+An _IdentityStore_ is logically stateless. An _IdentityStoreHandler_ should not make any assumptions about the state of an _IdentityStore_ before, during, or after making calls to it. In particular, an _IdentityStore_ store should not be aware of the point its caller has reached in the authentication process, and, even more specifically, an _IdentityStore_ should not keep track of whether a caller is authenticated or not at any given moment in time.
+
+An _IdentityStore_ instance may make use of instance variables; for example, to store configuration data like an LDAP URL, to store actual caller data for in-memory lookup, for the caching, etc.
+
+==== RememberMeIdentityStore
+
+The _RememberMeIdentityStore_ is a specialized interface that is similar to the standard _IdentityStore_ interface, but is a distinct type (no inheritance relationship) and works differently.
+
+Applications often want to remember logged in callers for extended periods of time -- days or weeks -- so that callers don't have to log in every time they visit the application. A _RememberMeIdentityStore_ can be used to:
+
+* Generate a login token ("remember me token") for a caller
+* Remember the caller associated with the login token
+* Validate the login token when the caller returns, and re-authenticate the caller without the need to provide additional credentials.
+
+If the caller does not have a login token, or if the login token has expired, then the normal authentication process takes place.
+
+[source,java]
+----
+public interface RememberMeIdentityStore {
+
+    CredentialValidationResult validate(RememberMeCredential credential);
+
+    String generateLoginToken(CallerPrincipal callerPrincipal, Set<String> groups);
+
+    void removeLoginToken(String token);
+}
+----
+
+_RememberMeIdentityStore_ can only be used when an application includes an _HttpAuthenticationMechanism_ or configures one of the built-in ones. The application must specify the _RememberMe_ annotation on the _HttpAuthenticationMechanism_ to configure the _RememberMeIdentityStore_.
+
+See the description of the _RememberMe_ annotation in Chapter 2, "<<authenticationMechanism.asciidoc#authentication-mechanism,Authentication Mechanism>>".
+
+=== Installation and Configuration
+
+Installation of an _IdentityStore_ depends on the CDI specification. That is, an _IdentityStore_ is considered installed and available for usage when it's available to the CDI runtime as an enabled Bean. An _IdentityStore_ is assumed to be normal scoped.
+
+It MUST be possible for the definition of an _IdentityStore_ to exist within the application archive. Alternatively such definition MAY also exists outside the application archive, for example in a jar added to the classpath of an application server. 
+
+As described above, in the "<<Declaring Capabilities>>" section, the _IdentityStore_ interface includes two methods, _validationTypes()_ and _priority()_, that enable an _IdentityStore_ to declare its capabilities. Those capabilities may be intrinsic -- determined by the __IdentityStore__'s implementation -- or they may be determined by the __IdentityStore__'s configuration.
+
+=== Annotations and Built-In IdentityStore Beans
+
+A Java EE container MUST support built-in beans for the following _IdentityStore_ types, to be configured and made available via corresponding annotations:
+
+* LDAP -- Supports caller data that is stored in an external LDAP server. This bean is activated and configured via the _@LdapIdentityStoreDefinition_ annotation.
+* Database -- Supports caller data that is stored in an external database accessible via a DataSource bound to JNDI. This bean is activated and configured via the _@DatabaseIdentityStoreDefinition_ annotation.
+
+Each of these beans MUST have the qualifier @Default and the scope @ApplicationScoped, as defined by the CDI specification.
+
+The built-in identity stores MUST support validating _UsernamePasswordCredential_. They MAY support other credential types, but are NOT REQUIRED to.
+
+The built-in identity stores MUST check whether a _SecurityManager_ is configured, and, if so, check whether the calling context has _IdentityStorePermission_, as described in <<Retrieving Caller Information>> above, before proceeding.
+
+Note that implementations are explicitly NOT REQUIRED to provide an LDAP server or database. The requirement is only to provide _IdentityStore_ implementations that can work with an external LDAP or database server that may be present in the operating environment.
+
+The corresponding annotations are defined as shown in the following sections.
+
+==== LDAP Annotation
+
+The _LdapIdentityStoreDefinition_ annotation configures an instance of the built-in LDAP identity store. See javadoc for details of the configuration attributes.
+
+[source,java]
+----
+@Retention(RUNTIME)
+@Target(TYPE)
+public @interface LdapIdentityStoreDefinition {
+
+    enum LdapSearchScope { ONE_LEVEL, SUBTREE }
+
+    String url() default "";
+
+    String bindDn() default "";
+
+    String bindDnPassword() default "";
+
+    String callerBaseDn() default "";
+
+    String callerNameAttribute() default "uid";
+
+    String callerSearchBase() default "";
+
+    String callerSearchFilter() default "";
+
+    LdapSearchScope callerSearchScope() default LdapSearchScope.SUBTREE;
+
+    String callerSearchScopeExpression() default "";
+
+    String groupSearchBase() default "";
+
+    String groupSearchFilter() default "";
+
+    LdapSearchScope groupSearchScope() default LdapSearchScope.SUBTREE;
+
+    String groupSearchScopeExpression() default "";
+
+    String groupNameAttribute() default "cn";
+
+    String groupMemberAttribute() default "member";
+
+    String groupMemberOfAttribute() default "memberOf";
+
+    int readTimeout() default 0;
+
+    String readTimeoutExpression() default "";
+
+    int maxResults() default 1000;
+
+    String maxResultsExpression() default "";
+
+    int priority() default 80;
+
+    String priorityExpression() default "";
+
+    ValidationType[] useFor() default {VALIDATE, PROVIDE_GROUPS};
+
+    String useForExpression() default "";
+
+}
+----
+
+==== Database Annotation
+
+The _DatabaseIdentityStoreDefinition_ annotation configures an instance of the built-in database identity store.
+
+[source,java]
+----
+@Retention(RUNTIME)
+@Target(TYPE)
+public @interface DatabaseIdentityStoreDefinition {
+
+    String dataSourceLookup() default "java:comp/DefaultDataSource";
+
+    String callerQuery() default "";
+
+    String groupsQuery() default "";
+
+    Class<? extends PasswordHash> hashAlgorithm() default Pbkdf2PasswordHash.class;
+
+    String[] hashAlgorithmParameters() default {};
+
+    int priority() default 70;
+
+    String priorityExpression() default "";
+
+    ValidationType[] useFor() default {VALIDATE, PROVIDE_GROUPS};
+
+    String useForExpression() default "";
+}
+----
+
+Password hashing/hash verification is provided by an implementation of the _PasswordHash_ interface, which must be made available as a dependent-scoped bean, and is configured by type on the _hashAlgorithm()_ attribute. The specified type may refer to the actual implementation class, or to any type it implements or extends, as long as the specified type implements the _PasswordHash_ interface.
+
+Parameters for the configured _PasswordHash_ can be provided using the _hashAlgorithmParameters_ attribute, and will be passed to the _initialize()_ method of the _PasswordHash_ when the identity store is initialized.
+
+The default hash algorithm, _Pbkdf2PasswordHash_, is an interface denoting a standard, built-in _PasswordHash_. All implementations of this specification MUST provide an implementation of the _Pbkdf2PasswordHash_ interface, with configuration and behavior as described by the interface's javadoc.
+
+See javadoc for further details on _PasswordHash_ and the _DatabaseIdentityStoreDefinition_ annotation.
+
+=== Relationship to Other Specifications
+
+_IdentityStore_ and _IdentityStoreHandler_ implementations are CDI beans, as defined by [https://jcp.org/aboutJava/communityprocess/mrel/jsr346/index.html[CDI12]].

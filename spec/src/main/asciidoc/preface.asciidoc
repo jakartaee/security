@@ -1,0 +1,69 @@
+:numbered!:
+["preface",sectnum="0"]
+
+[[preface]]
+
+== Preface
+
+This document is the Java EE Security API Specification, version 1.0.
+
+=== Notational Conventions
+
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in RFC 2119, "Key words for use in RFCs to Indicate Requirement Levels" [https://tools.ietf.org/html/rfc2119[RFC2119]].
+
+Other documents referenced by this specification are identified by name on first use, and thereafter by a short abbreviation. The "<<bibliography.asciidoc#bibliography,Bibliography>>" section at the end of this document provides full references.
+
+=== Acknowledgments
+
+The authors would like to thank the JSR-375 Expert Group and Contributors, and, in particular, Arjan Tijms, whose contributions were critical to the success of the JSR.
+
+We would also like to thank Alex Kosowski for his work putting together the original JSR-375 proposal, submitting it to the JCP, recruiting a diverse and highly-qualified expert group, and leading the initial development and specification efforts. Without Alex, there would be no JSR-375.
+
+Lastly, we would like to acknowledge Ron Monzillo, and the various expert groups he has led or worked with over the years, for putting in place the foundational security APIs and SPIs upon which JSR-375 is built.
+
+==== Specification Lead
+
+Will Hopkins (October 2016 -- Present) +
+Alexander Kosowski (April 2014 -- September 2016)
+
+==== Expert Group
+
+[cols="2*", options="noheader"]
+|===
+| Adam Bien
+| David Blevins (Tomitribe)
+
+| Rudy De Busscher
+| Ivar Grimstad
+
+| Les Hazlewood (Stormpath, Inc.)
+| Will Hopkins (Oracle)
+
+| Werner Keil
+| Matt Konda (Jemurai)
+
+| Alexander Kosowski (Oracle)
+| Darran Lofthouse (Red Hat)
+
+| Jean-Louis Monteiro (Tomitribe)
+| Ajay Reddy (IBM)
+
+| Pedro Igor Silva (Red Hat)
+| Arjan Tijms
+|===
+
+==== Contributors
+
+[cols="2*", options="noheader"]
+|===
+| Guillermo González de Agüero
+| John Hogan
+
+| Elder Moraes
+| Fatih Mutluay
+
+| Reza Rahman
+| Ashley Richardson
+|===
+
+:numbered:

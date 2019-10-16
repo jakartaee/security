@@ -1,0 +1,50 @@
+:numbered!:
+["bibliography",sectnum="0"]
+
+[[bibliography]]
+
+== Bibliography
+
+The following documents are referenced by this specification.
+
+[CDI12]::
+JSR-346, "Contexts and Dependency Injection for the Java EE platform", version 1.2, Maintenance Release +
+https://jcp.org/aboutJava/communityprocess/mrel/jsr346/index.html
+
+[EJB32]::
+JSR-345, "Enterprise JavaBeans", version 3.2 +
+https://jcp.org/aboutJava/communityprocess/final/jsr345/index.html
+
+[EL30]::
+JSR-341, "Expression Language", version 3.0 +
+https://jcp.org/aboutJava/communityprocess/final/jsr341/index.html
+
+[JACC]::
+JSR-115, "Java Authorization Contract for Containers", version 1.5, Maintenance Release 3 +
+https://jcp.org/aboutJava/communityprocess/mrel/jsr115/index3.html
+
+[JASPIC]::
+JSR-196, "Java Authentication SPI for Containers", version 1.1, Maintenance Release B +
+https://jcp.org/aboutJava/communityprocess/mrel/jsr196/index2.html
+
+[RFC2119]::
+RFC 2119, "Key words for use in RFCs to Indicate Requirement Level" +
+https://tools.ietf.org/html/rfc2119
+
+[RFC7617]::
+RFC 7617, "The 'Basic' HTTP Authentication Scheme" +
+https://tools.ietf.org/html/rfc7617
+
+[SECAPI]::
+JSR-375, "Java EE Security API", version 1.0 +
+https://jcp.org/en/jsr/detail?id=375
+
+[SERVLET31]::
+JSR-340, "Java Servlet Specification", version 3.1 +
+https://jcp.org/aboutJava/communityprocess/final/jsr340/index.html
+
+[SHIROTERM]::
+"Apache Shiro Terminology" +
+https://shiro.apache.org/terminology.html
+
+:numbered:
