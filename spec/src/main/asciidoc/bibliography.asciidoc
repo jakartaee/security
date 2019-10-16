@@ -7,25 +7,25 @@
 
 The following documents are referenced by this specification.
 
-[CDI12]::
-JSR-346, "Contexts and Dependency Injection for the Java EE platform", version 1.2, Maintenance Release +
-https://jcp.org/aboutJava/communityprocess/mrel/jsr346/index.html
+[CDI20]::
+Jakarta Contexts and Dependency Injection, version 2.0 +
+https://jakarta.ee/specifications/cdi/2.0/
 
-[EJB32]::
-JSR-345, "Enterprise JavaBeans", version 3.2 +
-https://jcp.org/aboutJava/communityprocess/final/jsr345/index.html
+[JEB32]::
+Jakarta Enterprise Beans, version 3.2 +
+https://jakarta.ee/specifications/enterprise-beans/3.2/
 
 [EL30]::
-JSR-341, "Expression Language", version 3.0 +
-https://jcp.org/aboutJava/communityprocess/final/jsr341/index.html
+Jakarta Expression Language, version 3.0 +
+https://jakarta.ee/specifications/expression-language/3.0/
 
 [JACC]::
-JSR-115, "Java Authorization Contract for Containers", version 1.5, Maintenance Release 3 +
-https://jcp.org/aboutJava/communityprocess/mrel/jsr115/index3.html
+Jakarta Authorization, version 1.5 +
+https://jakarta.ee/specifications/authorization/1.5/
 
 [JASPIC]::
-JSR-196, "Java Authentication SPI for Containers", version 1.1, Maintenance Release B +
-https://jcp.org/aboutJava/communityprocess/mrel/jsr196/index2.html
+Jakarta Authentication, version 1.1 +
+https://jakarta.ee/specifications/authentication/1.1/
 
 [RFC2119]::
 RFC 2119, "Key words for use in RFCs to Indicate Requirement Level" +
@@ -36,12 +36,12 @@ RFC 7617, "The 'Basic' HTTP Authentication Scheme" +
 https://tools.ietf.org/html/rfc7617
 
 [SECAPI]::
-JSR-375, "Java EE Security API", version 1.0 +
-https://jcp.org/en/jsr/detail?id=375
+Jakarta Security, version 1.0 +
+https://jakarta.ee/specifications/security/1.0/
 
-[SERVLET31]::
-JSR-340, "Java Servlet Specification", version 3.1 +
-https://jcp.org/aboutJava/communityprocess/final/jsr340/index.html
+[SERVLET40]::
+Jakarta Servlet, version 3.0 +
+https://jakarta.ee/specifications/servlet/4.0/
 
 [SHIROTERM]::
 "Apache Shiro Terminology" +

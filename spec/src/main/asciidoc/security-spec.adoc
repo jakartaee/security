@@ -3,8 +3,8 @@
 //
 
 = Jakarta Security
-:authors: Jakarta Security Team, https://projects.eclipse.org/projects/ee4j.es
-:email: https://dev.eclipse.org/mailman/listinfo/security.enterprise-api-dev
+:authors: Jakarta Security Community, https://projects.eclipse.org/projects/ee4j.es
+:email: https://dev.eclipse.org/mailman/listinfo/es-dev
 :version-label!:
 :doctype: book
 :license: Eclipse Foundation Specification License v1.0

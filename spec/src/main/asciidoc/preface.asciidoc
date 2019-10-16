@@ -5,7 +5,7 @@
 
 == Preface
 
-This document is the Jakarta EE Security API Specification, version 1.0.
+This document is the Jakarta Security Specification, version 1.0.
 
 === Notational Conventions
 
@@ -15,11 +15,11 @@ Other documents referenced by this specification are identified by name on first
 
 === Acknowledgments
 
-The authors would like to thank the JSR-375 Expert Group and Contributors, and, in particular, Arjan Tijms, whose contributions were critical to the success of the JSR.
+The authors would like to thank the JSR-375 Expert Group and Contributors, and, in particular, Arjan Tijms, whose contributions were critical to the success of the JCP JSR.
 
 We would also like to thank Alex Kosowski for his work putting together the original JSR-375 proposal, submitting it to the JCP, recruiting a diverse and highly-qualified expert group, and leading the initial development and specification efforts. Without Alex, there would be no JSR-375.
 
-Lastly, we would like to acknowledge Ron Monzillo, and the various expert groups he has led or worked with over the years, for putting in place the foundational security APIs and SPIs upon which JSR-375 is built.
+Lastly, we would like to acknowledge Ron Monzillo, and the various expert groups he has led or worked with over the years, for putting in place the foundational security APIs and SPIs upon which JSR-375 was built.
 
 ==== Specification Lead
 

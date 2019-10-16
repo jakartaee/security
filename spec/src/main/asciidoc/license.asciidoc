@@ -5,7 +5,7 @@
 
 == License
 
-Specification: JSR-375 Java EE Security API ("Specification")
+Specification: Jakarta Security
 
 Version: 1.0
 
