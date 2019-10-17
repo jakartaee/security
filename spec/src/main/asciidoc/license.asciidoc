@@ -15,7 +15,7 @@ Specification Lead: Oracle America, Inc. ("Specification Lead")
 
 Release: August 2017
 
-Copyright 2017 Oracle America, Inc. +
+Copyright © 2019 Eclipse Foundation
 All rights reserved.
 
 
