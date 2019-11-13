@@ -99,7 +99,7 @@ A Jakarta EE container MUST support built-in beans for the following _HttpAuthen
 
 All of these beans MUST have the qualifier @Default and the scope @ApplicationScoped, as defined by the CDI specification.
 
-All of the built-in beans MUST support authentication using _IdentityStore_, described in Chapter 3, "<<identityStore.asciidoc#identity-store,Identity Store>>", but MAY fall-back to container-specific methods if no _IdentityStore_ is available.
+All of the built-in beans MUST support authentication using _IdentityStore_, described in Chapter 3, "<<identityStore.adoc#identity-store,Identity Store>>", but MAY fall-back to container-specific methods if no _IdentityStore_ is available.
 
 See also the "<<Implementation Notes>>" section of this chapter.
 
@@ -301,7 +301,7 @@ Intercepting _cleanSubject()_::
 ** Remove the cookie.
 ** Call the _removeLoginToken()_ method of the _RememberMeIdentityStore_.
 
-See also the description of _RememberMeIdentityStore_ in Chapter 3, "<<identityStore.asciidoc#identity-store,Identity Store>>".
+See also the description of _RememberMeIdentityStore_ in Chapter 3, "<<identityStore.adoc#identity-store,Identity Store>>".
 
 ==== AutoApplySession Annotation
 

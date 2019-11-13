@@ -253,7 +253,7 @@ public interface RememberMeIdentityStore {
 
 _RememberMeIdentityStore_ can only be used when an application includes an _HttpAuthenticationMechanism_ or configures one of the built-in ones. The application must specify the _RememberMe_ annotation on the _HttpAuthenticationMechanism_ to configure the _RememberMeIdentityStore_.
 
-See the description of the _RememberMe_ annotation in Chapter 2, "<<authenticationMechanism.asciidoc#authentication-mechanism,Authentication Mechanism>>".
+See the description of the _RememberMe_ annotation in Chapter 2, "<<authenticationMechanism.adoc#authentication-mechanism,Authentication Mechanism>>".
 
 === Installation and Configuration
 

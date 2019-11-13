@@ -23,18 +23,18 @@ endif::[]
 :sectnums!:
 include::license-efsl.adoc[]
 
-// == Scope
+// == Toc
 :sectnums:
 
-include::preface.asciidoc[]
+include::preface.adoc[]
 
-include::concepts.asciidoc[]
+include::concepts.adoc[]
 
-include::authenticationMechanism.asciidoc[]
+include::authenticationMechanism.adoc[]
 
-include::identityStore.asciidoc[]
+include::identityStore.adoc[]
 
-include::securityContext.asciidoc[]
+include::securityContext.adoc[]
 
-include::bibliography.asciidoc[]
+include::bibliography.adoc[]
 

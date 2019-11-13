@@ -31,7 +31,7 @@ The _getPrincipalsByType()_ method retrieves all principals of the given type. T
 
 Where both a container caller principal and an application caller principal are present, the value returned by _getName()_ MUST be the same for both principals.
 
-See the Chapter 1, "<<concepts.asciidoc#concepts,Concepts>>", for more information on principal handling.
+See the Chapter 1, "<<concepts.adoc#concepts,Concepts>>", for more information on principal handling.
 
 The _isCallerInRole()_ method takes a String argument that represents the role that is to be tested for. It is undefined by this specification how the role determination is made, but the result MUST be the same as if the corresponding container-specific call had been made (i.e., _HttpServletRequest.isUserInRole()_, _EJBContext.isCallerInRole()_), and MUST be consistent with the result implied by other specifications that prescribe role-mapping behavior.
 
