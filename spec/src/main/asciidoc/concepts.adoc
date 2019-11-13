@@ -53,7 +53,7 @@ When both a container caller principal and an application caller principal are p
 
 When no specific application caller principal is supplied during authentication, the caller's identity should be represented by a single principal, the container's caller principal.
 
-==== Expression Language Support
+==== Jakarta Expression Language Support
 
 This specification defines a number of annotations:
 
@@ -70,7 +70,7 @@ LoginToContinue
 RememberMe
 ----
 
-Attributes on these annotations can be provided either as actual values, or as Expression Language 3.0 expressions. In cases where the return type of an attribute is not String, an "EL alternative" attribute is provided, with "Expression" appended to the name. If an "EL alternative" attribute has a non-empty value, it takes precedence over the attribute it's an alternative to, and must contain a valid EL expression that evaluates to the same type as the attribute it's an alternative to.
+Attributes on these annotations can be provided either as actual values, or as Jakarta Expression Language 3.0 expressions. In cases where the return type of an attribute is not String, an "Expression Language alternative" attribute is provided, with "Expression" appended to the name. If an "Expression Language alternative" attribute has a non-empty value, it takes precedence over the attribute it's an alternative to, and must contain a valid Expression Language expression that evaluates to the same type as the attribute it's an alternative to.
 
 For more information, see the package javadoc for the javax.security.enterprise package.
  

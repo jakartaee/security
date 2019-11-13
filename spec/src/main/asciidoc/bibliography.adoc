@@ -19,11 +19,11 @@ https://jakarta.ee/specifications/enterprise-beans/3.2/
 Jakarta Expression Language, version 3.0 +
 https://jakarta.ee/specifications/expression-language/3.0/
 
-[AUTHORIZATIONSPEC]::
+[AUTHORIZATION15]::
 Jakarta Authorization, version 1.5 +
 https://jakarta.ee/specifications/authorization/1.5/
 
-[AUTHENTICATIONSPEC]::
+[AUTHENTICATION11]::
 Jakarta Authentication, version 1.1 +
 https://jakarta.ee/specifications/authentication/1.1/
 
