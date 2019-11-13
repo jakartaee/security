@@ -11,22 +11,22 @@ This document is the Jakarta Security Specification, version 1.0.
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in RFC 2119, "Key words for use in RFCs to Indicate Requirement Levels" [https://tools.ietf.org/html/rfc2119[RFC2119]].
 
-Other documents referenced by this specification are identified by name on first use, and thereafter by a short abbreviation. The "<<bibliography.asciidoc#bibliography,Bibliography>>" section at the end of this document provides full references.
+Other documents referenced by this specification are identified by name on first use, and thereafter by a short abbreviation. The "<<bibliography.adoc#bibliography,Bibliography>>" section at the end of this document provides full references.
 
 === Acknowledgments
 
-The authors would like to thank the JSR-375 Expert Group and Contributors, and, in particular, Arjan Tijms, whose contributions were critical to the success of the JCP JSR.
+The authors would like to thank the original JCP JSR-375 Expert Group and Contributors, and, in particular, Arjan Tijms, whose contributions were critical to the success of the JCP JSR.
 
 We would also like to thank Alex Kosowski for his work putting together the original JSR-375 proposal, submitting it to the JCP, recruiting a diverse and highly-qualified expert group, and leading the initial development and specification efforts. Without Alex, there would be no JSR-375.
 
-Lastly, we would like to acknowledge Ron Monzillo, and the various expert groups he has led or worked with over the years, for putting in place the foundational security APIs and SPIs upon which JSR-375 was built.
+Lastly, we would like to acknowledge Ron Monzillo, and the various JCP expert groups he has led or worked with over the years, for putting in place the foundational security APIs and SPIs upon which JSR-375 was built.
 
-==== Specification Lead
+==== Specification Lead under the JCP
 
-Will Hopkins (October 2016 -- Present) +
+Will Hopkins (October 2016 -- September 2017) +
 Alexander Kosowski (April 2014 -- September 2016)
 
-==== Expert Group
+==== Expert Group under the JCP
 
 [cols="2*", options="noheader"]
 |===
@@ -52,7 +52,7 @@ Alexander Kosowski (April 2014 -- September 2016)
 | Arjan Tijms
 |===
 
-==== Contributors
+==== Contributors under the JCP
 
 [cols="2*", options="noheader"]
 |===
@@ -65,5 +65,42 @@ Alexander Kosowski (April 2014 -- September 2016)
 | Reza Rahman
 | Ashley Richardson
 |===
+
+==== Project Lead at the Eclipse Foundation
+
+Arjan Tijms
+
+==== Committers at the Eclipse Foundation
+
+[cols="3*", options="noheader"]
+|===
+| Ajay Reddy (IBM)
+| Arjan Tijms
+| Bill Shannon (Oracle)
+
+| Darran Lofthouse (Red Hat)
+| David Blevins (Tomitribe)
+| Dmitry Kornilov (Oracle)
+
+| Ed Bratt (Oracle)
+| Guillermo González de Agüero 
+| Ivar Grimstad (Eclipse Foundation)
+
+| James Mulvey (IBM)
+| Padmanabha Bhat (Oracle)
+| Rudy De Busscher (Payara)
+
+| Steven Liu (Oracle)
+| Teddy Torres (IBM)
+| Tomas Langer (Oracle)
+
+| VINAY VISHAL (Oracle)
+| Werner Keil
+| Wilson Tian (Oracle)
+
+| xuwei wang (Oracle)
+| Yamini K B (Oracle)
+|===
+
 
 :numbered:
