@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates and others.
+ * Copyright (c) 2015, 2020 Oracle and/or its affiliates and others.
  * All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,7 +25,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 import javax.enterprise.util.Nonbinding;
-import javax.interceptor.InterceptorBinding;
+
+import jakarta.interceptor.InterceptorBinding;
 
 /**
  * The <code>LoginToContinue</code> annotation provides an application the ability to declaratively
