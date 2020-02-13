@@ -16,7 +16,7 @@
 
 package jakarta.security.enterprise;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import jakarta.security.enterprise.authentication.mechanism.http.HttpAuthenticationMechanism;
 
@@ -26,7 +26,7 @@ import jakarta.security.enterprise.authentication.mechanism.http.HttpAuthenticat
  * of the authentication process.
  * 
  * <p>
- * For the result from {@link HttpAuthenticationMechanism#validateRequest(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, jakarta.security.enterprise.authentication.mechanism.http.HttpMessageContext)} 
+ * For the result from {@link HttpAuthenticationMechanism#validateRequest(jakarta.servlet.http.HttpServletRequest, jakarta.servlet.http.HttpServletResponse, jakarta.security.enterprise.authentication.mechanism.http.HttpMessageContext)} 
  * an AuthenticationStatus must be transformed by the Jakarta EE server into the corresponding Jakarta Authentication <code>AuthStatus</code>
  * according to the following rules:
  * 
@@ -50,10 +50,10 @@ import jakarta.security.enterprise.authentication.mechanism.http.HttpAuthenticat
  * otherwise not.
  * 
  * <p>
- * The return value of {@link SecurityContext#authenticate(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, jakarta.security.enterprise.authentication.mechanism.http.AuthenticationParameters)}
+ * The return value of {@link SecurityContext#authenticate(jakarta.servlet.http.HttpServletRequest, jakarta.servlet.http.HttpServletResponse, jakarta.security.enterprise.authentication.mechanism.http.AuthenticationParameters)}
  * , which is also of type AuthenticationStatus, strongly relates to the outcome of the <code>HttpAuthenticationMechanism#validateRequest</code>
  * method as described above, but must be transformed by the Jakarta EE server from the corresponding outcome of the
- * {@link HttpServletRequest#authenticate(javax.servlet.http.HttpServletResponse)} call as follows:
+ * {@link HttpServletRequest#authenticate(jakarta.servlet.http.HttpServletResponse)} call as follows:
  * 
  * <ul>
  *   <li> <code>true</code> to <code>AuthenticationStatus.SUCCESS</code> </li>

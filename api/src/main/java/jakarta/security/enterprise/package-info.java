@@ -75,4 +75,4 @@
  */
 package jakarta.security.enterprise;
 
-import javax.el.ELProcessor;
+import jakarta.el.ELProcessor;

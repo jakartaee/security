@@ -35,12 +35,6 @@
     </scm>
 
     <properties>
-        <non_final>false</non_final>
-        <extension.name>javax.security.enterprise</extension.name>
-        <spec.version>1.0</spec.version>
-
-        <packages.export>javax.security.enterprise.*</packages.export>
-
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 

@@ -18,11 +18,11 @@ package jakarta.security.enterprise.authentication.mechanism.http;
 
 import static jakarta.security.enterprise.AuthenticationStatus.SUCCESS;
 
-import javax.security.auth.message.module.ServerAuthModule;
-import javax.servlet.Filter;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.security.auth.message.module.ServerAuthModule;
+import jakarta.servlet.Filter;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import jakarta.security.enterprise.AuthenticationException;
 import jakarta.security.enterprise.AuthenticationStatus;

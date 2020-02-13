@@ -27,11 +27,11 @@ import javax.interceptor.InterceptorBinding;
 
 /**
  * The AutoApplySession annotation provides an application the ability to declaratively designate
- * that an authentication mechanism uses the <code>javax.servlet.http.registerSession</code>
+ * that an authentication mechanism uses the <code>jakarta.servlet.http.registerSession</code>
  * and auto applies this for every request.
  *
  * <p>
- * See the Jakarta Authentication spec for further details on <code>javax.servlet.http.registerSession</code>.
+ * See the Jakarta Authentication spec for further details on <code>jakarta.servlet.http.registerSession</code>.
  *
  * <p>
  * This support is provided via an implementation of a Jakarta Interceptors interceptor that conducts the

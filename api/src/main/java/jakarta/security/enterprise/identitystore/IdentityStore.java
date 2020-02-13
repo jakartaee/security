@@ -26,7 +26,7 @@ import java.lang.invoke.MethodHandles;
 import java.util.EnumSet;
 import java.util.Set;
 
-import javax.security.auth.message.module.ServerAuthModule;
+import jakarta.security.auth.message.module.ServerAuthModule;
 
 import jakarta.security.enterprise.CallerPrincipal;
 import jakarta.security.enterprise.authentication.mechanism.http.HttpAuthenticationMechanism;

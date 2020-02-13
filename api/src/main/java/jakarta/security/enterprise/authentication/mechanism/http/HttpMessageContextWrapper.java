@@ -21,12 +21,12 @@ import java.util.Set;
 
 import javax.security.auth.Subject;
 import javax.security.auth.callback.CallbackHandler;
-import javax.security.auth.message.MessageInfo;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
+import jakarta.security.auth.message.MessageInfo;
 import jakarta.security.enterprise.AuthenticationStatus;
 import jakarta.security.enterprise.identitystore.CredentialValidationResult;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * This class is an implementation of the HttpMessageContext interface that
