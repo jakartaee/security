@@ -21,16 +21,16 @@ import java.util.Set;
 
 import javax.security.auth.Subject;
 import javax.security.auth.callback.CallbackHandler;
-import javax.security.auth.message.MessageInfo;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
+import jakarta.security.auth.message.MessageInfo;
 import jakarta.security.enterprise.AuthenticationStatus;
 import jakarta.security.enterprise.CallerPrincipal;
 import jakarta.security.enterprise.SecurityContext;
 import jakarta.security.enterprise.identitystore.CredentialValidationResult;
 import jakarta.security.enterprise.identitystore.CredentialValidationResult.Status;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * <code>HttpMessageContext</code> contains all of the per-request state information and encapsulates the client request, 
@@ -190,7 +190,7 @@ public interface HttpMessageContext {
      * 
      * @return {@link AuthenticationStatus#SEND_CONTINUE}
      * 
-     * @see RequestDispatcher#forward(javax.servlet.ServletRequest, javax.servlet.ServletResponse)
+     * @see RequestDispatcher#forward(jakarta.servlet.ServletRequest, jakarta.servlet.ServletResponse)
      */
     AuthenticationStatus forward(String path);
 

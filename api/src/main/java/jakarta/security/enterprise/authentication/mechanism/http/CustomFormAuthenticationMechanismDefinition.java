@@ -32,7 +32,7 @@ import jakarta.security.enterprise.SecurityContext;
  * <p> 
  * Instead of posting back to a predefined action to continue the authentication dialog 
  * (Servlet spec 13.6.3 step 3), this variant depends on the application calling 
- * {@link SecurityContext#authenticate(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, jakarta.security.enterprise.authentication.mechanism.http.AuthenticationParameters)}
+ * {@link SecurityContext#authenticate(jakarta.servlet.http.HttpServletRequest, jakarta.servlet.http.HttpServletResponse, jakarta.security.enterprise.authentication.mechanism.http.AuthenticationParameters)}
  * 
  */
 @Retention(RUNTIME)

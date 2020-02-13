@@ -16,7 +16,7 @@
 
 package jakarta.security.enterprise.identitystore;
 
-import javax.security.auth.message.module.ServerAuthModule;
+import jakarta.security.auth.message.module.ServerAuthModule;
 
 import jakarta.security.enterprise.authentication.mechanism.http.HttpAuthenticationMechanism;
 import jakarta.security.enterprise.credential.Credential;
