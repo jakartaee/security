@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.eclipse.ee4j</groupId>
         <artifactId>project</artifactId>
-        <version>1.0.5</version>
+        <version>1.0.6</version>
         <relativePath/>
     </parent>
 
@@ -114,7 +114,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <version>4.13</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -139,8 +139,30 @@
                 <targetPath>META-INF</targetPath>
             </resource>
         </resources>
-    
+
         <plugins>
+            <!-- Sets minimal Maven version to 3.5.4 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.0.0-M2</version>
+                <executions>
+                    <execution>
+                        <id>enforce-maven</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireMavenVersion>
+                                    <version>3.5.4</version>
+                                </requireMavenVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        
              <!-- Checks copyright / license headers -->        
             <plugin>
                 <groupId>org.glassfish.copyright</groupId>
@@ -197,7 +219,7 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
-                <version>4.0.0</version>
+                <version>4.2.1</version>
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
@@ -254,72 +276,63 @@ Use is subject to <a href="{@docRoot}/doc-files/speclicense.html" target="_top">
                     </execution>
                 </executions>
             </plugin>
-
-            <!-- This plugin's configuration is used to store Eclipse m2e settings only.
-                 It has no influence on the Maven build itself. -->
-            <plugin>
-                <groupId>org.eclipse.m2e</groupId>
-                <artifactId>lifecycle-mapping</artifactId>
-                <configuration>
-                    <lifecycleMappingMetadata>
-                        <pluginExecutions>
-                            <pluginExecution>
-                                <pluginExecutionFilter>
-                                    <groupId>org.glassfish.build</groupId>
-                                    <artifactId>spec-version-maven-plugin</artifactId>
-                                    <versionRange>[1.2,)</versionRange>
-                                    <goals>
-                                        <goal>set-spec-properties</goal>
-                                    </goals>
-                                </pluginExecutionFilter>
-                                <action>
-                                    <ignore />
-                                </action>
-                            </pluginExecution>
-                        </pluginExecutions>
-                    </lifecycleMappingMetadata>
-                </configuration>
-            </plugin>
         </plugins>
-        
-        
-        <pluginManagement>
-            <plugins>
-                <!-- This plugin's configuration is used to store Eclipse m2e settings only.
-                     It has no influence on the Maven build itself. -->
-                <plugin>
-                    <groupId>org.eclipse.m2e</groupId>
-                    <artifactId>lifecycle-mapping</artifactId>
-                    <version>1.0.0</version>
-                    <configuration>
-                        <lifecycleMappingMetadata>
-                            <pluginExecutions>
-                                <pluginExecution>
-                                    <pluginExecutionFilter>
-                                        <groupId>
-                                            org.glassfish.build
-                                        </groupId>
-                                        <artifactId>
-                                            spec-version-maven-plugin
-                                        </artifactId>
-                                        <versionRange>
-                                            [1.2,)
-                                        </versionRange>
-                                        <goals>
-                                            <goal>
-                                                set-spec-properties
-                                            </goal>
-                                        </goals>
-                                    </pluginExecutionFilter>
-                                    <action>
-                                        <ignore />
-                                    </action>
-                                </pluginExecution>
-                            </pluginExecutions>
-                        </lifecycleMappingMetadata>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
     </build>
+
+    <profiles>
+        <profile>
+            <id>only-eclipse</id>
+            <activation>
+                <property>
+                    <name>m2e.version</name>
+                </property>
+            </activation>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <!-- This plugin's configuration is used to store Eclipse m2e settings only. It has no influence 
+                            on the Maven build itself. -->
+                        <plugin>
+                            <groupId>org.eclipse.m2e</groupId>
+                            <artifactId>lifecycle-mapping</artifactId>
+                            <version>1.0.0</version>
+                            <configuration>
+                                <lifecycleMappingMetadata>
+                                    <pluginExecutions>
+                                        <pluginExecution>
+                                            <pluginExecutionFilter>
+                                                <groupId>org.glassfish.build</groupId>
+                                                <artifactId>spec-version-maven-plugin</artifactId>
+                                                <versionRange>[1.2,)</versionRange>
+                                                <goals>
+                                                    <goal>set-spec-properties</goal>
+                                                </goals>
+                                            </pluginExecutionFilter>
+                                            <action>
+                                                <ignore />
+                                            </action>
+                                        </pluginExecution>
+                                        <pluginExecution>
+                                            <pluginExecutionFilter>
+                                                <groupId>org.glassfish.copyright</groupId>
+                                                <artifactId>glassfish-copyright-maven-plugin</artifactId>
+                                                <versionRange>[1.2,)</versionRange>
+                                                <goals>
+                                                    <goal>copyright</goal>
+                                                    <goal>check</goal>
+                                                </goals>
+                                            </pluginExecutionFilter>
+                                            <action>
+                                                <ignore />
+                                            </action>
+                                        </pluginExecution>
+                                    </pluginExecutions>
+                                </lifecycleMappingMetadata>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+    </profiles>
 </project>
