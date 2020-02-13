@@ -17,15 +17,32 @@
 
     <groupId>org.eclipse.ee4j.security.enterprise-api</groupId>
     <artifactId>security.enterprise-api-parent</artifactId>
-    <packaging>pom</packaging>
     <version>2.0.0-SNAPSHOT</version>
-    
+    <packaging>pom</packaging>
+
     <name>Jakarta Security Parent</name>
     <description>
         Jakarta Security defines a standard for creating secure Jakarta EE applications in modern application paradigms.
         It defines an overarching (end-user targeted) Security API for Jakarta EE Applications.
     </description>
     <url>https://github.com/eclipse-ee4j/security.enterprise-api</url>
+    <licenses>
+        <license>
+            <name>EPL 2.0</name>
+            <url>http://www.eclipse.org/legal/epl-2.0</url>
+            <distribution>repo</distribution>
+        </license>
+        <license>
+            <name>GPL2 w/ CPE</name>
+            <url>https://www.gnu.org/software/classpath/license.html</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <modules>
+        <module>api</module>
+        <module>spec</module>
+    </modules>
 
     <scm>
         <connection>scm:git:https://github.com/eclipse-ee4j/security-api.git</connection>
@@ -42,24 +59,6 @@
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 
-    <modules>
-        <module>api</module>
-        <module>spec</module>
-    </modules>
-
-    <licenses>
-        <license>
-            <name>EPL 2.0</name>
-            <url>http://www.eclipse.org/legal/epl-2.0</url>
-            <distribution>repo</distribution>
-        </license>
-        <license>
-            <name>GPL2 w/ CPE</name>
-            <url>https://www.gnu.org/software/classpath/license.html</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
-    
     <build>
         <plugins>
             <!-- Sets minimal Maven version to 3.5.4 -->
@@ -85,5 +84,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>
