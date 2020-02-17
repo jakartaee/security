@@ -22,7 +22,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import javax.enterprise.util.Nonbinding;
+import jakarta.enterprise.util.Nonbinding;
 
 /**
  * Annotation used to define a container authentication mechanism that implements
@@ -33,8 +33,8 @@ import javax.enterprise.util.Nonbinding;
 @Retention(RUNTIME)
 @Target(TYPE)
 public @interface FormAuthenticationMechanismDefinition {
- 
+
     @Nonbinding
     LoginToContinue loginToContinue();
-    
+
 }

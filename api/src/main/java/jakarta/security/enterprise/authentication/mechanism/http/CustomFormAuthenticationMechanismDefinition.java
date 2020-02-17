@@ -22,24 +22,24 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import javax.enterprise.util.Nonbinding;
+import jakarta.enterprise.util.Nonbinding;
 
 import jakarta.security.enterprise.SecurityContext;
 
 /**
  * Annotation used to define a container authentication mechanism that implements
  * authentication resembling Servlet FORM authentication (Servlet spec 13.6.3).
- * <p> 
- * Instead of posting back to a predefined action to continue the authentication dialog 
- * (Servlet spec 13.6.3 step 3), this variant depends on the application calling 
+ * <p>
+ * Instead of posting back to a predefined action to continue the authentication dialog
+ * (Servlet spec 13.6.3 step 3), this variant depends on the application calling
  * {@link SecurityContext#authenticate(jakarta.servlet.http.HttpServletRequest, jakarta.servlet.http.HttpServletResponse, jakarta.security.enterprise.authentication.mechanism.http.AuthenticationParameters)}
- * 
+ *
  */
 @Retention(RUNTIME)
 @Target(TYPE)
 public @interface CustomFormAuthenticationMechanismDefinition {
- 
+
     @Nonbinding
     LoginToContinue loginToContinue();
-    
+
 }
