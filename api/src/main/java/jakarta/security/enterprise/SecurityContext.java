@@ -19,7 +19,6 @@ package jakarta.security.enterprise;
 import java.security.Principal;
 import java.util.Set;
 
-import javax.ejb.SessionContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -78,7 +77,7 @@ public interface SecurityContext {
 	 * Should code in either such Jakarta Servlet or Jakarta Enterprise Bean wish to take such mapped (aka referenced, linked) 
 	 * roles into account, the facilities for that specific container should be used instead. For instance for Servlet that 
 	 * would be {@link HttpServletRequest#isUserInRole(String)} and for Jakarta Enterprise Beans that would be
-	 * {@link SessionContext#isCallerInRole(String)}.
+	 * {@link jakarta.ejb.SessionContext#isCallerInRole(String)}.
 	 *
 	 *
 	 * @param role a <code>String</code> specifying the name of the logical application role
