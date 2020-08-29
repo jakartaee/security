@@ -72,6 +72,6 @@ RememberMe
 
 Attributes on these annotations can be provided either as actual values, or as Jakarta Expression Language 3.0 expressions. In cases where the return type of an attribute is not String, an "Expression Language alternative" attribute is provided, with "Expression" appended to the name. If an "Expression Language alternative" attribute has a non-empty value, it takes precedence over the attribute it's an alternative to, and must contain a valid Expression Language expression that evaluates to the same type as the attribute it's an alternative to.
 
-For more information, see the package javadoc for the javax.security.enterprise package.
+For more information, see the package javadoc for the jakarta.security.enterprise package.
  
 Jakarta Expression Language, version 3.0 [https://jakarta.ee/specifications/expression-language/3.0/[EL30]] is a Jakarta EE specification.

@@ -305,9 +305,9 @@ See also the description of _RememberMeIdentityStore_ in Chapter 3, "<<identityS
 
 ==== AutoApplySession Annotation
 
-The _AutoApplySession_ annotation provides a way to declaratively enable Jakarta Authentication _javax.servlet.http.registerSession_ behavior for an authentication mechanism, and automatically apply it for every request.
+The _AutoApplySession_ annotation provides a way to declaratively enable Jakarta Authentication _jakarta.servlet.http.registerSession_ behavior for an authentication mechanism, and automatically apply it for every request.
 
-The _javax.servlet.http.registerSession_ property is described in Section 3.8.4 of [https://jakarta.ee/specifications/authentication/1.1/[AUTHENTICATION11]].
+The _jakarta.servlet.http.registerSession_ property is described in Section 3.8.4 of [https://jakarta.ee/specifications/authentication/1.1/[AUTHENTICATION11]].
 
 This annotation embodies the concept of a caller being authenticated over a series of multiple HTTP requests (together, a "session"). The built-in form-based authentication mechanisms use this same concept. It is therefore implicitly suggested, but not required, that the form-based authentication mechanisms use the backing interceptor for this annotation to establish and maintain their sessions.
 
@@ -328,7 +328,7 @@ Intercepting _validateRequest()_::
 * Get the _Principal_ from the _HttpServletRequest_ (via _getUserPrincipal()_).
 * If the _Principal_ is null:
 ** Call the next _Interceptor_, and remember the resulting _AuthenticationStatus_.
-*** If the result is _AuthenticationStatus.SUCCESS_, get the _Map_ object from the _MessageInfo_ in the _HttpMessageContext_, and add an entry to the _Map_ with key "_javax.servlet.http.registerSession_" and value "_true_".
+*** If the result is _AuthenticationStatus.SUCCESS_, get the _Map_ object from the _MessageInfo_ in the _HttpMessageContext_, and add an entry to the _Map_ with key "_jakarta.servlet.http.registerSession_" and value "_true_".
 ** Return the _AuthenticationStatus_.
 * If the _Principal_ is not null:
 ** Create a new _CallerPrincipalCallback_ instance, passing the _Principal_ and client subject obtained from _HttpMessageContext_ to the constructor.
@@ -443,11 +443,11 @@ When _newAuthentication_ is set to _false_, the container MUST NOT discard any s
 
 ==== AutoApplySession Notes ====
 
-As an example, idiomatic code for setting the _javax.servlet.http.registerSession_ key as per the requirements is:
+As an example, idiomatic code for setting the _jakarta.servlet.http.registerSession_ key as per the requirements is:
 
 [source,java]
 ----
-httpMessageContext.getMessageInfo().getMap().put("javax.servlet.http.registerSession", TRUE.toString());
+httpMessageContext.getMessageInfo().getMap().put("jakarta.servlet.http.registerSession", TRUE.toString());
 ----
 
 As another example, idiomatic code for setting the _CallerPrincipalCallback_ as per the requirements is:
