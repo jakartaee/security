@@ -9,7 +9,9 @@ Status: {revremark}
 Release: {revdate}
 ....
 
-Copyright (c) 2019 Eclipse Foundation.
+== Copyright
+
+Copyright (c) 2019, 2020 Eclipse Foundation.
 
 === Eclipse Foundation Specification License
 
