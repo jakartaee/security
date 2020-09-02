@@ -69,7 +69,7 @@ See javadoc for a detailed description of _HttpMessageContext_ and _HttpMessageC
 
 === Installation and Configuration
 
-An _HttpAuthenticationMechanism_ must be a CDI bean, and is therefore visible to the container through CDI if it is packaged in a bean archive, which generally includes Jakarta EE modules and application archives, as well as other archives and classes that are not part of an application, but are required by the Java EE specification to be visible to applications. See the CDI specification for details on bean archives and bean discovery. An _HttpAuthenticationMechanism_ is assumed to be normal scoped.
+An _HttpAuthenticationMechanism_ must be a CDI bean, and is therefore visible to the container through CDI if it is packaged in a bean archive, which generally includes Jakarta EE modules and application archives, as well as other archives and classes that are not part of an application, but are required by the Jakarta EE specification to be visible to applications. See the CDI specification for details on bean archives and bean discovery. An _HttpAuthenticationMechanism_ is assumed to be normal scoped.
 
 It MUST be possible for the definition of an _HttpAuthenticationMechanism_ to exist within the application archive. Alternatively such definition MAY also exists outside the application archive, for example in a jar added to the classpath of an application server.
 

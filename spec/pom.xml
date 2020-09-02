@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.eclipse.ee4j.security.enterprise-api</groupId>
         <artifactId>security.enterprise-api-parent</artifactId>
-        <version>2.0.0-SNAPSHOT</version>
+        <version>2.0.0</version>
     </parent>
 
     <artifactId>security-spec</artifactId>
@@ -40,6 +40,10 @@
         <status>DRAFT</status>
         <maven.build.timestamp.format>MMMM dd, yyyy</maven.build.timestamp.format>
         <revisiondate>${maven.build.timestamp}</revisiondate>
+
+        <!-- default is the same for backward compatibility reason
+            Easy to override when building with a system property -->
+        <spec.version>${project.version}</spec.version>
     </properties>
 
     <build>
@@ -75,7 +79,7 @@
                         </goals>
                         <configuration>
                             <backend>html5</backend>
-                            <outputFile>${project.build.directory}/generated-docs/security-spec-${project.version}.html</outputFile>
+                            <outputFile>${project.build.directory}/generated-docs/security-spec-${spec.version}.html</outputFile>
                             <attributes>
                                 <doctype>book</doctype>
                                 <status>${status}</status>
@@ -98,7 +102,7 @@
                         </goals>
                         <configuration>
                             <backend>pdf</backend>
-                            <outputFile>${project.build.directory}/generated-docs/security-spec-${project.version}.pdf</outputFile>
+                            <outputFile>${project.build.directory}/generated-docs/security-spec-${spec.version}.pdf</outputFile>
                             <attributes>
                                 <pdf-stylesdir>${project.basedir}/src/main/theme</pdf-stylesdir>
                                 <pdf-style>jakartaee</pdf-style>
@@ -122,7 +126,7 @@
                     <sourceDocumentName>security-spec.adoc</sourceDocumentName>
                     <sourceHighlighter>coderay</sourceHighlighter>
                     <attributes>
-                        <revnumber>${project.version}</revnumber>
+                        <revnumber>${spec.version}</revnumber>
                         <revremark>${status}</revremark>
                         <revdate>${revisiondate}</revdate>
                     </attributes>
