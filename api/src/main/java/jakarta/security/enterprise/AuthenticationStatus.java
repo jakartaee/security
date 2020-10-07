@@ -97,28 +97,28 @@ public enum AuthenticationStatus {
      * mechanism is called, but authentication is optional and would only take place when for
      * instance a specific request header is present.
      */
-	NOT_DONE,
-	
-	/**
-	 * The authentication mechanism was called and a multi-step authentication dialog with the caller
-	 * has been started (for instance, the caller has been redirected to a login page). Simply said 
-	 * authentication is "in progress". Calling application code (if any) should not write to the response
-	 * when this status is received. 
-	 */
-	SEND_CONTINUE,
-	
-	/**
-	 * The authentication mechanism was called and the caller was successfully authenticated. After the
-	 * Jakarta EE server has processed this outcome, the caller principal is available.
-	 */
-	SUCCESS,
-	
-	/**
-	 * The authentication mechanism was called but the caller was <em>not</em> successfully authenticated and
-	 * therefore the caller principal will not be made available.
-	 * <p>
-	 * Note that this status should be used to indicate a logical problem (such as a credential not matching or a caller
-	 * ID that can not be found). Exceptions should be used for system level problems (such as a database connection timing out).
-	 */
-	SEND_FAILURE
+    NOT_DONE,
+    
+    /**
+     * The authentication mechanism was called and a multi-step authentication dialog with the caller
+     * has been started (for instance, the caller has been redirected to a login page). Simply said 
+     * authentication is "in progress". Calling application code (if any) should not write to the response
+     * when this status is received. 
+     */
+    SEND_CONTINUE,
+    
+    /**
+     * The authentication mechanism was called and the caller was successfully authenticated. After the
+     * Jakarta EE server has processed this outcome, the caller principal is available.
+     */
+    SUCCESS,
+    
+    /**
+     * The authentication mechanism was called but the caller was <em>not</em> successfully authenticated and
+     * therefore the caller principal will not be made available.
+     * <p>
+     * Note that this status should be used to indicate a logical problem (such as a credential not matching or a caller
+     * ID that can not be found). Exceptions should be used for system level problems (such as a database connection timing out).
+     */
+    SEND_FAILURE
 }

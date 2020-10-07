@@ -77,10 +77,10 @@ public class Password {
     }
     
     public boolean compareTo(String password) {
-    	if (password == null) {
-    		return false;
-    	}
-    	
-    	return Arrays.equals(password.toCharArray(), value);
+        if (password == null) {
+            return false;
+        }
+        
+        return Arrays.equals(password.toCharArray(), value);
     }
 }

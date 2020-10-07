@@ -19,11 +19,10 @@ package jakarta.security.enterprise;
 import java.security.Principal;
 import java.util.Set;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-
 import jakarta.security.enterprise.authentication.mechanism.http.AuthenticationParameters;
 import jakarta.security.enterprise.authentication.mechanism.http.HttpAuthenticationMechanism;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * The SecurityContext provides an access point for programmatic security; an injectable type that is intended to be
@@ -32,7 +31,6 @@ import jakarta.security.enterprise.authentication.mechanism.http.HttpAuthenticat
  * <p>
  * Unless otherwise indicated, this type must be usable in all Jakarta EE containers, specifically the Jakarta Servlet
  * and Jakarta Enterprise Beans containers.
- *
  *
  */
 public interface SecurityContext {
@@ -43,7 +41,7 @@ public interface SecurityContext {
      *
      * @return Principal representing the name of the current authenticated user, or null if not authenticated.
      */
-	Principal getCallerPrincipal();
+    Principal getCallerPrincipal();
 
     /**
      * Retrieve all Principals of the given type from the authenticated caller's Subject,
@@ -64,29 +62,28 @@ public interface SecurityContext {
      */
     <T extends Principal> Set<T> getPrincipalsByType(Class<T> pType);
 
-	/**
-	 * Checks whether the authenticated caller is included in the specified logical <em>application</em> "role".
-	 * If the caller is not authenticated, this always returns <code>false</code>.
-	 *
-	 * <p>
-	 * This method <em>can not</em> be used to test for roles that are mapped to specific named Jakarta Servlets or
-	 * named Jakarta Enterprise Beans. For a Servlet an example of this would be the <code>role-name</code> nested in a
-	 * <code>security-role-ref</code> element nested in a <code>servlet</code> element in <code>web.xml</code>.
-	 *
-	 * <p>
-	 * Should code in either such Jakarta Servlet or Jakarta Enterprise Bean wish to take such mapped (aka referenced, linked) 
-	 * roles into account, the facilities for that specific container should be used instead. For instance for Servlet that 
-	 * would be {@link HttpServletRequest#isUserInRole(String)} and for Jakarta Enterprise Beans that would be
-	 * {@link jakarta.ejb.SessionContext#isCallerInRole(String)}.
-	 *
-	 *
-	 * @param role a <code>String</code> specifying the name of the logical application role
-	 * @return <code>true</code> if the authenticated caller is in the given role, false if the caller is not authentication or
-	 * is not in the given role.
-	 */
-	boolean isCallerInRole(String role);
+    /**
+     * Checks whether the authenticated caller is included in the specified logical <em>application</em> "role".
+     * If the caller is not authenticated, this always returns <code>false</code>.
+     *
+     * <p>
+     * This method <em>can not</em> be used to test for roles that are mapped to specific named Jakarta Servlets or
+     * named Jakarta Enterprise Beans. For a Servlet an example of this would be the <code>role-name</code> nested in a
+     * <code>security-role-ref</code> element nested in a <code>servlet</code> element in <code>web.xml</code>.
+     *
+     * <p>
+     * Should code in either such Jakarta Servlet or Jakarta Enterprise Bean wish to take such mapped (aka referenced, linked)
+     * roles into account, the facilities for that specific container should be used instead. For instance for Servlet that
+     * would be {@link HttpServletRequest#isUserInRole(String)} and for Jakarta Enterprise Beans that would be
+     * {@link jakarta.ejb.SessionContext#isCallerInRole(String)}.
+     *
+     * @param role a <code>String</code> specifying the name of the logical application role
+     * @return <code>true</code> if the authenticated caller is in the given role, false if the caller is not authentication or
+     * is not in the given role.
+     */
+    boolean isCallerInRole(String role);
 
-	/**
+    /**
      * Checks whether the caller has access to the provided "web resource" using the given methods,
      * as specified by section 13.8 of the Servlet specification.
      *
@@ -101,13 +98,13 @@ public interface SecurityContext {
      *
      * @return <code>true</code> if the caller has access to the web resource using one of the given methods, <code>false</code> otherwise.
      */
-	boolean hasAccessToWebResource(String resource, String... methods);
+    boolean hasAccessToWebResource(String resource, String... methods);
 
-	/**
-	 * Signal to the container (programmatically trigger) that it should start or continue a web/HTTP based authentication dialog with
-	 * the caller.
-	 *
-	 * <p>
+    /**
+     * Signal to the container (programmatically trigger) that it should start or continue a web/HTTP based authentication dialog with
+     * the caller.
+     *
+     * <p>
      * Programmatically triggering means that the container responds as if the caller had attempted to access a constrained resource
      * and acts by invoking a configured authentication mechanism (such as the {@link HttpAuthenticationMechanism}).
      *
@@ -117,17 +114,17 @@ public interface SecurityContext {
      * started. A new dialog can be forced to be started regardless of one being in progress or not by providing a value of
      * <code>true</code> for the {@link AuthenticationParameters#newAuthentication} parameter with this call.
      *
-	 * <p>
-	 * This method requires an {@link HttpServletRequest} and {@link HttpServletResponse} argument to be passed in, and
-	 * can therefore only be used in a valid Servlet context.
-	 *
-	 * @param request The <code>HttpServletRequest</code> associated with the current web resource invocation.
-	 * @param response The <code>HttpServletResponse</code> associated with the given <code>HttpServletRequest</code>.
-	 * @param parameters The parameters that are provided along with a programmatic authentication request, for instance the credentials.
-	 * collected by the application for continuing an authentication dialog.
-	 *
-	 * @return The state of the authentication mechanism after being triggered by this call
-	 */
+     * <p>
+     * This method requires an {@link HttpServletRequest} and {@link HttpServletResponse} argument to be passed in, and
+     * can therefore only be used in a valid Servlet context.
+     *
+     * @param request The <code>HttpServletRequest</code> associated with the current web resource invocation.
+     * @param response The <code>HttpServletResponse</code> associated with the given <code>HttpServletRequest</code>.
+     * @param parameters The parameters that are provided along with a programmatic authentication request, for instance the credentials.
+     * collected by the application for continuing an authentication dialog.
+     *
+     * @return The state of the authentication mechanism after being triggered by this call
+     */
     AuthenticationStatus authenticate(HttpServletRequest request, HttpServletResponse response, AuthenticationParameters parameters);
 
 }
