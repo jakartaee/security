@@ -27,7 +27,6 @@ import java.util.EnumSet;
 import java.util.Set;
 
 import jakarta.security.auth.message.module.ServerAuthModule;
-
 import jakarta.security.enterprise.CallerPrincipal;
 import jakarta.security.enterprise.authentication.mechanism.http.HttpAuthenticationMechanism;
 import jakarta.security.enterprise.credential.Credential;
@@ -44,7 +43,7 @@ import jakarta.security.enterprise.credential.Credential;
  * such as a database, LDAP server, or file.
  */
 public interface IdentityStore {
-    
+
     /**
      * Default set of validation types. Contains {@code VALIDATE} and {@code PROVIDE_GROUPS}.
      */
@@ -63,7 +62,7 @@ public class ExampleIdentityStore implements IdentityStore {
         // Implementation ...
         return INVALID_RESULT;
     }
-	
+
 }
      * }</pre></blockquote>
      * <p>
@@ -74,23 +73,23 @@ public class ExampleIdentityStore implements IdentityStore {
      * This method returns a {@link CredentialValidationResult} representing the result of the validation attempt:
      * whether it succeeded or failed, and, for a successful validation, the {@link CallerPrincipal}, and possibly
      * groups or other attributes, of the caller.
-     * 
+     *
      * @param credential The credential to validate.
      * @return The validation result.
      */
     default CredentialValidationResult validate(Credential credential) {
         try {
-        	    return CredentialValidationResult.class.cast(
-                    MethodHandles.lookup()
-                                 .bind(this, "validate", methodType(CredentialValidationResult.class, credential.getClass()))
-                                 .invoke(credential));
+            return CredentialValidationResult.class.cast(
+                MethodHandles.lookup()
+                             .bind(this, "validate", methodType(CredentialValidationResult.class, credential.getClass()))
+                             .invoke(credential));
         } catch (NoSuchMethodException e) {
             return NOT_VALIDATED_RESULT;
-		} catch (Throwable e) {
-			throw new IllegalStateException(e);
-		}
+        } catch (Throwable e) {
+            throw new IllegalStateException(e);
+        }
     }
-    
+
     /**
      * Returns groups for the caller, who is identified by the {@link CallerPrincipal}
      * (and potentially other values) found in the {@code validationResult} parameter.
@@ -111,13 +110,13 @@ if (security != null) {
      * @throws SecurityException May be thrown if the calling code does not have {@link IdentityStorePermission}.
      */
     default Set<String> getCallerGroups(CredentialValidationResult validationResult) {
-    	    return emptySet();
+        return emptySet();
     }
 
     /**
      * Determines the order of invocation for multiple {@link IdentityStore}s.
      * Stores with a lower priority value are consulted first.
-     * 
+     *
      * @return The priority value. Lower values indicate higher priorities.
      */
     default int priority() {
@@ -125,7 +124,7 @@ if (security != null) {
     }
 
     /**
-     * Determines the type of validation the {@link IdentityStore} should be used for. 
+     * Determines the type of validation the {@link IdentityStore} should be used for.
      * By default, its used for credential validation AND providing groups.
      * <p>
      * Implementations of this API should not return a direct reference
@@ -133,14 +132,14 @@ if (security != null) {
      * unless it is an immutable {@link Set}. Callers of the API should be aware that
      * the returned {@link Set} may be immutable, or a copy, and that, in any case,
      * it should not be modified by the caller.
-     * 
+     *
      * @return {@link Set} containing the validation types enabled for the {@link IdentityStore}.
      */
     default Set<ValidationType> validationTypes() {
         return DEFAULT_VALIDATION_TYPES;
     }
-    
-    
+
+
 
     /**
      * Determines the type of validation (operations) that should be done by this store.
@@ -148,12 +147,12 @@ if (security != null) {
      * but only what the store is configured to be used for.
      */
     enum ValidationType {
-        
+
         /**
          * Only validation is performed, so no groups, are taken from this store.
          **/
         VALIDATE,
-        
+
         /**
          * Only groups for a principal, possibly established by another IdentityStore, are taken from this store.
          */
