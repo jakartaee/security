@@ -29,7 +29,7 @@
 
     <groupId>jakarta.security.enterprise</groupId>
     <artifactId>jakarta.security.enterprise-api</artifactId>
-    <version>2.0.1-SNAPSHOT</version>
+    <version>3.0.0-SNAPSHOT</version>
     <packaging>bundle</packaging>
 
     <name>Jakarta Security</name>
@@ -62,8 +62,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
     </properties>
 
     <dependencies>
@@ -136,7 +136,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.0.0-M3</version>
+                <version>3.0.0</version>
                 <executions>
                     <execution>
                         <id>enforce-maven</id>
@@ -186,7 +186,7 @@
                 <version>2.1</version>
                 <configuration>
                     <spec>
-                        <specVersion>2.0</specVersion>
+                        <specVersion>3.0</specVersion>
                         <specImplVersion>${project.version}</specImplVersion>
                         <apiPackage>jakarta.security.enterprise</apiPackage>
                     </spec>
@@ -252,7 +252,7 @@
                             <header><![CDATA[<br>Jakarta Security API v${project.version}]]></header>
                             <bottom><![CDATA[
 Comments to: <a href="mailto:es-dev@eclipse.org">es-dev@eclipse.org</a>.<br>
-Copyright &#169; 2019, 2020 Eclipse Foundation. All rights reserved.<br>
+Copyright &#169; 2019, 2021 Eclipse Foundation. All rights reserved.<br>
 Use is subject to <a href="{@docRoot}/doc-files/speclicense.html" target="_top">license terms</a>.]]>
                             </bottom>
                             <docfilessubdirs>true</docfilessubdirs>
