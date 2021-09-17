@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2015, 2020 Oracle and/or its affiliates and others.
- * All rights reserved.
+ * Copyright (c) 2015, 2020 Oracle and/or its affiliates and others. All rights reserved.
+ * Copyright (c) 2021 Contributors to Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,8 +24,8 @@ import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+import jakarta.enterprise.util.AnnotationLiteral;
 import jakarta.enterprise.util.Nonbinding;
-
 import jakarta.interceptor.InterceptorBinding;
 
 /**
@@ -90,5 +90,63 @@ public @interface LoginToContinue {
      */
     @Nonbinding
     String errorPage() default "/login-error";
+
+    /**
+     * Supports inline instantiation of the LoginToContinue annotation.
+     *
+     * @since 3.0
+     */
+    public static final class Literal extends AnnotationLiteral<LoginToContinue> implements LoginToContinue {
+        private final String loginPage;
+        private final boolean useForwardToLogin;
+        private final String useForwardToLoginExpression;
+        private final String errorPage;
+
+        /**
+         * Default instance of the {@link LoginToContinue} Interceptor Binding.
+         */
+        public static final Literal INSTANCE = of("/login", true, "", "/login-error");
+
+        /**
+         * Instance of the {@link LoginToContinue} Interceptor Binding.
+         *
+         * @param loginPage page a caller is directed to to authenticate (login)
+         * @param useForwardToLogin true if a forward is to be used, false for a redirect
+         * @param useForwardToLoginExpression an expression evaluating to true if a forward is to be used, false for a redirect
+         * @param errorPage page a caller is directed to after an authentication (login) error
+         * @return instance of the {@link LoginToContinue} Interceptor Binding.
+         */
+        public static Literal of(String loginPage, boolean useForwardToLogin, String useForwardToLoginExpression, String errorPage) {
+            return new Literal(loginPage, useForwardToLogin, useForwardToLoginExpression, errorPage);
+        }
+
+        private Literal(String loginPage, boolean useForwardToLogin, String useForwardToLoginExpression, String errorPage) {
+            this.loginPage = loginPage;
+            this.useForwardToLogin = useForwardToLogin;
+            this.useForwardToLoginExpression = useForwardToLoginExpression;
+            this.errorPage = errorPage;
+        }
+
+        @Override
+        public String loginPage() {
+            return loginPage;
+        }
+
+        @Override
+        public boolean useForwardToLogin() {
+            return useForwardToLogin;
+        }
+
+        @Override
+        public String useForwardToLoginExpression() {
+            return useForwardToLoginExpression;
+        }
+
+        @Override
+        public String errorPage() {
+            return errorPage;
+        }
+
+    }
 
 }

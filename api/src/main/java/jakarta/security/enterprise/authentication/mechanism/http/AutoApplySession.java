@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2015, 2020 Oracle and/or its affiliates and others.
- * All rights reserved.
+ * Copyright (c) 2015, 2020 Oracle and/or its affiliates and others. All rights reserved.
+ * Copyright (c) 2021 Contributors to Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,6 +23,7 @@ import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+import jakarta.enterprise.util.AnnotationLiteral;
 import jakarta.interceptor.InterceptorBinding;
 
 /**
@@ -56,5 +57,18 @@ import jakarta.interceptor.InterceptorBinding;
 @Retention(RUNTIME)
 @Target(TYPE)
 public @interface AutoApplySession {
-  
+
+    /**
+     * Supports inline instantiation of the AutoApplySession annotation.
+     *
+     * @since 3.0
+     */
+    public static final class Literal extends AnnotationLiteral<AutoApplySession> implements AutoApplySession {
+        private static final long serialVersionUID = 1L;
+
+        /**
+         * Instance of the {@link AutoApplySession} Interceptor Binding.
+         */
+        public static final Literal INSTANCE = new Literal();
+    }
 }
