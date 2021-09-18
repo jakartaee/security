@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,7 +24,7 @@ import java.security.Principal;
  * Principal that represents the caller principal associated with the invocation being
  * processed by the container (e.g. the current HTTP request).
  */
-public class CallerPrincipal implements Principal {
+public class CallerPrincipal implements Principal, Serializable {
 
     private static final long serialVersionUID = -6951555039431667786L;
 
