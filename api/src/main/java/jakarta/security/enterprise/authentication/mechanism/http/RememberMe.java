@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2015, 2020 Oracle and/or its affiliates and others.
- * All rights reserved.
+ * Copyright (c) 2015, 2020 Oracle and/or its affiliates and others. All rights reserved.
+ * Copyright (c) 2021 Contributors to Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,9 +24,9 @@ import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import jakarta.enterprise.util.Nonbinding;
-
 import jakarta.el.ELProcessor;
+import jakarta.enterprise.util.AnnotationLiteral;
+import jakarta.enterprise.util.Nonbinding;
 import jakarta.interceptor.InterceptorBinding;
 import jakarta.security.enterprise.identitystore.IdentityStore;
 import jakarta.security.enterprise.identitystore.RememberMeIdentityStore;
@@ -90,7 +90,6 @@ public @interface RememberMe {
      * @see Cookie#setMaxAge(int)
      *
      * @return Max age in seconds
-     *
      */
     @Nonbinding
     int cookieMaxAgeSeconds() default 86400; // 1 day
@@ -181,8 +180,151 @@ public @interface RememberMe {
      * which refers to the current {@link HttpMessageContext}.
      *
      * @return Jakarta Expression Language expression to determine if remember me should be used
-     *
      */
     @Nonbinding
     String isRememberMeExpression() default "";
+
+    /**
+     * Supports inline instantiation of the RememberMe annotation.
+     *
+     * @since 3.0
+     */
+    public static final class Literal extends AnnotationLiteral<RememberMe> implements RememberMe {
+
+        private static final long serialVersionUID = 1L;
+
+        private final int       cookieMaxAgeSeconds;
+        private final String    cookieMaxAgeSecondsExpression;
+        private final boolean   cookieSecureOnly;
+        private final String    cookieSecureOnlyExpression;
+        private final boolean   cookieHttpOnly;
+        private final String    cookieHttpOnlyExpression;
+        private final String    cookieName;
+        private final boolean   isRememberMe;
+        private final String    isRememberMeExpression;
+
+        /**
+         * Default instance of the {@link RememberMe} Interceptor Binding.
+         */
+        public static final Literal INSTANCE = of(
+            86400,
+            "",
+            true,
+            "",
+            true,
+            "",
+            "JREMEMBERMEID",
+            true,
+            ""
+        );
+
+        /**
+         * Instance of the {@link RememberMe} Interceptor Binding.
+         *
+         * @param cookieMaxAgeSeconds Max age in seconds for the remember me cookie.
+         * @param cookieMaxAgeSecondsExpression Jakarta Expression Language expression variant of <code>cookieMaxAgeSeconds</code>
+         * @param cookieSecureOnly Flag to indicate that the remember me cookie should only be sent using a secure protocol
+         * @param cookieSecureOnlyExpression Jakarta Expression Language expression variant of <code>cookieSecureOnly</code>
+         * @param cookieHttpOnly true if the cookie should be sent only with HTTP requests
+         * @param cookieHttpOnlyExpression Jakarta Expression Language expression variant of <code>cookieHttpOnly</code>
+         * @param cookieName Name of the remember me cookie.
+         * @param isRememberMe Flag to determine if remember me should be used.
+         * @param isRememberMeExpression Jakarta Expression Language expression variant of <code>isRememberMe</code>
+         * @return instance of the {@link RememberMe} Interceptor Binding
+         */
+        public static Literal of(
+            int     cookieMaxAgeSeconds,
+            String  cookieMaxAgeSecondsExpression,
+            boolean cookieSecureOnly,
+            String  cookieSecureOnlyExpression,
+            boolean cookieHttpOnly,
+            String  cookieHttpOnlyExpression,
+            String  cookieName,
+            boolean isRememberMe,
+            String  isRememberMeExpression
+
+
+            ) {
+            return new Literal(
+                    cookieMaxAgeSeconds,
+                    cookieMaxAgeSecondsExpression,
+                    cookieSecureOnly,
+                    cookieSecureOnlyExpression,
+                    cookieHttpOnly,
+                    cookieHttpOnlyExpression,
+                    cookieName,
+                    isRememberMe,
+                    isRememberMeExpression
+                );
+        }
+
+        private Literal(
+            int     cookieMaxAgeSeconds,
+            String  cookieMaxAgeSecondsExpression,
+            boolean cookieSecureOnly,
+            String  cookieSecureOnlyExpression,
+            boolean cookieHttpOnly,
+            String  cookieHttpOnlyExpression,
+            String  cookieName,
+            boolean isRememberMe,
+            String  isRememberMeExpression
+                ) {
+
+            this.cookieMaxAgeSeconds =              cookieMaxAgeSeconds;
+            this.cookieMaxAgeSecondsExpression =    cookieMaxAgeSecondsExpression;
+            this.cookieSecureOnly =                 cookieSecureOnly;
+            this.cookieSecureOnlyExpression =       cookieSecureOnlyExpression;
+            this.cookieHttpOnly =                   cookieHttpOnly;
+            this.cookieHttpOnlyExpression =         cookieHttpOnlyExpression;
+            this.cookieName =                       cookieName;
+            this.isRememberMe =                     isRememberMe;
+            this.isRememberMeExpression =           isRememberMeExpression;
+        }
+
+        @Override
+        public boolean cookieHttpOnly() {
+            return cookieHttpOnly;
+        }
+
+        @Override
+        public String cookieHttpOnlyExpression() {
+            return cookieHttpOnlyExpression;
+        }
+
+        @Override
+        public int cookieMaxAgeSeconds() {
+            return cookieMaxAgeSeconds;
+        }
+
+        @Override
+        public String cookieMaxAgeSecondsExpression() {
+            return cookieMaxAgeSecondsExpression;
+        }
+
+        @Override
+        public boolean cookieSecureOnly() {
+            return cookieSecureOnly;
+        }
+
+        @Override
+        public String cookieSecureOnlyExpression() {
+            return cookieSecureOnlyExpression;
+        }
+
+        @Override
+        public String cookieName() {
+            return cookieName;
+        }
+
+        @Override
+        public boolean isRememberMe() {
+            return isRememberMe;
+        }
+
+        @Override
+        public String isRememberMeExpression() {
+            return isRememberMeExpression;
+        }
+    }
 }
+
