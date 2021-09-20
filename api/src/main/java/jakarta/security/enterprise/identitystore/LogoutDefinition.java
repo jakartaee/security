@@ -16,7 +16,7 @@
  * Contributors:
  *   2021 : Payara Foundation and/or its affiliates
  *      Initially authored in Security Connectors
-*/
+ */
 package jakarta.security.enterprise.identitystore;
 
 import java.lang.annotation.Retention;
@@ -46,11 +46,18 @@ public @interface LogoutDefinition {
     boolean notifyProvider() default false;
 
     /**
+     * Optional. Allows the OIDC provider (OP) notification that the user has logged
+     * using the Jakarta Expression Language expression. If set, overrides the value set by notifyProvider.
+     */
+    String notifyProviderExpression() default "";
+
+    /**
      * Optional. The post logout redirect URI to which the RP is requesting that
      * the End-User's User Agent be redirected after a logout has been
      * performed. If redirect URI is empty then redirect to OpenID connect
      * provider authorization_endpoint for re-authentication.
-     **
+     * *
+     *
      * @return URL after logout is performed on the client.
      */
     String redirectURI() default "";
@@ -63,10 +70,26 @@ public @interface LogoutDefinition {
     boolean accessTokenExpiry() default false;
 
     /**
+     * Allow the session timeout definition using a Jakarta Expression Language expression.
+     * If set, overrides the value defined with accessTokenExpiry.
+     *
+     * @return
+     */
+    String accessTokenExpiryExpression() default "";
+
+    /**
      * Session timeout on the expiry of Identity Token.
      *
      * @return
      */
     boolean identityTokenExpiry() default false;
+
+    /**
+     * Allow the session timeout using the Jakarta Expression Language expression.
+     * If set, overrides the identityTokenExpiry value.
+     *
+     * @return
+     */
+    String identityTokenExpiryExpression() default "";
 
 }

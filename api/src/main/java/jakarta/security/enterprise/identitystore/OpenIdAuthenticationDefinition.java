@@ -106,6 +106,14 @@ public @interface OpenIdAuthenticationDefinition {
     String[] scope() default {OpenIdConstant.OPENID_SCOPE, OpenIdConstant.EMAIL_SCOPE, OpenIdConstant.PROFILE_SCOPE};
 
     /**
+     * Optional. Allows The scope value to be specified as Jakarta Expression Language expression.
+     * If Set, overrides any values set by scope.
+     *
+     * @return
+     */
+    String scopeExpression() default "";
+
+    /**
      * Optional. Response Type value defines the processing flow to be used. By
      * default, the value is code (Authorization Code Flow).
      *
@@ -132,12 +140,28 @@ public @interface OpenIdAuthenticationDefinition {
     PromptType[] prompt() default {};
 
     /**
+     * Optional. Allows the  prompt value to be specified as Jakarta Expression Language expression.
+     * If Set, overirdes the value defined by the prompt value.
+     *
+     * @return
+     */
+    String promptExpression() default "";
+
+    /**
      * Optional. The display value specifying how the authorization server
      * displays the authentication and consent user interface pages.
      *
      * @return
      */
     DisplayType display() default DisplayType.PAGE;
+
+    /**
+     * Optional. Allows the display value to be specified as Jakarta Expression Language expression.
+     * If set, overrides the value defined by display.
+     *
+     * @return
+     */
+    String displayExpression() default "";
 
     /**
      * Optional. Enables string value used to mitigate replay attacks.
@@ -147,12 +171,28 @@ public @interface OpenIdAuthenticationDefinition {
     boolean useNonce() default true;
 
     /**
+     * Optional. Allows the nonce activation to be specified as Jakarta Expression Language expression.
+     * If set, overrides the value defined by the useNonce value.
+     *
+     * @return
+     */
+    String useNonceExpression() default "";
+
+    /**
      * Optional. If enabled state & nonce value stored in session otherwise in
      * cookies.
      *
      * @return
      */
     boolean useSession() default true;
+
+    /**
+     * Optional. Allows the configuration of the session through a Jakarta Expression Language expression.
+     * If set, overwrites the value of useSession value.
+     *
+     * @return
+     */
+    String useSessionExpression() default "";
 
     /**
      * An array of extra options that will be sent to the OAuth provider.
@@ -165,6 +205,14 @@ public @interface OpenIdAuthenticationDefinition {
     String[] extraParameters() default {};
 
     /**
+     * Allows the extra parameters to be defined as a Jakarta Expression Language expression.
+     * If set, overrides the extraParameters value.
+     *
+     * @return
+     */
+    String extraParametersExpression() default "";
+
+    /**
      * Optional. Sets the connect timeout(in milliseconds) for Remote JWKS
      * retrieval. Value must not be negative and if value is zero then infinite
      * timeout.
@@ -174,6 +222,15 @@ public @interface OpenIdAuthenticationDefinition {
     int jwksConnectTimeout() default 500;
 
     /**
+     * Optional. Allows the connect timeout(in milliseconds) for Remote JWKS to be defined as
+     * Jakarta Expression Language expression.
+     * If set, overwrites the  jwksConnectTimeout value.
+     *
+     * @return
+     */
+    String jwksConnectTimeoutExpression() default "";
+
+    /**
      * Optional. Sets the read timeout(in milliseconds) for Remote JWKS
      * retrieval. Value must not be negative and if value is zero then infinite
      * timeout.
@@ -181,6 +238,15 @@ public @interface OpenIdAuthenticationDefinition {
      * @return
      */
     int jwksReadTimeout() default 500;
+
+    /*
+     * Optional. Allows the read timeout(in milliseconds) for Remote JWKS
+     * retrieval to be defined as Jakarta Expression Language expression.
+     * If set, overwrites the jwksReadTimeout value.
+     *
+     * @return
+     */
+    String jwksReadTimeoutExpression() default "";
 
     /**
      * Optional. Enables or disables the automatically performed refresh of
@@ -192,6 +258,13 @@ public @interface OpenIdAuthenticationDefinition {
     boolean tokenAutoRefresh() default false;
 
     /**
+     * Optional. Allows the automatically performed refresh of
+     * Access and Refresh Token to be defined as Jakarta Expression Language expression.
+     * If set, overwrites the value of  tokenAutoRefresh.
+     */
+    String tokenAutoRefreshExpression() default "";
+
+    /**
      * Optional. Sets the minimum validity time in milliseconds the Access Token
      * must be valid before it is considered expired. Value must not be
      * negative.
@@ -199,4 +272,13 @@ public @interface OpenIdAuthenticationDefinition {
      * @return
      */
     int tokenMinValidity() default 10 * 1000;
+
+    /**
+     * Optional. Allows the minimum validity time in milliseconds the Access Token
+     * must be valid before it is considered expired to be defined as Jakarta Expression Language expression.
+     * If Set, overwrites the tokenMinValidity value.
+     *
+     * @return
+     */
+    String tokenMinValidityExpression() default "";
 }
