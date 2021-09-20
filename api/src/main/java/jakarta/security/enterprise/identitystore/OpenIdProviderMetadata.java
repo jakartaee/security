@@ -77,4 +77,30 @@ public @interface OpenIdProviderMetadata {
      */
     String jwksURI() default "";
 
+
+    /**
+     * Required. The issuer of the tokens issued by the Provider.
+     * @return
+     */
+    String issuer() default "";
+
+
+    /**
+     * Required. The supported subject Types by the Provider.
+     * @return
+     */
+    String subjectTypeSupported() default "public";
+
+    /**
+     * Required. The supported Signing algorithms for the ID token by provider.
+     * @return
+     */
+    String idTokenSigningAlgorithmsSupported() default "RS256";
+
+
+    /**
+     * Required. The supported response types by the Provider.
+     * @return
+     */
+    String responseTypeSupported() default "code,id_token,token id_token";
 }

@@ -40,8 +40,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface OpenIdAuthenticationDefinition {
 
     /**
-     * Required. The provider uri (
-     * http://openid.net/specs/openid-connect-discovery-1_0.html ) to read /
+     * Required or information need to be defined through providerMetadata member.
+     * The provider uri ( http://openid.net/specs/openid-connect-discovery-1_0.html ) to read /
      * discover the metadata of the openid provider.
      *
      * @return
