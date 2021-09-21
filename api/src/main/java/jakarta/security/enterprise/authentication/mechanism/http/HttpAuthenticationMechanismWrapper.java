@@ -26,17 +26,33 @@ import jakarta.servlet.http.HttpServletResponse;
  * functionality.
  * <p>
  * All methods default to calling the wrapped object.
- * 
+ *
  * @since 3.0
  */
 public class HttpAuthenticationMechanismWrapper implements HttpAuthenticationMechanism {
 
     private final HttpAuthenticationMechanism httpAuthenticationMechanism;
 
+    /**
+     * This constructor is intended for proxy usuage only.
+     */
+    public HttpAuthenticationMechanismWrapper() {
+        httpAuthenticationMechanism = null;
+    }
+
+    /**
+     * Constructs the wrapper with the object being delegated to.
+     * @param httpAuthenticationMechanism The wrapped object which all methods call.
+     */
     public HttpAuthenticationMechanismWrapper(HttpAuthenticationMechanism httpAuthenticationMechanism) {
         this.httpAuthenticationMechanism = httpAuthenticationMechanism;
     }
 
+    /**
+     * Returns the object that's being wrapped.
+     *
+     * @return the object that's being wrapped.
+     */
     public HttpAuthenticationMechanism getWrapped() {
         return httpAuthenticationMechanism;
     }
