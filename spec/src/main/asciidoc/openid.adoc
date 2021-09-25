@@ -1,0 +1,59 @@
+[[openid]]
+
+== Open Id Connect Support
+
+The Jakarta Security API supports the integration of the OpenId Connect protocol within an application.  The idea is to define the required parameters for the OpenId Connect provider and the implementation provides the necessary steps to call the endpoints and integrate with the IdentityStore concept.
+
+=== Define the OpenId Connect Provider details
+
+
+The `jakarta.security.enterprise.identitystore.OpenIdAuthenticationDefinition.providerURI` defines the base URL of the Provider where the `/.well-known/openid-configuration` is appended to (or used as it is when it is the well known configuration URL itself)
+
+Reading the `well known openid configuration endpoint` can be done when the application is deployed or at the time a secured URL is accessed for the first time.
+
+The values retrieved from the `well known openid configuration endpoint` can be overwritten by the definitions made in the `OpenIdProviderMetadata` structure.
+
+Both the providerURI member and the members in the OpenIdProviderMetadata support values or EL expressions that are resolved to retrieve the actual values used by the implementation.
+
+The following values are required (since they are defined as required by the OpenId Specification) and must be validated to verify if they are specified.
+
+- Authorization endpoint
+- Token endpoint
+- JWKS URI
+- Issuer of the tokens
+- Supported Subject types
+- Supported Response types
+- Supported Id Token Signing Algorithms
+
+These values can come from the `well known openid configuration endpoint` or from the `OpenIdProviderMetadata` structure.
+
+=== Define the OpenId Connect Client details
+
+The `clientId` and the `clientSecret` are two important parameters to identify the client application for the provider.  They need to be specified as members of the `OpenIdAuthenticationDefinition` authentication.  They can either be defined within the member itself (not recommended) or as EL expression so that the value can be read from otside of the application.
+
+Other client parameters that are also required but have a default value defined within the annotation:
+
+- Redirect URI to which the response of the authentication request must be sent. This URI can be used by the developer to redirect the authenticated user to the original requested secured URL or any other part of the application. +
+  The annotation member has a default value `${baseURL}/Callback`.
+- JWKS connect timeout must be a valid positive value.
+- JWKS read timeout must be a valid positive value.
+- Response Type must be defined and valid based on the supported values by the server. A default value of `code` is defined.
+- Scope(s) must be defined and valid based on the supported values by the server. A default value of `openid,email,profile` is defined.
+
+Since both timeouts are a number, an `Expression` member is provided to define an EL expression.  If the Expression member has a valid, the resolved value overrides the number based member.
+
+=== Additional properties
+
+The other members defined on the `OpenIdAuthenticationDefinition` must be sent to the OpenId Connect Provider so that the configuration can be picked up.
+
+- responseMode: Defines the mechanism to be used for returning parameters from the Authorization Endpoint.
+- prompt: The value specifies whether the authorization server prompts the user for reauthentication and consent.
+- display: This value specifies how the authorization server displays the authentication and consent user interface pages.
+- useNonce: Defines if an additional value is created to mitigate replay attacks.
+- useSession: If specified, the HTTP session is used to store the state and nonce values. Otherwise a cookie.
+- extraParameters: additianal key value pairs that are sent to the Provider to cover Provider specific functionality.
+
+
+
+
+-
