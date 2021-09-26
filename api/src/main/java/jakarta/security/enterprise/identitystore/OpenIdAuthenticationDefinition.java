@@ -31,6 +31,9 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 /**
  * {@link OpenIdAuthenticationDefinition} annotation defines openid connect
  * client configuration and The value of each parameter can be defined as Expression.
+ * Supports the Authorization Code flow of OpenId Connect specification https://openid.net/specs/openid-connect-core-1_0.html#CodeFlowAuth
+ * and Refresh tokens https://openid.net/specs/openid-connect-core-1_0.html#RefreshTokens.
+ * It can make use of the user endpoint for retrieving claims about the user.
  *
  * @author Gaurav Gupta
  * @author Rudy De Busscher
@@ -239,7 +242,7 @@ public @interface OpenIdAuthenticationDefinition {
      */
     int jwksReadTimeout() default 500;
 
-    /*
+    /**
      * Optional. Allows the read timeout(in milliseconds) for Remote JWKS
      * retrieval to be defined as Jakarta Expression Language expression.
      * If set, overwrites the jwksReadTimeout value.

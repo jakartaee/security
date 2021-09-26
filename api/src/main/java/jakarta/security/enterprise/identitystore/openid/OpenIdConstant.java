@@ -82,8 +82,6 @@ public interface OpenIdConstant {
     String ISSUER = "issuer";
     String SCOPES_SUPPORTED = "scopes_supported";
     String ID_TOKEN_SIGNING_ALG_VALUES_SUPPORTED = "id_token_signing_alg_values_supported";
-    String ID_TOKEN_ENCRYPTION_ALG_VALUES_SUPPORTED = "id_token_encryption_alg_values_supported";
-    String ID_TOKEN_ENCRYPTION_ENC_VALUES_SUPPORTED = "id_token_encryption_enc_values_supported";
     String RESPONSE_TYPES_SUPPORTED = "response_types_supported";
     String RESPONSE_MODES_SUPPORTED = "response_modes_supported";
     String TOKEN_ENDPOINT_AUTH_METHODS_SUPPORTED = "token_endpoint_auth_methods_supported";
