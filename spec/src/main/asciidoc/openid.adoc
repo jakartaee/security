@@ -53,7 +53,80 @@ The other members defined on the `OpenIdAuthenticationDefinition` must be sent t
 - useSession: If specified, the HTTP session is used to store the state and nonce values. Otherwise a cookie.
 - extraParameters: additianal key value pairs that are sent to the Provider to cover Provider specific functionality.
 
+== OpenIdAuthenticationMechanism
 
+An implementation is required to implement an `HttpAuthenticationMechanism` that interact with the OpenId Connect Provider using the OpenId protocol.
 
+If the request is related to a protected resource and no user is authenticated for the request, an authentication request need to be assembled and send to the authentication endpoint of the provider. Following configured values need to be passed to the endpoint:
 
--
+- ClientId value
+- Scope value
+- Response Type value
+- State value, automatically generated
+- RedirectURI value.
+
+The redirectURI can contain the 'expression' value `${baseURL}` and this must be replaced by the host and context path. This requirement makes it easier to have an absolute URL as required by the OpenId Connect specification. The `OpenIdAuthenticationDefinition.redirectURI` member also supports Jakarta EL Expression values to configure the `redirectURI`.
+
+Following configuration values need to be supplied to the authorisation call when they are defined
+
+- Nonce, automatically generated
+- Response Mode value
+- Display value
+- Prompt value
+- Extra extra
+
+The State value, and also the Nonce value if requested, will be stored so the values can be validated when the OpenId Connect Provider calls the supplied redirectURI. +
+These values can be either stored in the HTTP Session context or as a Cookie.  The value of the member OpenIdAuthenticationDefinition.useSession determines what is used.  In the case of a storage through a Cookie, it must be defined as `HTTPonly` and must have the `Secure` flag set.
+
+Before the redirect to the authentication endpoint of the Provider is performed, the URL requested by the caller must be stored so that it later on can be retrieved by a call to `OpenIdContext.getStoredValue(request, response, OpenIdConstant.ORIGINAL_REQUEST)`.
+
+If a request is detected that contains a `state` request parameter, it might be a call to the redirectURI by the Openid Connect Provider and the following logic must be implemented.
+
+- If the call does not match the `redirectURI`, it must reply with a `CredentialValidationResult.NOT_VALIDATED_RESULT` value.
+- If there is no State value stored, it must reply with a `CredentialValidationResult.NOT_VALIDATED_RESULT` value.
+- If the State value on the request does not match the State value stored, it must reply with a `CredentialValidationResult.INVALID_RESULT` value.
+- If the request contains a parameter `error`, the authentication by the Provider failed and the authentication must reply with a `CredentialValidationResult.INVALID_RESULT` value.
+
+If none of the above conditions apply, the authentication is considered as successful, and the OpenId Tokens can be requested (see further). The stored State value must be cleared (removed from HTTP session or Cookie must be removed)
+
+=== Get Tokens
+
+Based on the value of the code received on the RedirectURI callback method, the implementation must call the Token endpoint to retrieve an Access Token and ID Token.
+
+The call to the token endpoint must include the following parameters (as specified by the OpenId Connect specification)
+
+- The ClientId configured for the application.
+- The ClientSecret configured for the application.
+- The `grant_type` parameter (_authorization_code_)
+- The redirectURI value
+- The code received from the Provider.
+
+If the call to the Token endpoint is successful, the following checks must be performed (also defined by the OpenId Connect specification)
+
+- The issuer claim matches the issuer retrieved from the `well known openid configuration endpoint` or the `issuer` member of the `OpenIdProviderMetadata` construct.
+- A Subject claim is present and contains a value.
+- The Audience claim is present and is equal to the clientId that we configured.
+- If multiple audience values are returned by the Provider, an authorized party claim (`azp`) must be present.
+- If an authorized party claim (`azp`) is present, it must match the clientId that we configured.
+- The expiration claim must be present and must be 'in the future' (a clock skew might be considered or configured in an implementation specific way)
+- The issued at claim must be present and must be 'in the past' (a clock skew might be considered or configured in an implementation specific way)
+- The _not before_ claim can be present and if defined, must be 'in the past' (a clock skew might be considered or configured in an implementation specific way)
+
+For the Identity Token, the following check must be performed additionally
+
+- When `nonce` usage is configured, verify if the `nonce` value within the Identity Token is identical to the one that was specified in the authentication request.
+
+=== Caller name and groups
+
+The Caller Name and the Caller Groups must be present in the `CredentialValidationResult` as defined by the Security API specification.
+
+The claim name that is used to define the Caller Name and the Caller Groups can be defined by the members `ClaimsDefinition.callerNameClaim` and `ClaimsDefinition.callerGroupsClaim`.  The following logic is sued to determine the value;
+
+- If the specified claim exists and has a non-empty value in the Access Token, this Access Token claim value is taken.
+- If not resolved yet, and the specified claim exists and has a non-empty value in the Identity Token, this Identity Token claim value is taken.
+- If not resolved yet, and the specified claim exists and has a non-empty value in the User Info Token, this User Info Token claim value is taken.
+
+An implementation may choose to not implement the call to the User Info Endpoint, in all cases or when a certain configuration value is set, since not all OpenId Connect Providers support this User Info Endpoint.
+
+== OpenIdContext
+
