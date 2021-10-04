@@ -130,3 +130,49 @@ An implementation may choose to not implement the call to the User Info Endpoint
 
 == OpenIdContext
 
+An implementation must provide an CDI bean for the `OpenIdContext` interface with scope `SessionScoped`.
+
+The javadoc of the class defines the values and some additional requirments when retrieving values through the bean.
+
+The programmatic logout option is described further in the document.
+
+== RefreshToken
+
+The Authenthentication Mechanism must check for each call to a protected resource when there is an authenticated user if the Access Token or the Identity Token is expired.
+
+The member `OpenIdAuthenticationDefinition.tokenAutoRefresh` determines if the in the case a token is expired  a re-authentication is attempted based on the RefreshToken.  This option can be used to configure the usage of Refresh Token based on the fact on the support of the OpenId Connect Provider supports RefreshTokens.
+
+The `LogoutDefinition` can be used to determine if the expiration time of the Access Token or the Identity Token is considered (or both).
+
+In the case the _autoRefresh_ is configured, and the token that is indicated on the `LogoutDefinition` is expired, the RefreshToken is used to send it to yhe OpenId Connect provider refreshToken endpoint.
+
+The OpenId Specification requires that also the _clientId_ and the _clientSecret_ are sent to this endpoint.
+
+When the call is successful and a new Access Token is received, the same logic is applied as described above;
+
+- Validate tokens
+- Store in context
+- Determine the caller Name and Caller groups values (which can lead to more or less permissions in the application)
+
+== Logout
+
+A programmatic logout can be performed through the `OpenIdContext` instance that can be retrieved from the CDI subsystem.
+
+A call to this method must always result in a logout from the current HTTP request and an invalidation of an HTTP Session is that one is available.
+
+When the `LogoutDefinition.notifyProvider` flag (or through the expression member) is set, a RP-Initiated Logout is performed.  The EndSession endpoint of the OpenId Connect provider is called, optionally containing the URL defined in the `LogoutDefinition.redirectURI` member.
+
+If the provider is not to be notified, but a `LogoutDefinition.redirectURI` is defined, a redirect to this URL must be performed.
+
+Otherwise, a call to the authentication endpoint is performed. Be aware that a correct `promptType` must be defined so that this option works properly.  Without any prompt defined, the Openid Connect Provider can immediately redirect to the _callback_  of the application and user is again authenticated within the application.
+
+==  Callback
+
+As indicated earlier, a _callback_ or redirect URL is required to be defined.  The developer is responsible for creating a resource mapped to the redirectURL like a Servlet.
+
+Within the Servlet implementation, the developer can redirect ro the original requested URL by the user, using the key `OpenIdConstant.ORIGINAL_REQUEST`.
+
+----
+Optional<String> originalRequest = context.getStoredValue(request, response, OpenIdConstant.ORIGINAL_REQUEST);
+----
+
