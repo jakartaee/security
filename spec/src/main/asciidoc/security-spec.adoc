@@ -36,5 +36,7 @@ include::identityStore.adoc[]
 
 include::securityContext.adoc[]
 
+include::openid.adoc[]
+
 include::bibliography.adoc[]
 
