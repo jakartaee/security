@@ -186,7 +186,7 @@ public @interface OpenIdAuthenticationDefinition {
     String useNonceExpression() default "";
 
     /**
-     * Optional. If enabled state & nonce value stored in session otherwise in
+     * Optional. If enabled state and nonce value stored in session otherwise in
      * cookies.
      *
      * @return

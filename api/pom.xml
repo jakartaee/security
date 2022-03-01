@@ -248,7 +248,8 @@
                             <goal>jar</goal>
                         </goals>
                         <configuration>
-                            <source>1.8</source>
+                            <source>11</source>
+                            <quiet>true</quiet>
                             <additionalJOption>-Xdoclint:none</additionalJOption>
                             <detectJavaApiLink>false</detectJavaApiLink>
                             <description>Jakarta Security API documentation</description>
