@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -75,7 +75,7 @@ public interface SecurityContext {
      * Should code in either such Jakarta Servlet or Jakarta Enterprise Bean wish to take such mapped (aka referenced, linked)
      * roles into account, the facilities for that specific container should be used instead. For instance for Servlet that
      * would be {@link HttpServletRequest#isUserInRole(String)} and for Jakarta Enterprise Beans that would be
-     * {@link jakarta.ejb.SessionContext#isCallerInRole(String)}.
+     * <code>jakarta.ejb.SessionContext#isCallerInRole(String)</code>.
      *
      * @param role a <code>String</code> specifying the name of the logical application role
      * @return <code>true</code> if the authenticated caller is in the given role, false if the caller is not authentication or
