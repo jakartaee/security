@@ -25,7 +25,7 @@ package jakarta.security.enterprise.identitystore.openid;
 
 
 import jakarta.json.JsonObject;
-import jakarta.security.enterprise.identitystore.LogoutDefinition;
+import jakarta.security.enterprise.authentication.mechanism.http.openid.LogoutDefinition;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 

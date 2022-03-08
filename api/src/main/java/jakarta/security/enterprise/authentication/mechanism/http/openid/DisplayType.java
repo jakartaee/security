@@ -21,7 +21,7 @@
  *   2021 : Payara Foundation and/or its affiliates
  *      Initially authored in Security Connectors
  */
-package jakarta.security.enterprise.identitystore;
+package jakarta.security.enterprise.authentication.mechanism.http.openid;
 
 import static java.util.Objects.isNull;
 

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021, 2022 Contributors to Eclipse Foundation.
  * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,17 +17,16 @@
 
 package jakarta.security.enterprise.identitystore;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
-
-import jakarta.security.enterprise.credential.UsernamePasswordCredential;
-import jakarta.security.enterprise.identitystore.IdentityStore;
-import jakarta.security.enterprise.identitystore.IdentityStore.ValidationType;
-
 import static jakarta.security.enterprise.identitystore.IdentityStore.ValidationType.PROVIDE_GROUPS;
 import static jakarta.security.enterprise.identitystore.IdentityStore.ValidationType.VALIDATE;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+
+import jakarta.security.enterprise.credential.UsernamePasswordCredential;
+import jakarta.security.enterprise.identitystore.IdentityStore.ValidationType;
 
 /**
  * Annotation used to define a container-provided {@link IdentityStore} that stores
@@ -144,7 +144,7 @@ public @interface LdapIdentityStoreDefinition {
     /**
      * Search scope for caller searches: determines depth
      * of the search in the LDAP tree.
-     * 
+     *
      * @return The search scope
      */
     LdapSearchScope callerSearchScope() default LdapSearchScope.SUBTREE;
@@ -152,7 +152,7 @@ public @interface LdapIdentityStoreDefinition {
     /**
      * Allow callerSearchScope to be specified as a Jakarta Expression Language expression.
      * If set, overrides any value set with callerSearchScope.
-     * 
+     *
      * @return the callerSearchScope Jakarta Expression Language expression
      */
     String callerSearchScopeExpression() default "";
@@ -163,7 +163,7 @@ public @interface LdapIdentityStoreDefinition {
      * <p>
      * Needed only for a store that performs group lookup.
      * Requires that the bindDn member be filled in.
-     * 
+     *
      * @return Base DN for searching the LDAP tree for groups.
      */
     String groupSearchBase() default "";
@@ -180,7 +180,7 @@ public @interface LdapIdentityStoreDefinition {
     /**
      * Search scope for group searches, determines depth
      * of the search in the LDAP tree.
-     * 
+     *
      * @return The search scope
      */
     LdapSearchScope groupSearchScope() default LdapSearchScope.SUBTREE;
@@ -188,7 +188,7 @@ public @interface LdapIdentityStoreDefinition {
     /**
      * Allow groupSearchScope to be specified as a Jakarta Expression Language expression.
      * If set, overrides any value set with groupSearchScope.
-     * 
+     *
      * @return the groupSearchScope Jakarta Expression Language expression
      */
     String groupSearchScopeExpression() default "";
@@ -262,7 +262,7 @@ public @interface LdapIdentityStoreDefinition {
      * <p>
      * The default value of 0 means wait forever (assuming the connection
      * itself does not time out).
-     * 
+     *
      * @return The readTimeout value.
      */
     int readTimeout() default 0;
@@ -270,7 +270,7 @@ public @interface LdapIdentityStoreDefinition {
     /**
      * Allow readTimeout to be specified as an Jakarta Expression Language expression.
      * If set, overrides any value set with readTimeout.
-     * 
+     *
      * @return The readTimeout Jakarta Expression Language expression
      */
     String readTimeoutExpression() default "";
@@ -286,7 +286,7 @@ public @interface LdapIdentityStoreDefinition {
      * necessary for normal validation and group lookup use cases.
      * Implementations of the built-in LDAP IdentityStore MAY support
      * paging through larger result sets, but are NOT REQUIRED to.
-     * 
+     *
      * @return The maximum number of results the LDAP server should return.
      */
     int maxResults() default 1000;
@@ -294,7 +294,7 @@ public @interface LdapIdentityStoreDefinition {
     /**
      * Allow maxResults to be specified as Jakarta Expression Language expression.
      * If set, overrides any value set with maxResults.
-     * 
+     *
      * @return The maxResults Jakarta Expression Language expression
      */
     String maxResultsExpression() default "";
@@ -308,14 +308,14 @@ public @interface LdapIdentityStoreDefinition {
     /**
      * Allow priority to be specified as a Jakarta Expression Language expression.
      * If set, overrides any value set with priority.
-     * 
+     *
      * @return The priority Jakarta Expression Language expression
      */
     String priorityExpression() default "";
 
     /**
      * Determines what the identity store is used for
-     * 
+     *
      * @return The type the identity store is used for
      */
     ValidationType[] useFor() default {VALIDATE, PROVIDE_GROUPS};
@@ -323,7 +323,7 @@ public @interface LdapIdentityStoreDefinition {
     /**
      * Allow useFor to be specified as a Jakarta Expression Language expression.
      * If set, overrides any value set with useFor.
-     * 
+     *
      * @return The useFor Jakarta Expression Language expression
      */
     String useForExpression() default "";

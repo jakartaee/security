@@ -21,9 +21,7 @@
  *      Initially authored in Security Connectors
  */
 
-package jakarta.security.enterprise.identitystore;
-
-import jakarta.security.enterprise.identitystore.openid.OpenIdConstant;
+package jakarta.security.enterprise.authentication.mechanism.http.openid;
 
 import java.lang.annotation.Retention;
 

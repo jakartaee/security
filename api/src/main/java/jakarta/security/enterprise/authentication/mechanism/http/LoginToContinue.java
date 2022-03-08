@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2022 Contributors to Eclipse Foundation.
  * Copyright (c) 2015, 2021 Oracle and/or its affiliates and others. All rights reserved.
- * Copyright (c) 2021 Contributors to Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -33,7 +33,7 @@ import jakarta.interceptor.InterceptorBinding;
  * add login to continue functionality to an authentication mechanism.
  *
  * <p>
- * When the <code>LoginToContinue</code> annotation is used on a custom authentication mechanism, EL
+ * When the <code>LoginToContinue</code> annotation is used on a custom authentication mechanism, Expression Language
  * expressions in attributes of type <code>String</code> are evaluated for every request requiring
  * authentication. Both immediate and deferred syntax is supported, but effectively the semantics
  * are always deferred.
