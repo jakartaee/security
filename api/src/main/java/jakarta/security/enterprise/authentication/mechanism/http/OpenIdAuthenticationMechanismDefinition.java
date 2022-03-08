@@ -10,7 +10,7 @@
  * Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
  * version 2 with the GNU Classpath Exception, which is available at
  * https://www.gnu.org/software/classpath/license.html.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  *
  */
@@ -21,37 +21,103 @@
  *   2021 : Payara Foundation and/or its affiliates
  *      Initially authored in Security Connectors
  */
-package jakarta.security.enterprise.identitystore;
+package jakarta.security.enterprise.authentication.mechanism.http;
 
-import jakarta.security.enterprise.identitystore.openid.OpenIdConstant;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
-
+import static jakarta.security.enterprise.authentication.mechanism.http.openid.OpenIdConstant.CODE;
+import static jakarta.security.enterprise.authentication.mechanism.http.openid.OpenIdConstant.EMAIL_SCOPE;
+import static jakarta.security.enterprise.authentication.mechanism.http.openid.OpenIdConstant.OPENID_SCOPE;
+import static jakarta.security.enterprise.authentication.mechanism.http.openid.OpenIdConstant.PROFILE_SCOPE;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+
+import jakarta.security.enterprise.authentication.mechanism.http.openid.ClaimsDefinition;
+import jakarta.security.enterprise.authentication.mechanism.http.openid.DisplayType;
+import jakarta.security.enterprise.authentication.mechanism.http.openid.LogoutDefinition;
+import jakarta.security.enterprise.authentication.mechanism.http.openid.OpenIdProviderMetadata;
+import jakarta.security.enterprise.authentication.mechanism.http.openid.PromptType;
+import jakarta.security.enterprise.identitystore.IdentityStoreHandler;
+
+
+
 /**
- * {@link OpenIdAuthenticationDefinition} annotation defines openid connect
- * client configuration and The value of each parameter can be defined as Expression.
- * Supports the Authorization Code flow of OpenId Connect specification https://openid.net/specs/openid-connect-core-1_0.html#CodeFlowAuth
- * and Refresh tokens https://openid.net/specs/openid-connect-core-1_0.html#RefreshTokens.
+ * Annotation used to define a container authentication mechanism that implements
+ * the Authorization Code flow and Refresh tokens as defined by the OpenId Connect specification
+ * and make that implementation available as an enabled CDI bean.
+ *
+ * <p>
+ * Attributes on this annotation make up the OpenID connect client configuration. Expression Language
+ * expressions in attributes of type <code>String</code> are evaluated.
+ *
+ * <p>
  * It can make use of the user endpoint for retrieving claims about the user.
+ *
+ * <p>
+ * Note that in the OpenID terminology the authentication mechanism becomes a "Relying Party" (RP)
+ * that redirects the "End-User" (caller) to an "OpenId Connect Provider" (Identity Provider).
+ * Authentication takes place between the user and the Identity Provider, where the result of this
+ * authentication is communicated back to the authentication mechanism.
+ *
+ * <p>
+ * This is depicted in the following non-normative diagram:
+ *
+ * <pre>
+ *  +--------+                                                       +--------+
+ *  |        |                                                       |        |
+ *  |        |---------------(1) Authentication Request------------->|        |
+ *  |        |                                                       |        |
+ *  |        |       +--------+                                      |        |
+ *  |        |       |  End-  |&lt;--(2) Authenticates the End-User---->|        |
+ *  |   RP   |       |  User  |                                      |   OP   |
+ *  |        |       +--------+                                      |        |
+ *  |        |                                                       |        |
+ *  |        |&lt;---------(3) returns Authorization code---------------|        |
+ *  |        |                                                       |        |
+ *  |        |                                                       |        |
+ *  |        |------------------------------------------------------>|        |
+ *  |        |   (4) Request to TokenEndpoint for Access / Id Token  |        |
+ *  | OpenId |&lt;------------------------------------------------------| OpenId |
+ *  | Connect|                                                       | Connect|
+ *  | Client | ----------------------------------------------------->|Provider|
+ *  |        |   (5) Fetch JWKS to validate ID Token                 |        |
+ *  |        |&lt;------------------------------------------------------|        |
+ *  |        |                                                       |        |
+ *  |        |------------------------------------------------------>|        |
+ *  |        |   (6) Request to UserInfoEndpoint for End-User Claims |        |
+ *  |        |&lt;------------------------------------------------------|        |
+ *  |        |                                                       |        |
+ *  +--------+                                                       +--------+
+ * </pre>
+ *
+ * <p>
+ * Because of the way this authentication mechanism and protocol works, there is no
+ * requirement to explicitly define an identity store. However, the authentication
+ * mechanism MUST validate the token received from the "TokenEndpoint" by calling
+ * the {@link IdentityStoreHandler}. This allows for extra identity stores and/or
+ * a custom IdentityStoreHandler to participate in the final authentication result
+ * (e.g. adding extra groups).
+ *
+ *
+ * @see https://openid.net/specs/openid-connect-core-1_0.html#CodeFlowAuth
+ * @see https://openid.net/specs/openid-connect-core-1_0.html#RefreshTokens
  *
  * @author Gaurav Gupta
  * @author Rudy De Busscher
  */
 @Target({TYPE, METHOD})
 @Retention(RUNTIME)
-public @interface OpenIdAuthenticationDefinition {
+public @interface OpenIdAuthenticationMechanismDefinition {
 
     /**
-     * Required or information need to be defined through providerMetadata member.
-     * The provider uri ( http://openid.net/specs/openid-connect-discovery-1_0.html ) to read /
-     * discover the metadata of the openid provider.
+     * Required, unless providerMetadata is specified.
+     * The provider URI to read / discover the metadata of the openid provider.
      *
-     * @return
+     * @see http://openid.net/specs/openid-connect-discovery-1_0.html
+     *
+     * @return provider URI to read from which to read metadata
      */
     String providerURI() default "";
 
@@ -64,22 +130,6 @@ public @interface OpenIdAuthenticationDefinition {
     OpenIdProviderMetadata providerMetadata() default @OpenIdProviderMetadata;
 
     /**
-     * Optional. The claims definition defines the custom claims mapping of
-     * caller name and groups.
-     *
-     * @return
-     */
-    ClaimsDefinition claimsDefinition() default @ClaimsDefinition;
-
-    /**
-     * Optional. The Logout definition defines the logout and RP session
-     * management configuration.
-     *
-     * @return
-     */
-    LogoutDefinition logout() default @LogoutDefinition;
-
-    /**
      * Required. The client identifier issued when the application was
      * registered.
      *
@@ -88,12 +138,31 @@ public @interface OpenIdAuthenticationDefinition {
     String clientId() default "";
 
     /**
-     * Required. The client secret, it is recommended to set this using an Expression so that value
-     * is not hardcoded within the code..
+     * Required. The client secret.
+     *
+     * <p>
+     * Note that it is strongly recommended to set this using an Expression so that the value
+     * is not hardcoded within the code.
+     *
+     * @return The client secret
+     */
+    String clientSecret() default "";
+
+    /**
+     * Optional. The claims definition defines the custom claims mapping of
+     * caller name and groups.
      *
      * @return
      */
-    String clientSecret() default "";
+    ClaimsDefinition claimsDefinition() default @ClaimsDefinition;
+
+    /**
+     * Optional. The Logout definition defines the logout and Relaying Party session
+     * management configuration.
+     *
+     * @return
+     */
+    LogoutDefinition logout() default @LogoutDefinition;
 
     /**
      * The redirect URI to which the response will be sent by OpenId Connect
@@ -110,7 +179,7 @@ public @interface OpenIdAuthenticationDefinition {
      *
      * @return
      */
-    String[] scope() default {OpenIdConstant.OPENID_SCOPE, OpenIdConstant.EMAIL_SCOPE, OpenIdConstant.PROFILE_SCOPE};
+    String[] scope() default {OPENID_SCOPE, EMAIL_SCOPE, PROFILE_SCOPE};
 
     /**
      * Optional. Allows The scope value to be specified as Jakarta Expression Language expression.
@@ -126,7 +195,7 @@ public @interface OpenIdAuthenticationDefinition {
      *
      * @return
      */
-    String responseType() default OpenIdConstant.CODE;
+    String responseType() default CODE;
 
     /**
      * Optional. Informs the Authorization Server of the mechanism to be used
@@ -186,7 +255,7 @@ public @interface OpenIdAuthenticationDefinition {
     String useNonceExpression() default "";
 
     /**
-     * Optional. If enabled state and nonce value stored in session otherwise in
+     * Optional. If enabled the state and nonce values are stored in an HTTP session otherwise in
      * cookies.
      *
      * @return

@@ -10,7 +10,7 @@
  * Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
  * version 2 with the GNU Classpath Exception, which is available at
  * https://www.gnu.org/software/classpath/license.html.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  *
  */
@@ -24,8 +24,8 @@
 package jakarta.security.enterprise.identitystore.openid;
 
 /**
- * A refresh token provides continuous access to authentication server while the
- * user is not logged into application by issuing new access token.
+ * A refresh token provides continuous access to an authentication server while the
+ * user is not logged into an application by issuing a new access token.
  *
  * @author jGauravGupta
  * @author Rudy De Busscher
@@ -35,7 +35,7 @@ public interface RefreshToken {
     /**
      * The refresh token
      *
-     * @return
+     * @return the refresh token
      */
      String getToken();
 }

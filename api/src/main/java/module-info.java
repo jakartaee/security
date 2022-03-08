@@ -16,8 +16,10 @@
 module jakarta.security {
     exports jakarta.security.enterprise;
     exports jakarta.security.enterprise.authentication.mechanism.http;
+    exports jakarta.security.enterprise.authentication.mechanism.http.openid;
     exports jakarta.security.enterprise.credential;
     exports jakarta.security.enterprise.identitystore;
+    exports jakarta.security.enterprise.identitystore.openid;
 
     requires jakarta.servlet;
     requires jakarta.cdi;

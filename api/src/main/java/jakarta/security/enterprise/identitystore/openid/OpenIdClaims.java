@@ -23,9 +23,9 @@
  */
 package jakarta.security.enterprise.identitystore.openid;
 
-import java.util.Optional;
+import static jakarta.security.enterprise.authentication.mechanism.http.openid.OpenIdConstant.*;
 
-import static jakarta.security.enterprise.identitystore.openid.OpenIdConstant.*;
+import java.util.Optional;
 
 /**
  * User Claims received from the userinfo endpoint.
