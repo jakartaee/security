@@ -10,7 +10,7 @@
  * Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
  * version 2 with the GNU Classpath Exception, which is available at
  * https://www.gnu.org/software/classpath/license.html.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  *
  */
@@ -24,14 +24,13 @@
 package jakarta.security.enterprise.identitystore.openid;
 
 
-import jakarta.json.JsonObject;
-import jakarta.security.enterprise.authentication.mechanism.http.openid.LogoutDefinition;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-
 import java.io.Serializable;
 import java.util.Optional;
 import java.util.Set;
+
+import jakarta.json.JsonObject;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * An injectable interface that provides access to access token, identity token,
@@ -111,31 +110,13 @@ public interface OpenIdContext extends Serializable {
     JsonObject getProviderMetadata();
 
     /**
-     * Invalidates the RP's active OpenId Connect session and if
-     * {@link LogoutDefinition#notifyProvider}
-     * set to {@code true} then redirect the End-User's User Agent to the
-     * {@code end_session_endpoint} to notify the OP that the user has logged
-     * out of the RP's application and ask the user whether they want to logout
-     * from the OP as well. After successful logout, the End-User's User Agent
-     * redirect back to the RP's {@code post_redirect_uri}
-     * configured via
-     * {@link LogoutDefinition#redirectURI}
-     *
-     * @param request
-     * @param response
-     */
-    void logout(HttpServletRequest request, HttpServletResponse response);
-
-
-    /**
      * Retrieves the Stored value from Storage Controller.
+     *
      * @param request
      * @param response
      * @param key
      * @param <T>
      * @return
      */
-    <T> Optional<T> getStoredValue(HttpServletRequest request,
-                                   HttpServletResponse response,
-                                   String key);
+    <T> Optional<T> getStoredValue(HttpServletRequest request, HttpServletResponse response, String key);
 }
