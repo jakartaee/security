@@ -26,7 +26,6 @@ package jakarta.security.enterprise.identitystore.openid;
 
 import java.io.Serializable;
 import java.util.Optional;
-import java.util.Set;
 
 import jakarta.json.JsonObject;
 import jakarta.servlet.http.HttpServletRequest;
@@ -39,16 +38,6 @@ import jakarta.servlet.http.HttpServletResponse;
  * @author Gaurav Gupta
  */
 public interface OpenIdContext extends Serializable {
-
-    /**
-     * @return the caller name of the validated caller
-     */
-    String getCallerName();
-
-    /**
-     * @return the groups associated with the caller
-     */
-    Set<String> getCallerGroups();
 
     /**
      * Subject Identifier. A locally unique and never reassigned identifier
@@ -91,14 +80,14 @@ public interface OpenIdContext extends Serializable {
     Optional<Long> getExpiresIn();
 
     /**
-     * Gets the User Claims that was received from the userinfo endpoint
+     * Gets the User Claims that were received from the userinfo endpoint
      *
      * @return the claims json
      */
     JsonObject getClaimsJson();
 
     /**
-     * Gets the User Claims that was received from the userinfo endpoint
+     * Gets the User Claims that were received from the userinfo endpoint
      *
      * @return the {@link OpenIdClaims} instance
      */
