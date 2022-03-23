@@ -44,7 +44,7 @@ The _SecurityContext_ interface defines a method for programmatically testing ac
 boolean hasAccessToWebResource(String resource, String... methods);
 ----
 
-The _hasAccessToWebResource()_ method determines if the caller has access to the specified web resource for the specified HTTP methods, as determined by the security constraints configured for the application. See section 13.8 of [https://jakarta.ee/specifications/servlet/4.0/[SERVLET40]] for a description of web application security constraints.
+The _hasAccessToWebResource()_ method determines if the caller has access to the specified web resource for the specified HTTP methods, as determined by the security constraints configured for the application. See section 13.8 of [https://jakarta.ee/specifications/servlet/6.0/[SERVLET60]] for a description of web application security constraints.
 
 The resource parameter is an _URLPatternSpec_ that identifies an application-specific web resource. See the javadoc for more detail.
 
@@ -85,7 +85,7 @@ The _authenticate()_ method allows an application to signal to the container tha
 
 === Relationship to Other Specifications
 
-The _SecurityContext_ implementation is a CDI bean, as defined by [https://jakarta.ee/specifications/cdi/2.0/[CDI20]].
+The _SecurityContext_ implementation is a CDI bean, as defined by [https://jakarta.ee/specifications/cdi/4.0/[CDI40]].
 
 Various specifications in Jakarta EE provide similar or even identical methods to those provided be the _SecurityContext_. It is the intention of this specification to eventually supersede those methods and provide a cross-specification, platform alternative. The following gives an overview:
 

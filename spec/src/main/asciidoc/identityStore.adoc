@@ -383,4 +383,4 @@ See javadoc for further details on _PasswordHash_ and the _DatabaseIdentityStore
 
 === Relationship to Other Specifications
 
-_IdentityStore_ and _IdentityStoreHandler_ implementations are CDI beans, as defined by [https://jakarta.ee/specifications/cdi/2.0/[CDI20]].
+_IdentityStore_ and _IdentityStoreHandler_ implementations are CDI beans, as defined by [https://jakarta.ee/specifications/cdi/4.0/[CDI40]].
