@@ -74,8 +74,11 @@ import jakarta.security.enterprise.identitystore.IdentityStoreHandler;
  *  |   RP   |       |  User  |                                      |   OP   |
  *  |        |       +--------+                                      |        |
  *  |        |                                                       |        |
- *  |        |&lt;---------(3) returns Authorization code---------------|        |
+ *  |        |&lt;---------(3) Returns Authorization code---------------|        |
  *  |        |                                                       |        |
+ *  |        |---------(3b)                                          |        |
+ *  |        |           | Redirect to original resource (if any)    |        |
+ *  |        |&lt;----------+                                           |        |
  *  |        |                                                       |        |
  *  |        |------------------------------------------------------>|        |
  *  |        |   (4) Request to TokenEndpoint for Access / Id Token  |        |
@@ -165,13 +168,38 @@ public @interface OpenIdAuthenticationMechanismDefinition {
     LogoutDefinition logout() default @LogoutDefinition;
 
     /**
-     * The redirect URI to which the response will be sent by OpenId Connect
-     * Provider. This URI must exactly match one of the Redirection URI values
+     * The redirect URI (callback URI) to which the response will be sent by the OpenId
+     * Connect Provider. This URI must exactly match one of the Redirection URI values
      * for the Client pre-registered at the OpenID Provider.
      *
      * @return
      */
     String redirectURI() default "${baseURL}/Callback";
+
+    /**
+     * Optional. Automatically redirects the caller (the end-user) from
+     * the redirect URI defined by the <code>redirectURI</code> attribute
+     * to the resource the end-user originally requested in a "login to continue"
+     * scenario.
+     *
+     * <p>
+     * After arriving at the original requested resource, the runtime restores
+     * the request as it originally happened, including cookies, headers, the
+     * request method and the request parameters in the same way as done when
+     * using the {@link LoginToContinue} feature.
+     *
+     * @return
+     */
+    boolean redirectToOriginalResource() default false;
+
+    /**
+     * Optional. Allows the <code>redirectToOriginalResource</code> to be specified as
+     * Jakarta Expression Language expression.
+     * If set, overrides the value defined by the <code>redirectToOriginalResource</code> value.
+     *
+     * @return
+     */
+    String redirectToOriginalResourceExpression() default "";
 
     /**
      * Optional. The scope value defines the access privileges. The basic (and
@@ -255,8 +283,8 @@ public @interface OpenIdAuthenticationMechanismDefinition {
     String useNonceExpression() default "";
 
     /**
-     * Optional. If enabled the state and nonce values are stored in an HTTP session otherwise in
-     * cookies.
+     * Optional. If enabled the state, nonce values and original requested resource data are stored in an HTTP session
+     * otherwise in cookies.
      *
      * @return
      */
