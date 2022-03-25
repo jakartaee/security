@@ -2,7 +2,7 @@
 
 == Security Context
 
-This chapter describes the _SecurityContext_ interface and contract.
+This chapter describes the main _SecurityContext_ interface and contract and other context interfaces and their contract.
 
 === Introduction
 
@@ -96,3 +96,12 @@ Various specifications in Jakarta EE provide similar or even identical methods t
 * Server Faces - _ExternalContext#getUserPrincipal_, _ExternalContext#isUserInRole_
 * Contexts and Dependency Injection - _@Inject Principal_
 * WebSocket - _Session#getUserPrincipal_
+
+=== Other context interfaces
+
+==== OpenIdContext
+
+An implementation must provide a CDI bean for the `OpenIdContext` interface with scope `SessionScoped`. This bean is used to programmatically access data received from an OpenID Connect Provider when the OpenID Connect authentication mechanism (via the <<OpenID Connect Annotation>>) has been used to authenticate the caller.
+
+
+

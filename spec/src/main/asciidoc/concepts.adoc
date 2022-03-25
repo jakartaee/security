@@ -65,6 +65,7 @@ LdapIdentityStoreDefinition
 BasicAuthenticationMechanismDefinition
 CustomFormAuthenticationMechanismDefinition
 FormAuthenticationMechanismDefinition
+OpenIdAuthenticationMechanismDefinition
 
 LoginToContinue
 RememberMe

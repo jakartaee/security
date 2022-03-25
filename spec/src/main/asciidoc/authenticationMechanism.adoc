@@ -96,6 +96,7 @@ A Jakarta EE container MUST support built-in beans for the following _HttpAuthen
 * BASIC - Authenticates according to the mechanism as described in 13.6.1, "HTTP Basic Authentication", in [https://jakarta.ee/specifications/servlet/6.0/[SERVLET60]]. See also RFC 7617, "The 'Basic' HTTP Authentication Scheme" [https://tools.ietf.org/html/rfc7617[RFC7617]]. This bean is activated and configured via the _@BasicAuthenticationMechanismDefinition_ annotation.
 * FORM - Authenticates according to the mechanism as described in 13.6.3, "Form Based Authentication", in [https://jakarta.ee/specifications/servlet/6.0/[SERVLET60]]. This bean is activated and configured via the _@FormAuthenticationMechanismDefinition_ annotation.
 * Custom FORM - A variant on FORM, with the difference that continuing the authentication dialog as described in [https://jakarta.ee/specifications/servlet/6.0/[SERVLET60]], section 13.6.3, step 3, and further clarified in section 13.6.3.1, does not happen by posting back to j_security_check, but by invoking _SecurityContext.authenticate()_ with the credentials the application collected. This bean is activated and configured via the _@CustomFormAuthenticationMechanismDefinition_ annotation.
+* OpenID Connect - Authenticates according to the Authorization Code flow and Refresh tokens as defined by the OpenID Connect specification. See [https://openid.net/specs/openid-connect-core-1_0.html#CodeFlowAuth[OPENID10FLOW]] and [https://openid.net/specs/openid-connect-core-1_0.html#RefreshTokens[OPENID10REFRESH]]. This bean is activated and configured via the _@OpenIdAuthenticationMechanismDefinition_ annotation.
 
 All of these beans MUST have the qualifier @Default and the scope @ApplicationScoped, as defined by the CDI specification.
 
@@ -160,6 +161,478 @@ public @interface CustomFormAuthenticationMechanismDefinition {
 ----
 
 See also the "<<LoginToContinue Annotation>>" and "<<Custom FORM Notes>>" sections below.
+
+
+==== OpenID Connect Annotation
+
+The following annotation is used to configure the built-in OpenID Connect authentication mechanism.
+
+[source,java]
+----
+@Target({TYPE, METHOD})
+@Retention(RUNTIME)
+public @interface OpenIdAuthenticationMechanismDefinition {
+
+    /**
+     * Required, unless providerMetadata is specified.
+     * The provider URI to read / discover the metadata of the openid provider.
+     *
+     * @see http://openid.net/specs/openid-connect-discovery-1_0.html
+     *
+     * @return provider URI to read from which to read metadata
+     */
+    String providerURI() default "";
+
+    /**
+     * To override the openid connect provider's metadata property discovered
+     * via providerUri.
+     *
+     * @return OpenIdProviderMetadata instance.
+     */
+    OpenIdProviderMetadata providerMetadata() default @OpenIdProviderMetadata;
+
+    /**
+     * Required. The client identifier issued when the application was
+     * registered.
+     *
+     * @return the client identifier
+     */
+    String clientId() default "";
+
+    /**
+     * Required. The client secret.
+     *
+     * <p>
+     * Note that it is strongly recommended to set this using an Expression so that the value
+     * is not hardcoded within the code.
+     *
+     * @return The client secret
+     */
+    String clientSecret() default "";
+
+    /**
+     * Optional. The claims definition defines the custom claims mapping of
+     * caller name and groups.
+     *
+     * @return
+     */
+    ClaimsDefinition claimsDefinition() default @ClaimsDefinition;
+
+    /**
+     * Optional. The Logout definition defines the logout and Relaying Party session
+     * management configuration.
+     *
+     * @return
+     */
+    LogoutDefinition logout() default @LogoutDefinition;
+
+    /**
+     * The redirect URI (callback URI) to which the response will be sent by the OpenId
+     * Connect Provider. This URI must exactly match one of the Redirection URI values
+     * for the Client pre-registered at the OpenID Provider.
+     *
+     * @return
+     */
+    String redirectURI() default "${baseURL}/Callback";
+
+    /**
+     * Optional. Automatically redirects the caller (the end-user) from
+     * the redirect URI defined by the <code>redirectURI</code> attribute
+     * to the resource the end-user originally requested in a "login to continue"
+     * scenario.
+     *
+     * <p>
+     * After arriving at the original requested resource, the runtime restores
+     * the request as it originally happened, including cookies, headers, the
+     * request method and the request parameters in the same way as done when
+     * using the {@link LoginToContinue} feature.
+     *
+     * @return
+     */
+    boolean redirectToOriginalResource() default false;
+
+    /**
+     * Optional. Allows the <code>redirectToOriginalResource</code> to be specified as
+     * Jakarta Expression Language expression.
+     * If set, overrides the value defined by the <code>redirectToOriginalResource</code> value.
+     *
+     * @return
+     */
+    String redirectToOriginalResourceExpression() default "";
+
+    /**
+     * Optional. The scope value defines the access privileges. The basic (and
+     * required) scope for OpenID Connect is the openid scope.
+     *
+     * @return
+     */
+    String[] scope() default {OPENID_SCOPE, EMAIL_SCOPE, PROFILE_SCOPE};
+
+    /**
+     * Optional. Allows The scope value to be specified as Jakarta Expression Language expression.
+     * If Set, overrides any values set by scope.
+     *
+     * @return
+     */
+    String scopeExpression() default "";
+
+    /**
+     * Optional. Response Type value defines the processing flow to be used. By
+     * default, the value is code (Authorization Code Flow).
+     *
+     * @return
+     */
+    String responseType() default CODE;
+
+    /**
+     * Optional. Informs the Authorization Server of the mechanism to be used
+     * for returning parameters from the Authorization Endpoint.
+     *
+     * @return
+     */
+    String responseMode() default "";
+
+    /**
+     * Optional. The prompt value specifies whether the authorization server
+     * prompts the user for reauthentication and consent. If no value is
+     * specified and the user has not previously authorized access, then the
+     * user is shown a consent screen.
+     *
+     * @return
+     */
+    PromptType[] prompt() default {};
+
+    /**
+     * Optional. Allows the  prompt value to be specified as Jakarta Expression Language expression.
+     * If Set, overirdes the value defined by the prompt value.
+     *
+     * @return
+     */
+    String promptExpression() default "";
+
+    /**
+     * Optional. The display value specifying how the authorization server
+     * displays the authentication and consent user interface pages.
+     *
+     * @return
+     */
+    DisplayType display() default DisplayType.PAGE;
+
+    /**
+     * Optional. Allows the display value to be specified as Jakarta Expression Language expression.
+     * If set, overrides the value defined by display.
+     *
+     * @return
+     */
+    String displayExpression() default "";
+
+    /**
+     * Optional. Enables string value used to mitigate replay attacks.
+     *
+     * @return
+     */
+    boolean useNonce() default true;
+
+    /**
+     * Optional. Allows the nonce activation to be specified as Jakarta Expression Language expression.
+     * If set, overrides the value defined by the useNonce value.
+     *
+     * @return
+     */
+    String useNonceExpression() default "";
+
+    /**
+     * Optional. If enabled the state, nonce values and original requested resource data are stored in an HTTP session
+     * otherwise in cookies.
+     *
+     * @return
+     */
+    boolean useSession() default true;
+
+    /**
+     * Optional. Allows the configuration of the session through a Jakarta Expression Language expression.
+     * If set, overwrites the value of useSession value.
+     *
+     * @return
+     */
+    String useSessionExpression() default "";
+
+    /**
+     * An array of extra options that will be sent to the OAuth provider.
+     * <p>
+     * These must be in the form of {@code "key=value"} i.e.
+     * <code> extraParameters={"key1=value", "key2=value2"} </code>
+     *
+     * @return
+     */
+    String[] extraParameters() default {};
+
+    /**
+     * Allows the extra parameters to be defined as a Jakarta Expression Language expression.
+     * If set, overrides the extraParameters value.
+     *
+     * @return
+     */
+    String extraParametersExpression() default "";
+
+    /**
+     * Optional. Sets the connect timeout(in milliseconds) for Remote JWKS
+     * retrieval. Value must not be negative and if value is zero then infinite
+     * timeout.
+     *
+     * @return
+     */
+    int jwksConnectTimeout() default 500;
+
+    /**
+     * Optional. Allows the connect timeout(in milliseconds) for Remote JWKS to be defined as
+     * Jakarta Expression Language expression.
+     * If set, overwrites the  jwksConnectTimeout value.
+     *
+     * @return
+     */
+    String jwksConnectTimeoutExpression() default "";
+
+    /**
+     * Optional. Sets the read timeout(in milliseconds) for Remote JWKS
+     * retrieval. Value must not be negative and if value is zero then infinite
+     * timeout.
+     *
+     * @return
+     */
+    int jwksReadTimeout() default 500;
+
+    /**
+     * Optional. Allows the read timeout(in milliseconds) for Remote JWKS
+     * retrieval to be defined as Jakarta Expression Language expression.
+     * If set, overwrites the jwksReadTimeout value.
+     *
+     * @return
+     */
+    String jwksReadTimeoutExpression() default "";
+
+    /**
+     * Optional. Enables or disables the automatically performed refresh of
+     * Access and Refresh Token.
+     *
+     * @return {@code true}, if Access and Refresh Token shall be refreshed
+     * automatically when they are expired.
+     */
+    boolean tokenAutoRefresh() default false;
+
+    /**
+     * Optional. Allows the automatically performed refresh of
+     * Access and Refresh Token to be defined as Jakarta Expression Language expression.
+     * If set, overwrites the value of  tokenAutoRefresh.
+     */
+    String tokenAutoRefreshExpression() default "";
+
+    /**
+     * Optional. Sets the minimum validity time in milliseconds the Access Token
+     * must be valid before it is considered expired. Value must not be
+     * negative.
+     *
+     * @return
+     */
+    int tokenMinValidity() default 10 * 1000;
+
+    /**
+     * Optional. Allows the minimum validity time in milliseconds the Access Token
+     * must be valid before it is considered expired to be defined as Jakarta Expression Language expression.
+     * If Set, overwrites the tokenMinValidity value.
+     *
+     * @return
+     */
+    String tokenMinValidityExpression() default "";
+}
+----
+
+Attributes of this annotation support Jakarta Expression Language evaluation as specified in <<Jakarta Expression Language Support>>.
+
+The expected behavior is defined in the following sections.
+
+===== Metadata configuration
+
+The OpenID Connect authentication mechanism needs metadata about the OpenID Connect Provider to function properly. The OpenID Connect specification defines that this data can be read from the `well known openid configuration endpoint` which resides at `[OpenID Connect Provider base URL].well-known/openid-configuration`.
+
+The following metadata values are required (since they are defined as required by the OpenID Specification):
+
+- Authorization endpoint
+- Token endpoint
+- JWKS URI
+- Issuer of the tokens
+- Supported Subject types
+- Supported Response types
+- Supported Id Token Signing Algorithms
+
+The `OpenIdAuthenticationMechanismDefinition.providerURI` defines the base URL of the OpenID Connect Provider where the `/.well-known/openid-configuration` is appended to (or used as-is when it is the well known configuration URL itself). Reading the `well known openid configuration endpoint` can be done eagerly when the application is deployed or lazily at the time a secured URL is accessed for the first time. The values retrieved from the `well known openid configuration endpoint` can be overwritten if needed by using the `OpenIdAuthenticationMechanismDefinition.providerMetadata` structure.
+
+
+===== Authentication dialog
+
+The authentication dialog that the authentication mechanism starts and coordinates follows the flow as defined by the OpenID Connect specification. For
+completeness this is depicted below:
+
+[source,text]
+----
+ *  +--------+                                                       +--------+
+ *  |        |                                                       |        |
+ *  |        |---------------(1) Authentication Request------------->|        |
+ *  |        |                                                       |        |
+ *  |        |       +--------+                                      |        |
+ *  |        |       |  End-  |<--(2) Authenticates the End-User---->|        |
+ *  |   RP   |       |  User  |                                      |   OP   |
+ *  |        |       +--------+                                      |        |
+ *  |        |                                                       |        |
+ *  |        |<---------(3) Returns Authorization code---------------|        |
+ *  |        |                                                       |        |
+ *  |        |---------(3b)                                          |        |
+ *  |        |           | Redirect to original resource (if any)    |        |
+ *  |        |<----------+                                           |        |
+ *  |        |                                                       |        |
+ *  |        |------------------------------------------------------>|        |
+ *  |        |   (4) Request to TokenEndpoint for Access / Id Token  |        |
+ *  | OpenID |<------------------------------------------------------| OpenID |
+ *  | Connect|                                                       | Connect|
+ *  | Client | ----------------------------------------------------->|Provider|
+ *  |        |   (5) Fetch JWKS to validate ID Token                 |        |
+ *  |        |<------------------------------------------------------|        |
+ *  |        |                                                       |        |
+ *  |        |------------------------------------------------------>|        |
+ *  |        |   (6) Request to UserInfoEndpoint for End-User Claims |        |
+ *  |        |<------------------------------------------------------|        |
+ *  |        |                                                       |        |
+ *  +--------+                                                       +--------+ 
+----                                       
+
+When the authentication mechanism determines authentication is required, for instance when the caller ("end-user" in OpenID Connect terminology) tries to access a protected resource without being authenticated, or when the caller explicitly initiates authentication, without being authenticated for the current request, an authentication request needs to be assembled and send to the authentication endpoint of the OpenID Connect provider. This request corresponds to step (1) in the OpenID Connect diagram depicted above. The location of this endpoint is configured by the `providerURI` attribute of the `OpenIdAuthenticationMechanismDefinition` annotation.
+
+The following values need to be passed to this endpoint _unconditionally_:
+
+- ClientId value as taken from `OpenIdAuthenticationMechanismDefinition.clientId`
+- Scope value as taken from `OpenIdAuthenticationMechanismDefinition.scope`
+- Response Type value as taken from `OpenIdAuthenticationMechanismDefinition.responseType`
+- State value, must be generated by the authentication mechanism
+- RedirectURI value as taken from `OpenIdAuthenticationMechanismDefinition.redirectURI` (evaluated)
+
+The `redirectURI` attribute of the `OpenIdAuthenticationMechanismDefinition` annotation may contain the special 'expression' value `${baseURL}` and this must be resolved to the host and context path of the application for which the OpenID Connect authentication mechanism is installed. This requirement makes it easier to have an absolute URL as required by the OpenID Connect specification.
+
+The following values need to be passed to this endpoint _conditionally_:
+
+- Nonce, must be generated by the authentication mechanism if `OpenIdAuthenticationMechanismDefinition.useNonce` is set to `true`
+- Response Mode value as taken from `OpenIdAuthenticationMechanismDefinition.responseMode` if defined
+- Display value as taken from `OpenIdAuthenticationMechanismDefinition.display` if defined
+- Prompt value as taken from `OpenIdAuthenticationMechanismDefinition.prompt` if defined
+- Extra values as taken from `OpenIdAuthenticationMechanismDefinition.extraParameters` if defined
+
+The State value, and also the Nonce value if requested, MUST be stored between requests so that these values can be validated when the OpenID Connect Provider later calls the supplied redirectURI. These values can either be stored serverside (in the HTTP Session) or clientside (as a Cookie). The value of the `OpenIdAuthenticationDefinition.useSession` attribute determines which one is used. In the case of storage through a Cookie, the Cookie must be defined as `HTTPonly` and must have the `Secure` flag set.
+
+Before the redirect to the authentication endpoint of the OpenID Connect Provider is performed, the URL plus request parameters requested by the caller on which the authentication dialog was triggered must be stored so that it later on can be retrieved by a call to `OpenIdContext.getStoredValue(request, response, OpenIdConstant.ORIGINAL_REQUEST)`. 
+
+Additionally, if `OpenIdAuthenticationMechanismDefinition.redirectToOriginalResource` is set to 'true' and the authentication flow is container-initiated (as opposed to caller-initiated authentication) the authentication mechanism must store the full request as well. The full request here means all data that makes up the `HttpServletRequest` so that the container can restore this request later on in a similar way to how the "<<LoginToContinue Annotation>>" behaves.
+
+Step (3) in the OpenID Connect diagram depicted above, that is, when the OpenID Connect Provider calls us back, is detected by the authentication mechanism when a request contains a `state` request parameter. When that initial condition is satisfied, the following investigation and actions must be done by the authentication mechanism:
+
+- If the request (without request parameters) does not match the `redirectURI`, or does not match the stored original URL (without request parameters) in case `AuthenticationMechanismDefinition.redirectToOriginalResource` is set to 'true', it must reply with a `CredentialValidationResult.NOT_VALIDATED_RESULT` value.
+- If there is no State value stored, it must reply with a `CredentialValidationResult.NOT_VALIDATED_RESULT` value.
+- If the State value in the request does not match the State value stored, it must reply with a `CredentialValidationResult.INVALID_RESULT` value.
+- If the request contains a parameter `error`, the authentication by the OpenID Connect Provider has failed and the authentication mechanism must reply with a `CredentialValidationResult.INVALID_RESULT` value.
+
+If none of the above listed additional conditions apply, the request is taken to be a valid callback and the authentication between the end-user (caller) and the OpenID Connect Provider is considered to have been successful. The authentication mechanism must now move to step (4) of the OpenID Connect diagram and mark this internally by clearing the stored State value (remove it from the HTTP session or Cookie).
+
+For step (4) the authentication mechanism itself must call the Token endpoint to retrieve an Access Token and ID Token. This constitutes a so-called server to server call, as the end-user (caller) MUST NOT be involved here.
+
+The call to the token endpoint must include the following parameters (as specified by the OpenID Connect specification):
+
+- The ClientId value as taken from `OpenIdAuthenticationMechanismDefinition.clientId`
+- The ClientSecret value as taken from `OpenIdAuthenticationMechanismDefinition.clientId`
+- The `grant_type` value set to the constant `authorization_code`
+- The RedirectURI value as taken from `OpenIdAuthenticationMechanismDefinition.redirectURI`
+- The code received from the OpenID Connect Provider in the callback request as the `code` request parameter
+
+If the call to the Token endpoint is successful, it should return a "Token Response" in JSON format. 
+
+When available in the "Token Response", the optional fields "refresh_token" and "expires_in" must be stored internally. 
+
+The authentication mechanism also MUST create a `jakarta.security.enterprise.credential.Credential` instance holding this Token Response and MUST validate this token using the available `IdentityStoreHandler`.
+
+In order to correctly validate this token, the Jakarta Security implementation MUST install an `IdentityStore` capable of validating this credential. Note that in this version of the specification the type of both the `Credential` and `IdentityStore` are implementation specific. A future version of the specification may standardise these. For this reason the implementation specific identity store is now discussed in this chapter.
+
+The `IdentityStore` mentioned above must perform the following checks (also defined by the OpenID Connect specification):
+
+- The _issuer_ claim matches the issuer retrieved from the `well known openid configuration endpoint` or the `issuer` member of the `OpenIdProviderMetadata` construct.
+- A _subject_ claim is present and contains a value.
+- The _audience_ claim is present and is equal to the `OpenIdAuthenticationMechanismDefinition.clientId`
+- If multiple audience values are returned by the OpenID Connect Provider, an authorized party claim (`azp`) must be present.
+- If an _authorized party_ claim (`azp`) is present, it must match the `OpenIdAuthenticationMechanismDefinition.clientId`
+- The _expiration_ claim must be present and must be 'in the future' (a clock skew might be considered or configured in an implementation specific way)
+- The _issued at_ claim must be present and must be 'in the past' (a clock skew might be considered or configured in an implementation specific way)
+- The _not before_ claim can be present and if defined, must be 'in the past' (a clock skew might be considered or configured in an implementation specific way)
+
+For the Identity Token, the following check must be performed additionally
+
+- When `nonce` usage is configured, verify if the `nonce` value within the Identity Token is identical to the one that was specified in the authentication request.
+
+===== Caller name and groups
+
+A public OpenID Connect Provider generally has no knowledge about roles or groups an end-user (caller) has in a client application (relying party), but
+a (private) OpenID Connect Provider operated by the same organisation may have. Therefore this specification allows groups to be provided by the client application or by the OpenID Connect Provider (or both).
+
+Groups can be provided by the client application by means of an extra identity store with the `validationTypes` method returning `PROVIDE_GROUPS`.  Groups can be provided by the OpenID Connect Provider by means of additional claims. 
+
+The claim name that is used to define the Caller Name and optionally the Caller Groups from the OpenID Connect Provider can be defined by the following attributes:
+
+- Caller Name: `OpenIdAuthenticationMechanismDefinition.claimsDefinition.callerNameClaim` 
+- Caller Groups: `OpenIdAuthenticationMechanismDefinition.claimsDefinition.callerGroupsClaim`.  
+
+The following logic is used to determine the value of each;
+
+- If the specified claim exists and has a non-empty value in the Access Token, this Access Token claim value is taken.
+- If not resolved yet, and the specified claim exists and has a non-empty value in the Identity Token, this Identity Token claim value is taken.
+- If not resolved yet, and the specified claim exists and has a non-empty value in the User Info Token, this User Info Token claim value is taken.
+
+An implementation may choose to not implement the call to the User Info Endpoint, in all cases or when a certain configuration value is set, since not all OpenID Connect Providers support this User Info Endpoint.
+
+The Caller Name and optionally any Caller Groups provided by the OpenID Connect Provider must be present in the `CredentialValidationResult` that is returned by the implementation specific identity store that validates the `Credential` holding the Token Response as mentioned above.
+
+====== Remembering authentication
+
+After the end-user (caller) has been successfully authenticated, the authentication mechanism must ensure that an authenticated session is established in a way functionally equivalent to the functionality provided by the "<<AutoApplySession Annotation>>". An implementation may, but does not have to, use that annotation to fulfill this requirement.
+
+====== Token Expiration
+
+The authentication mechanism must check on each request for which there is an authenticated user if the Access Token or the Identity Token has expired.
+
+In case a token is expired, there are 3 options:
+
+- The token is refreshed when `OpenIdAuthenticationMechanismDefinition.tokenAutoRefresh` set to `true`
+- A logout takes place when `OpenIdAuthenticationMechanismDefinition.logout.accessTokenExpiry` or `OpenIdAuthenticationMechanismDefinition.logout.identityTokenExpiry` set to `true` and the Access Token respectively Identity Token is expired
+- The token expiration is ignored when none of the above conditions hold
+
+In the case a refresh of the token is needed, the OpenID Connect provider refreshToken endpoint has to be called with the following parameters
+
+- The ClientId value as taken from `OpenIdAuthenticationMechanismDefinition.clientId`
+- The ClientSecret value as taken from `OpenIdAuthenticationMechanismDefinition.clientId`
+- The `grant_type` value set to the constant `refresh_token`
+- the `refresh_token` value set to the previously stored value from the `refresh_token` field of the Token Response
+
+When the call is successful and a new Access Token is received, the same logic is applied as described above;
+
+- Validate tokens
+- Store in context
+- Determine the caller Name and Caller groups values (which can lead to more or less permissions in the application)
+
+When the call is not successful, or when there is no previously stored `refresh_token` field of the Token Response, a logout should be initiated.
+
+====== Logout
+
+The `cleanSubject` method of the authentication mechanism has the following requirements
+
+- Invalidate the HTTP Session, if one is available
+- Call the EndSession endpoint of the OpenID Connect Provider if `OpenIdAuthenticationMechanismDefinition.logout.notifyProvider` is set to `true` and such EndSession endpoint is available. If `OpenIdAuthenticationMechanismDefinition.logout.redirectURI` is defined it should be passed along in this call.
+- Redirect to `OpenIdAuthenticationMechanismDefinition.logout.redirectURI` if `OpenIdAuthenticationMechanismDefinition.logout.notifyProvider` is set to `false` and `OpenIdAuthenticationMechanismDefinition.logout.redirectURI` is defined
+- Redirect to the OpenID Connect Provider Authentication endpoint for re-authentication if the previous two conditions don't hold. Be aware that a correct `promptType` must be defined so that this option works properly. Without any prompt defined, the Openid Connect Provider can immediately redirect to the _callback_  (value of `OpenIdAuthenticationMechanismDefinition.redirectURI`) of the application and the end-user (caller) is then again authenticated within the application, effectively making logging out impossible.
+
 
 ==== LoginToContinue Annotation
 
@@ -238,6 +711,10 @@ Intercepting _cleanSubject()_::
 * The _cleanSubject()_ method SHOULD NOT be intercepted.
 
 See also the <<SecurityContext.authenticate() Notes>> section below.
+
+
+
+
 
 ==== RememberMe Annotation
 
