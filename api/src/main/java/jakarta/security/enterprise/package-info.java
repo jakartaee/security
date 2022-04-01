@@ -36,7 +36,9 @@
  * <li>{@link jakarta.security.enterprise.authentication.mechanism.http.FormAuthenticationMechanismDefinition}</li>
  * </ul>
  * 
- * For all attributes of type <code>String</code> on these annotations, Jakarta Expression Language 3.0 expressions can
+ * For all attributes of type <code>String</code> on these annotations, as well as in the annotations referenced from them 
+ * (e.g. @{link jakarta.security.enterprise.authentication.mechanism.http.openid.OpenIdProviderMetadata}), 
+ * Jakarta Expression Language 3.0 expressions can
  * be used. All named CDI beans are available to that expression, as well as the default classes as specified by
  * Expression Language 3.0 for the {@link ELProcessor}.
  * 

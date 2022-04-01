@@ -24,12 +24,14 @@
 package jakarta.security.enterprise.authentication.mechanism.http.openid;
 
 import java.lang.annotation.Retention;
-
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * {@link OpenIdProviderMetadata} annotation overrides the openid connect
  * provider's endpoint value, discovered using providerUri.
+ * 
+ * <p>
+ * Expressions in attributes of type <code>String</code> are evaluated.
  *
  * @author Gaurav Gupta
  * @author Rudy De Busscher

@@ -24,12 +24,14 @@
 package jakarta.security.enterprise.authentication.mechanism.http.openid;
 
 import java.lang.annotation.Retention;
-
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * {@link ClaimsDefinition} annotation defines claims mapping in openid connect
- * client configuration.
+ * client configuration. Expression Language
+ * 
+ * <p>
+ * Expressions in attributes of type <code>String</code> are evaluated.
  *
  * @author jGauravGupta
  * @author Rudy De Busscher
