@@ -24,12 +24,14 @@
 package jakarta.security.enterprise.authentication.mechanism.http.openid;
 
 import java.lang.annotation.Retention;
-
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * {@link LogoutDefinition} annotation defines logout and RP session management
  * configuration in openid connect client.
+ * 
+ * <p>
+ * Expressions in attributes of type <code>String</code> are evaluated.
  *
  * @author jGauravGupta
  */

@@ -23,20 +23,19 @@
  */
 package jakarta.security.enterprise.authentication.mechanism.http;
 
-import static jakarta.security.enterprise.authentication.mechanism.http.openid.OpenIdConstant.CODE;
-import static jakarta.security.enterprise.authentication.mechanism.http.openid.OpenIdConstant.EMAIL_SCOPE;
-import static jakarta.security.enterprise.authentication.mechanism.http.openid.OpenIdConstant.OPENID_SCOPE;
-import static jakarta.security.enterprise.authentication.mechanism.http.openid.OpenIdConstant.PROFILE_SCOPE;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
 import java.lang.annotation.Retention;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Target;
 
 import jakarta.security.enterprise.authentication.mechanism.http.openid.ClaimsDefinition;
 import jakarta.security.enterprise.authentication.mechanism.http.openid.DisplayType;
 import jakarta.security.enterprise.authentication.mechanism.http.openid.LogoutDefinition;
+import static jakarta.security.enterprise.authentication.mechanism.http.openid.OpenIdConstant.CODE;
+import static jakarta.security.enterprise.authentication.mechanism.http.openid.OpenIdConstant.EMAIL_SCOPE;
+import static jakarta.security.enterprise.authentication.mechanism.http.openid.OpenIdConstant.OPENID_SCOPE;
+import static jakarta.security.enterprise.authentication.mechanism.http.openid.OpenIdConstant.PROFILE_SCOPE;
 import jakarta.security.enterprise.authentication.mechanism.http.openid.OpenIdProviderMetadata;
 import jakarta.security.enterprise.authentication.mechanism.http.openid.PromptType;
 import jakarta.security.enterprise.identitystore.IdentityStoreHandler;
@@ -169,8 +168,28 @@ public @interface OpenIdAuthenticationMechanismDefinition {
 
     /**
      * The redirect URI (callback URI) to which the response will be sent by the OpenId
-     * Connect Provider. This URI must exactly match one of the Redirection URI values
-     * for the Client pre-registered at the OpenID Provider.
+     * Connect Provider. This URI must be absolute and must exactly match one of the Redirection URI values
+     * for the Client pre-registered at the OpenID Provider. 
+     * <p>
+     * The value can be a Jakarta Expression Language 3.0 expression, which can contain 
+     * the implicit String variable baseURL. This variable contains the host and context path of the application 
+     * for which the OpenID Connect authentication mechanism is installed. This variable makes it easier to compose 
+     * an absolute URL as required by the OpenID Connect specification.
+     * 
+     * <p>
+     * Examples:
+     * <ul>
+     *  <li>{@code redirectURI = "${baseURL}/Callback"} - concatenates the `baseURL` variable and the "/Callback" string 
+     *    in a composite expression.
+     *   </li>
+     *  <li>{@code redirectURI = "${baseURL += oidcConfig.redirectCallback}"} - concatenates the `baseURL` variable and the 
+     *   `redirectCallback` property on bean `oidcConfig` in a single expression
+     *  </li>
+     *  <li>{@code redirectURI = "${baseURL}#{oidcConfig.redirectCallback}"} - concatenates the `baseURL` variable and the 
+     *   `redirectCallback` property on bean `oidcConfig` in a composite expression. The `redirectCallback` property would 
+     *   be evaluated as a deferred expression during each request.
+     *  </li>
+     * </ul>
      *
      * @return
      */
