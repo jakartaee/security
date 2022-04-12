@@ -176,6 +176,10 @@
 			<fileset dir="${deliverable.bundle.dir}/lib"
 					 includes="*jaxb*"/>
 		</delete>
+
+		<copy file="${ts.home}/pom-bundle.xml"
+              tofile="${deliverable.bundle.dir}/pom.xml"/>
+
 		<!--antcall target="mvn"/-->
         <!--
 		  <antcall target="create.doc.bundle"/>
