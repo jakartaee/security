@@ -173,8 +173,8 @@
                 <istrue value="${keywords.direction.forward}"/>
             <then>
                 <check.server host="${impl.vi.host}" port="${impl.vi.port}"/>
-                <echo message="trial impl.vi.host : ${impl.vi.host}"/>
-                <echo message="trial impl.vi.deploy.dir : ${impl.vi.deploy.dir}"/>
+                <echo message="impl.vi.host : ${impl.vi.host}"/>
+                <echo message="impl.vi.deploy.dir : ${impl.vi.deploy.dir}"/>
 
                 <ant antfile="${common.bin.dir}/xml/impl/${impl.vi}/deploy.xml"
                      target="-deploy"

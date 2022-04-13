@@ -75,11 +75,11 @@
     </target>
     
     <target name="configure.backend">
-        <echo message="trial db.driver is ${db.driver}"/>
-        <echo message="trial db.url is ${db.url}"/>
-        <echo message="trial db.lib is ${db.lib}"/>
-        <echo message="trial db.delimiter is ${db.delimiter}"/>
-        <echo message="trial db.user is ${db.user}"/>
+        <echo message="db.driver is ${db.driver}"/>
+        <echo message="db.url is ${db.url}"/>
+        <echo message="db.lib is ${db.lib}"/>
+        <echo message="db.delimiter is ${db.delimiter}"/>
+        <echo message="db.user is ${db.user}"/>
         <sql driver="${db.driver}"
              url="${db.url}"
              userid="${db.user}"

@@ -35,3 +35,9 @@ nb-configuration.xml
 # mac
 .DS_Store
 
+**/security-tck/dist/**
+**/release/SECURITYAPI_BUILD/**
+**/sun/javaee/runtime/ejb/**
+**/sun/javaee/runtime/web/**
+**/sun/javaee/runtime/appclient/**
+**/sun/javaee/runtime/app/**
