@@ -42,6 +42,7 @@ install and set up the following software components:
 include::req-software.inc[]
 * Java SE {SEversion}
 * Apache Ant {AntVersion}
+* Apacke Maven {MavenVersion}
 * A CI for {TechnologyShortName} {TechnologyVersion}, one example is {TechnologyRI}
 * {TechnologyShortName} TCK version {TechnologyVersion}, which includes:
 include::tck-packages.inc[]
@@ -62,6 +63,9 @@ on the Apache Ant Project site. The Apache Ant Manual is available at
 Apache Ant is protected under the Apache Software, License 2.0, which is
 is available on the Apache Ant Project license page at 
 `http://ant.apache.org/license.html`.
+.  Install the Apache Maven {AntVersion} software, if it is not already installed. +
+Download and install Apache Maven {AntVersion} software from Apache Maven
+Project.
 .  Install the {TechnologyShortName} TCK {TechnologyVersion} software.
   a.  Copy or download the {TechnologyShortName} TCK software to your
       local system. +

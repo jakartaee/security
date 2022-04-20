@@ -3,13 +3,12 @@ NOTE TO WRITERS:
 These CLI examples can be customized as necessary.
 ///////////////////////////////////////////////////////////////////////
 
-1.  Change to any subdirectory under `<TS_HOME>/src/com/sun/ts/tests`.
-2.  Start JavaTest using the following command:
+1.  Start the tests using the following command:
 +
 --
 [source,oac_no_warn]
 ----
-ant runclient
+mvn clean verify
 ----
 --
 
@@ -23,20 +22,20 @@ following commands:
 [source,subs="attributes"]
 ----
 cd {sigTestDirectoryExample}
-ant runclient
+mvn clean verify
 ----
 
 [[GCMBV]]
 
 
-===== Example 5-2 Single Test Directory
+===== Example 5-2 Start JavaTests in jakarta-security-tck/security-tck
 
-To run a single test directory, enter the following commands:
+To run the Javatests:
 
 [source,subs="attributes"]
 ----
-cd {singleTestDirectoryExample}
-ant runclient
+cd {javatTestDirectoryExample}
+mvn clean verify
 ----
 
 [[GCMCA]]
@@ -49,5 +48,5 @@ To run a subset of test directories, enter the following commands:
 [source,subs="attributes"]
 ----
 cd {subsetTestDirectoryExample}
-ant runclient
+mvn clean verify
 ----

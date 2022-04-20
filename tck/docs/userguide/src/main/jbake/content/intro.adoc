@@ -204,7 +204,6 @@ for test execution and test suite management. It supports the following
 features:
 
 * Sequencing of tests, allowing them to be loaded and executed automatically
-* Graphic user interface (GUI) for ease of use
 * Automated reporting capability to minimize manual errors
 * Failure analysis
 * Test result auditing and auditable test specification framework
@@ -331,6 +330,7 @@ on the system hosting the JavaTest harness:
 include::req-software.inc[]
 * Java SE {SEversion}
 * Apache Ant {AntVersion}
+* Apache Maven {MavenVersion}
 * A CI for {TechnologyShortName} {TechnologyVersion}. One example is {TechnologyRI}.
 * {TechnologyShortName} TCK version {TechnologyVersion}, which includes:
 include::tck-packages.inc[]

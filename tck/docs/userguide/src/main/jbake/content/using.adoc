@@ -15,7 +15,7 @@ Executing Tests
 5 Executing Tests
 -----------------
 
-The {TechnologyShortName} TCK uses the JavaTest harness to execute the
+The {TechnologyShortName} TCK uses the JavaTest harness to execute a set of
 tests in the test suite. For detailed instructions that explain how to
 run and use JavaTest, see the JavaTest User's Guide and Reference in
 the documentation bundle.
@@ -50,45 +50,29 @@ endif::rebuild[]
 
 [[GBFUZ]][[starting-javatest]]
 
-5.1 Starting JavaTest
+5.1 Starting All Tests
 ~~~~~~~~~~~~~~~~~~~~~
 
-There are two general ways to run the {TechnologyShortName} TCK using
-the JavaTest harness software:
-
-* Through the JavaTest GUI
-* From the command line in your shell environment
+It is recommended to run the {TechnologyShortName} TCK 
+from the command line in your shell environment
 
 
 [NOTE]
 =======================================================================
 
-The `ant` command referenced in the following
-two procedures and elsewhere in this guide is the Apache Ant
+The `mvn` command referenced in the following
+two procedures and elsewhere in this guide is the Apache Maven
 build tool, which will need to be downloaded separately.
 The `build.xml` file in `<TS_HOME>/bin` contains the various Ant
-targets for the {TechnologyShortName} TCK test suite.
+targets for the {TechnologyShortName} TCK test suite. Ant commands can 
+be run via maven using maven-antrun-plugin. 
 
 =======================================================================
 
-
-[[GBFWH]][[to-start-javatest-in-gui-mode]]
-
-5.1.1 To Start JavaTest in GUI Mode
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Execute the following commands:
-
-[source,oac_no_warn]
-----
-cd <TS_HOME>/bin
-ant gui
-----
-
 [[GBFVW]][[to-start-javatest-in-command-line-mode]]
 
-5.1.2 To Start JavaTest in Command-Line Mode
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+5.1.1 To Start All tests in Command-Line Mode
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 include::using-examples.inc[]
 
@@ -99,39 +83,11 @@ include::using-examples.inc[]
 
 Use the following modes to run a subset of the tests:
 
-* link:#GBFVT[Section 5.2.1, "To Run a Subset of Tests in GUI Mode"]
-* link:#GBFWK[Section 5.2.2, "To Run a Subset of Tests in Command-Line Mode"]
-* link:#GBFVL[Section 5.2.3, "To Run a Subset of Tests in Batch Mode
-Based on Prior Result Status"]
-
-[[GBFVT]][[to-run-a-subset-of-tests-in-gui-mode]]
-
-5.2.1 To Run a Subset of Tests in GUI Mode
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-1.  From the JavaTest main menu, click *Configure*, then click *Change
-Configuration*, and then click *Tests to Run*. +
-The tabbed Configuration Editor dialog box is displayed.
-2.  Click *Specify* from the option list on the left.
-3.  Select the tests you want to run from the displayed test tree, and
-then click *Done*. +
-You can select entire branches of the test tree, or use `Ctrl+Click` or
-`Shift+Click` to select multiple tests or ranges of tests, respectively,
-or select just a single test.
-4.  Click *Save File*.
-5.  Click *Run Tests*, and then click *Start* to run the tests you selected. +
-Alternatively, you can `right-click` the test you want from the test tree
-in the left section of the JavaTest main window, and choose *Execute
-These Tests* from the menu.
-6.  Click *Report*, and then click *Create Report*.
-7.  Specify the directory in which the JavaTest test harness will write
-the report, and then click *OK* +
-A report is created, and you are asked whether you want to view it.
-8.  Click *Yes* to view the report.
+* link:#GBFWK[Section 5.2.1, "To Run a Subset of Tests in Command-Line Mode"]
 
 [[GBFWK]][[to-run-a-subset-of-tests-in-command-line-mode]]
 
-5.2.2 To Run a Subset of Tests in Command-Line Mode
+5.2.1 To Run a Subset of Tests in Command-Line Mode
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 1.  Change to the directory containing the tests you want to run.
@@ -139,39 +95,10 @@ A report is created, and you are asked whether you want to view it.
 +
 [source]
 ----
-ant runclient
+mvn verify
 ----
 +
 The tests in the directory and its subdirectories are run.
-
-[[GBFVL]][[to-run-a-subset-of-tests-in-batch-mode-based-on-prior-result-status]]
-
-5.2.3 To Run a Subset of Tests in Batch Mode Based on Prior Result Status
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-You can run certain tests in batch mode based on the test's prior run
-status by specifying the `priorStatus` system property when invoking
-`ant`
-
-Invoke `ant` with the `priorStatus` property.
-
-The accepted values for the `priorStatus` property are any combination
-of the following:
-
-* `fail`
-* `pass`
-* `error`
-* `notRun`
-
-For example, you could run all the {TechnologyShortName} tests with a
-status of failed and error by invoking the following commands:
-
-[source,oac_no_warn]
-----
-ant -DpriorStatus="fail,error" runclient
-----
-
-Note that multiple `priorStatus` values must be separated by commas.
 
 [[GCLRR]][[running-the-tck-against-the-ci]]
 
@@ -238,26 +165,11 @@ their status messages.
 
 Use the following modes to create test reports:
 
-* link:#GBFVH[Section 5.5.1.1, "To Create a Test Report in GUI Mode"]
-* link:#GBFVC[Section 5.5.1.2, "To Create a Test Report in Command-Line Mode"]
-
-[[GBFVH]][[to-create-a-test-report-in-gui-mode]]
-
-5.5.1.1 To Create a Test Report in GUI Mode
-+++++++++++++++++++++++++++++++++++++++++++
-
-1.  From the JavaTest main menu, click *Report*, then click *Create Report*. +
-You are prompted to specify a directory to use for your test reports.
-2.  Specify the directory you want to use for your reports, and then
-click *OK*. +
-Use the Filter list to specify whether you want to generate reports for
-the current configuration, all tests, or a custom set of tests. +
-You are asked whether you want to view report now.
-3.  Click *Yes* to display the new report in the JavaTest ReportBrowser.
+* link:#GBFVC[Section 5.5.1.1, "To Create a Test Report in Command-Line Mode"]
 
 [[GBFVC]][[to-create-a-test-report-in-command-line-mode]]
 
-5.5.1.2 To Create a Test Report in Command-Line Mode
+5.5.1.1 To Create a Test Report in Command-Line Mode
 ++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 1.  Specify where you want to create the test report.
@@ -296,20 +208,9 @@ ant -Dreport.dir="none"
 
 Use the following modes to view an existing test report:
 
-* link:#GBFVO[Section 5.5.2.1, "To View an Existing Report in GUI Mode"]
-* link:#GBFWB[Section 5.5.2.2, "To View an Existing Report in
+* link:#GBFWB[Section 5.5.2.1, "To View an Existing Report in
 Command-Line Mode"]
 
-[[GBFVO]][[to-view-an-existing-report-in-gui-mode]]
-
-5.5.2.1 To View an Existing Report in GUI Mode
-++++++++++++++++++++++++++++++++++++++++++++++
-
-1.  From the JavaTest main menu, click *Report*, then click *Open Report*. +
-You are prompted to specify the directory containing the report you want
-to open.
-2.  Select the report directory you want to open, and then click *Open*. +
-The selected report set is opened in the JavaTest ReportBrowser.
 
 [[GBFWB]][[to-view-an-existing-report-in-command-line-mode]]
 

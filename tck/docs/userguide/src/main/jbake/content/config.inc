@@ -43,14 +43,14 @@ slashes as a path separator instead.
   b.  `TS_HOME` to the directory in which the {TechnologyShortName} TCK
   {TechnologyVersion} software is installed
   c.  `PATH` to include the following directories: `JAVA_HOME/bin`,
-  +{TechnologyHomeEnv}/bin+, and `ANT_HOME/bin`
-2.  Copy <TS_HOME>/bin/ts.jte.jdk11 as <TS_HOME>/bin/ts.jte if JAVA_HOME is Java SE 11.
+  +{TechnologyHomeEnv}/bin+, `ANT_HOME/bin` and `M2_HOME/bin`
+2.  Copy <TS_HOME>/bin/ts.jte.standalone as <TS_HOME>/bin/ts.jte if TCK is run in standalone mode.
 Edit your `<TS_HOME>/bin/ts.jte` file and set the following
 environment variables:
   a.  Set `securityapi.classes` to include all necessary JAR files that
   pertain to your implementation.
   b.  Set `web.home` to the location where the securityapi is implemented.
-  For example, If you are using Eclipse GlassFish 5.1 as your CI, set `web.home=<GLASSFISH_HOME_FOLDER`>.
+  For example, If you are using Eclipse GlassFish 7.0 as your CI, set `web.home=<GLASSFISH_HOME_FOLDER`>.
   c.  Set `jdbc.lib.class.path` to the location where the JDBC drivers are
   installed.
   d.  Set `jdbc.db` to the name of the database under test. Valid values
@@ -130,8 +130,8 @@ JavaTest Harness Software."]
 =======================================================================
 
 In these instructions, variables in angle brackets need to be expanded
-for each platform. For example, `<TS_HOME>` becomes `$TS_HOME` on
-Solaris/Linux and `%TS_HOME%` on Windows. In addition, the forward
+for each platform. For example, `<JAVA_HOME>` becomes `$JAVA_HOME` on
+Solaris/Linux and `%JAVA_HOME%` on Windows. In addition, the forward
 slashes (`/`) used in all of the examples need to be replaced with
 backslashes (`\`) for Windows. Finally, be sure to use the appropriate
 separator for your operating system when specifying multiple path
@@ -155,9 +155,3 @@ will be run and determine to which Servlet–compliant Web server the
 Adapt the above instructions for the vendor implementation.
 
 
-[[GHGDG]][[publishing-the-test-applications]]
-
-4.3 Publishing the Test Applications
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Not needed for the {TechnologyShortName} TCK.
