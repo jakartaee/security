@@ -1,0 +1,163 @@
+type=page
+status=published
+title=Setup and Configuration
+next=using.html
+prev=install.html
+~~~~~~
+include::attributes.conf[]
+Setup and Configuration
+=======================
+
+[[GBFVV]]
+
+
+
+[[setup-and-configuration]]
+4 Setup and Configuration
+-------------------------
+
+
+[NOTE]
+====
+The Jakarta EE Specification process provides for any number of compatible implementations.
+As additional implementations become available, refer to project or product documentation from
+those vendors for specific TCK setup and operational guidance.
+
+====
+
+This chapter describes how to set up the {TechnologyShortName} TCK.
+Before proceeding with the instructions in
+this chapter, be sure to install all required software, as described in
+link:install.html#GBFTP[Chapter 3, "Installation."]
+
+After completing the instructions in this chapter, proceed to
+link:using.html#GBFWO[Chapter 5, "Executing Tests,"] for instructions on
+running the {TechnologyShortName} TCK.
+
+include::config.inc[]
+
+[[GHGDH]][[custom-configuration-handlers]]
+
+4.4 Custom Configuration Handlers
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Configuration handlers are used to configure and unconfigure a
+{TechnologyShortName} {TechnologyVersion} implementation during the
+certification process.  These are similar to deployment handlers but
+used for configuration.  A configuration handler is an Ant build file
+that contains at least the required targets listed below:
+
+  * `config.vi` - to configure the vendor implementation
+  * `clean.vi` - to unconfigure the vendor implementation
+
+These targets are called from the `<TS_HOME>/bin/build.xml` file and
+call down into the implementation-specific configuration handlers.
+
+To provide your own configuration handler, create a config.vi.xml file
+with the necessary configuration steps for your implementation and place
+the file under the `<TS_HOME>/bin/xml/impl/<your_impl>` directory.
+
+For more information, you may wish to view `<TS_HOME>/bin/xml/impl/glassfish/config.vi.xml`,
+the configuration file for Jakarta EE {JakartaEEVersion} Compatible Implementation, Eclipse GlassFish.
+
+[[GBFWG]][[custom-deployment-handlers]]
+
+4.5 Custom Deployment Handlers
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Deployment handlers are used to deploy and undeploy the WAR files that
+contain the tests to be run during the certification process. A deployment
+handler is an Ant build file that contains at least the required targets
+listed in the table below.
+
+The {TechnologyShortName} TCK provides these deployment handlers:
+
+* `<TS_HOME>/bin/xml/impl/none/deploy.xml`
+* `<TS_HOME>/bin/xml/impl/glassfish/deploy.xml`
+* `<TS_HOME>/bin/xml/impl/tomcat/deploy.xml`
+
+The `deploy.xml` files in each of these directories are used to control
+deployment to a specific container (no deployment, deployment to
+the Eclipse GlassFish Web container, deployment to the Tomcat Web container)
+denoted by the name of the directory in which each `deploy.xml` file
+resides. The primary `build.xml` file in the `<TS_HOME>/bin` directory
+has a target to invoke any of the required targets (`-deploy`, `-undeploy`,
+`-deploy.all`, `-undeploy.all`).
+
+[[GBFVA]][[create-custom-deployment-handler]]
+
+4.5.1 To Create a Custom Deployment Handler
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+To deploy tests to another {TechnologyShortName} implementation, you
+must create a custom handler.
+
+1. Create a new directory in the `<TS_HOME>/bin/xml/impl` directory tree.
+  For example, create the `<TS_HOME>/bin/xml/impl/my_deployment_handler` directory.
+  Replace my_deployment_handler with the value of the impl.vi
+  property that you set in Step 5 of the configuration procedure
+  described in Section 4.2, "Configuring Your Environment to Repackage
+  and Run the TCK Against the Vendor Implementation".
+
+2.  Copy the deploy.xml file from the `<TS_HOME>/bin/xml/impl/none`
+  directory to the directory that you created.
+
+3.  Modify the required targets in the `deploy.xml` file.  This is what
+    the `deploy.xml` file for the "none" deployment handler looks like.
+
++
+[source,oac_no_warn]
+----
+<project name="No-op Deployment" default="deploy">
+    <!-- No-op deployment target -->
+    <target name="-deploy">
+        <echo message="No deploy target implemented for this deliverable"/>
+    </target>
+    <target name="-undeploy">
+        <echo message="No undeploy target implemented for this deliverable"/>
+    </target>
+    <target name="-deploy.all">
+        <echo message="No deploy target implemented for this deliverable"/>
+    </target>
+    <target name="-undeploy.all">
+        <echo message="No undeploy target implemented for this deliverable"/>
+    </target>
+</project>
+----
++
+Although this example just echoes messages, it does include the four
+required Ant targets (`-deploy`, `-undeploy`, `-deploy.all`, `-undeploy.all`)
+that your custom `deploy.xml` file must contain. With this as your
+starting point, look at the required targets in the `deploy.xml` files
+in the Tomcat and Eclipse Glassfish directories for guidance as you create
+the same targets for the Web container in which you will run your
+implementation of {TechnologyShortName}.
+
+The following Ant targets can be called from anywhere under the
+`<TS_HOME>/src` directory:
+
+* `deploy`
+* `undeploy`
+* `deploy.all`
+* `undeploy.all`
+
+The `deploy.all` and `undeploy.all` targets can also be called from the
+`<TS_HOME>/bin` directory.
+
+[NOTE]
+=======================================================================
+The targets in the `deploy.xml` file are never called directly.
+They are called indirectly by the targets listed above.
+=======================================================================
+
+[[GBFUY]][[using-the-javatest-harness-software]]
+
+4.6 Using the JavaTest Harness Software
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+It is recommended to run the {TechnologyShortName} TCK test
+suite using the JavaTest harness software in JavaTest batch mode, 
+from the command line in your shell
+environment; if using this method, please proceed directly to
+link:using.html#GBFWO[Chapter 5, "Executing Tests."]
+
