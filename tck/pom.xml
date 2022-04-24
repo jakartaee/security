@@ -90,16 +90,16 @@
     </modules>
 
     <properties>
+        <maven.compiler.release>11</maven.compiler.release>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
-
-        <!-- Test servers -->
-        <glassfish.version>7.0.0-M4</glassfish.version>
-        <glassfish.port>8080</glassfish.port>
+        
+        <zipname>${project.artifactId}-${project.version}</zipname>
+        <licenseFile>${project.basedir}/LICENSE_EFTL.md</licenseFile>
         
         <security-api.version>3.0.0</security-api.version>
-        <soteria.version>3.0.0-M5</soteria.version>
-        <weld-decorator.version>3.0.0-M5</weld-decorator.version>
+        
+        <buildDirectory>${project.basedir}/target</buildDirectory>
         
         
         <!-- Below Servers need to be updated to their Jakarta.* versions and currently don't work -->
@@ -116,8 +116,6 @@
         <wildfly-arquillian-container-managed.version>2.1.0.Final</wildfly-arquillian-container-managed.version>
 		
         <jacc-provider.version>0.3</jacc-provider.version>
-        
-        <buildDirectory>${project.basedir}/target</buildDirectory>
     </properties>
 
     <dependencyManagement>
@@ -343,6 +341,28 @@
                     </systemPropertyVariables>
                 </configuration>
             </plugin>
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <inherited>false</inherited>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <finalName>${zipname}</finalName>
+                            <attach>true</attach>
+                            <appendAssemblyId>false</appendAssemblyId>
+                            <descriptors>
+                                <descriptor>zip.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
@@ -358,6 +378,9 @@
             </activation>
 
             <properties>
+                <glassfish.version>7.0.0-M4</glassfish.version>
+                <glassfish.port>8080</glassfish.port>
+                <glassfish.suspend>false</glassfish.suspend>
                 <glassfish.root>${maven.multiModuleProjectDirectory}/target</glassfish.root>
             </properties>
 
@@ -442,7 +465,13 @@
             <id>glassfish-ci-managed-update</id>
 
             <properties>
+                <glassfish.version>7.0.0-M4</glassfish.version>
+                <glassfish.port>8080</glassfish.port>
+                <glassfish.suspend>false</glassfish.suspend>
                 <glassfish.root>${maven.multiModuleProjectDirectory}/target</glassfish.root>
+                
+                <soteria.version>3.0.0-M5</soteria.version>
+                <weld-decorator.version>3.0.0-M5</weld-decorator.version>
             </properties>
 
             <dependencies>
