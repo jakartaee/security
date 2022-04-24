@@ -824,6 +824,7 @@
             <arg line=" -keywords &quot;${keywords}&quot;"/>
             <arg line=" ${tests.arg}" />
             <arg line=" -runtests ${report.arg}"/>
+        	<jvmarg value="-Djavatest.security.noSecurityManager=true"/>
             <jvmarg value="-Xms256m"/>
             <jvmarg value="-Xmx512m"/>
         </javatest>    

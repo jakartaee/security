@@ -78,6 +78,15 @@
         <module>app-custom-identity-store-handler</module>
 
         <module>app-jaxrs</module>
+        
+        <!-- 
+        	Runs a variety of tests using the old (javatest based) TCK.
+        	Historical note: the old TCK is actually partially newer than the new TCK.
+        	The project started with a series of Arquillian/JUnit based tests, but at the time
+        	the TCK process was not ready to adopt these. Javatest based tests were created
+        	based on these original Arquillian/JUnit tests and expanded upon.
+         -->
+        <module>old-tck</module>
     </modules>
 
     <properties>
@@ -85,7 +94,7 @@
         <maven.compiler.target>11</maven.compiler.target>
 
         <!-- Test servers -->
-        <glassfish.version>7.0.0-SNAPSHOT</glassfish.version>
+        <glassfish.version>7.0.0-M4</glassfish.version>
         <glassfish.port>8080</glassfish.port>
         
         <security-api.version>3.0.0</security-api.version>
