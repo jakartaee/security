@@ -354,7 +354,7 @@
         <!-- by the previous antfetch call -->
         <property name="deliverable.tck.version"           value="unset_deliverable_tck_version"/>
 
-        <property name="zip.fullname" value="${zip.name}-${deliverable.tck.version}_${time.stamp.bundle.string}"/>
+        <property name="zip.fullname" value="${zip.name}"/>
         <property name="zip.file" value="${zip.fullname}.zip"/>
         <property name="excludelist.zip.file" value="excludelist_${zip.fullname}.zip"/>
         <antcall target="do.common.bundle.creation"/> 
