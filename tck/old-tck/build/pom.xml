@@ -79,6 +79,10 @@
                         <configuration>
                             <executable>${project.basedir}/../source/docker/build_oldtck.sh</executable>
                             <workingDirectory>${project.basedir}/../source</workingDirectory>
+                            <environmentVariables>
+                                 <ANT_HOME>${ant.home}/</ANT_HOME>
+                                 <PATH>${ant.home}/bin:${env.PATH}</PATH>
+                            </environmentVariables>
                             <successCodes>
                                 <successCode>0</successCode>
                                 <successCode>1</successCode>
