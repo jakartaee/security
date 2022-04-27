@@ -444,6 +444,7 @@
                                     <goal>unpack</goal>
                                 </goals>
                                 <configuration>
+                                    <skip>${skipITs}</skip>
                                     <outputDirectory>${glassfish.root}</outputDirectory>
                                     <markersDirectory>${glassfish.root}/dependency-maven-plugin-markers</markersDirectory>
                                     <artifactItems>
@@ -472,6 +473,7 @@
                                     <goal>run</goal>
                                 </goals>
                                 <configuration>
+                                    <skip>${skipITs}</skip>
                                     <target>
                                         <echo level="info">Replacing in ${glassfish.root}</echo>
                                         <replace token="8080"
