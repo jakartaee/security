@@ -31,6 +31,7 @@
         <tomcat.root>${maven.multiModuleProjectDirectory}/target</tomcat.root>
         <tomcat.version>9.0.60</tomcat.version>
         <tomcat.dir>${tomcat.root}/apache-tomcat-${tomcat.version}</tomcat.dir>
+        <tomcat.pidfile>${tomcat.dir}/pidfile</tomcat.pidfile>
         <finalName>openid-client</finalName>
     </properties>
 
@@ -69,7 +70,7 @@
                                 <artifactItem>
                                     <groupId>org.apache.tomcat</groupId>
                                     <artifactId>tomcat</artifactId>
-                                    <version>9.0.60</version>
+                                    <version>${tomcat.version}</version>
                                     <type>zip</type>
                                     <overWrite>true</overWrite>
                                 </artifactItem>
@@ -146,7 +147,9 @@
 
                                 <chmod dir="${tomcat.dir}/bin" perm="ugo+rx" includes="*" />
 
-                                <exec executable="${tomcat.dir}/bin/startup.sh" dir="${tomcat.dir}" />
+                                <exec executable="${tomcat.dir}/bin/startup.sh" dir="${tomcat.dir}" >
+                                    <env key="CATALINA_PID" value="${tomcat.pidfile}" />
+                                </exec>
 
                                 <!-- Give the server some time to settle down -->
                                 <sleep seconds="5" />
@@ -165,7 +168,11 @@
                         <configuration>
                             <target xmlns:if="ant:if" xmlns:unless="ant:unless">
                                 <!-- stop the server -->
-                                <exec executable="${tomcat.dir}/bin/shutdown.sh" dir="${tomcat.dir}" unless:set="tomcat.keeprunning" />
+                                <exec executable="${tomcat.dir}/bin/shutdown.sh" dir="${tomcat.dir}" unless:set="tomcat.keeprunning" >
+                                    <env key="CATALINA_PID" value="${tomcat.pidfile}" />
+                                    <arg value="30" />
+                                    <arg value="-force" />
+                                </exec>
                             </target>
                         </configuration>
                     </execution>
