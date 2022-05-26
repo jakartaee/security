@@ -29,7 +29,7 @@
 	<properties>
         <failOnMissingWebXml>false</failOnMissingWebXml>
         <tomcat.root>${maven.multiModuleProjectDirectory}/target</tomcat.root>
-        <tomcat.version>9.0.60</tomcat.version>
+        <tomcat.version>9.0.63</tomcat.version>
         <tomcat.dir>${tomcat.root}/apache-tomcat-${tomcat.version}</tomcat.dir>
         <tomcat.pidfile>${tomcat.dir}/pidfile</tomcat.pidfile>
         <finalName>openid-client</finalName>
