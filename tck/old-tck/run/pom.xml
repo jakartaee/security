@@ -32,7 +32,7 @@
     <name>Old Jakarta Security TCK - run</name>
 
     <properties>
-    	<ant.version>1.10.2</ant.version>
+    	<ant.version>1.10.12</ant.version>
         <ant.home>${project.build.directory}/apache-ant-${ant.version}</ant.home>
         <ant.zip.url>https://archive.apache.org/dist/ant/binaries/apache-ant-${ant.version}-bin.zip</ant.zip.url>
         
@@ -77,7 +77,7 @@
             <plugin>
                 <groupId>com.googlecode.maven-download-plugin</groupId>
                 <artifactId>download-maven-plugin</artifactId>
-                <version>1.6.7</version>
+                <version>1.6.8</version>
                 <executions>
                     <execution>
                         <id>download-ant</id>
