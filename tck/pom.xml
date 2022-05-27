@@ -87,6 +87,11 @@
             based on these original Arquillian/JUnit tests and expanded upon.
          -->
         <module>old-tck</module>
+        
+        <!-- 
+            Checks the API signature of the API module.
+        -->
+        <module>signaturetest</module>
     </modules>
 
     <properties>
