@@ -4,7 +4,7 @@ This repository contains the code for Jakarta Security.
 
 [Online JavaDoc](https://javadoc.io/doc/jakarta.security.enterprise/jakarta.security.enterprise-api/)
 
-[Website](https://eclipse-ee4j.github.io/security-api/)
+[Website](https://jakartaee.github.io/security/)
 
 Building
 --------
