@@ -35,7 +35,7 @@
     <name>Old Jakarta Security TCK - build</name>
 
     <properties>
-    	<ant.version>1.10.2</ant.version>
+    	<ant.version>1.10.12</ant.version>
         <ant.home>${project.build.directory}/apache-ant-${ant.version}</ant.home>
         <ant.zip.url>https://archive.apache.org/dist/ant/binaries/apache-ant-${ant.version}-bin.zip</ant.zip.url>
     </properties>
@@ -51,11 +51,31 @@
             </plugins>
         </pluginManagement>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>enforce-maven</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireMavenVersion>
+                                    <version>3.6.3</version>
+                                </requireMavenVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+              </plugin>  
               <plugin>
                 <groupId>com.googlecode.maven-download-plugin</groupId>
                 <artifactId>download-maven-plugin</artifactId>
                 <inherited>false</inherited>
-                <version>1.6.7</version>
+                <version>1.6.8</version>
                 <executions>
                     <execution>
                         <id>download-ant</id>
@@ -77,7 +97,7 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <inherited>false</inherited>
-                <version>1.6.0</version>
+                <version>3.0.0</version>
                 <executions>
                     <execution>
                         <id>build-old-tck</id>
