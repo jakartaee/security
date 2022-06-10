@@ -1047,11 +1047,4 @@
             </build>
         </profile>
     </profiles>
-    
-    <repositories>
-        <repository>
-            <id>staged-jakarta-releases</id>
-            <url>https://jakarta.oss.sonatype.org/content/groups/staging/</url>
-        </repository>
-    </repositories>
 </project>
