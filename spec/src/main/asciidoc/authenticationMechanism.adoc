@@ -548,7 +548,7 @@ For step (4) the authentication mechanism itself must call the Token endpoint to
 The call to the token endpoint must include the following parameters (as specified by the OpenID Connect specification):
 
 - The ClientId value as taken from `OpenIdAuthenticationMechanismDefinition.clientId`
-- The ClientSecret value as taken from `OpenIdAuthenticationMechanismDefinition.clientId`
+- The ClientSecret value as taken from `OpenIdAuthenticationMechanismDefinition.clientSecret`
 - The `grant_type` value set to the constant `authorization_code`
 - The RedirectURI value as taken from `OpenIdAuthenticationMechanismDefinition.redirectURI`
 - The code received from the OpenID Connect Provider in the callback request as the `code` request parameter
