@@ -56,7 +56,7 @@ public @interface OpenIdProviderMetadata {
     String tokenEndpoint() default "";
 
     /**
-     * Required. An OAuth 2.0 Protected Resource that returns Claims about the
+     * Optional. An OAuth 2.0 Protected Resource that returns Claims about the
      * authenticated End-User.
      *
      * @return URL for User Info.
