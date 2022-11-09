@@ -46,6 +46,7 @@ public class OpenIdTestUtil {
                 .addClass(OidcProvider.class)
                 .addClass(ApplicationConfig.class)
                 .addAsResource("openid-configuration.json")
+                .addAsResource("jsonwebkeys.json")
                 .addAsWebInfResource("beans.xml");
 
         return war;
