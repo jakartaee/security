@@ -227,7 +227,8 @@ public class OidcProvider {
                        .add("email", "john.doe@acme.org")
                        .add("email_verified", true)
                        .add("gender", "male")
-                       .add("locale", "en");
+                       .add("locale", "en")
+                       .add("preferred_username", "johndoe");
 
             if (rolesInUserInfoEndpoint) {
                 JsonArrayBuilder groupsBuilder = Json.createArrayBuilder();
