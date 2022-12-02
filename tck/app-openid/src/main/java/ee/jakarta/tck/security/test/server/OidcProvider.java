@@ -45,12 +45,20 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
+import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jose.JWSHeader;
+import com.nimbusds.jose.JWSSigner;
+import com.nimbusds.jose.crypto.RSASSASigner;
+import com.nimbusds.jose.jwk.JWK;
+import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jwt.JWTClaimsSet;
-import com.nimbusds.jwt.PlainJWT;
+import com.nimbusds.jwt.SignedJWT;
 
 import jakarta.json.Json;
 import jakarta.json.JsonArrayBuilder;
@@ -83,6 +91,7 @@ public class OidcProvider {
     private static final String BEARER_TYPE = "Bearer";
     private static final String AUTH_CODE_VALUE = "sample_auth_code";
     private static final String ACCESS_TOKEN_VALUE = "sample_access_token";
+    private static final String KID_VALUE = "sample_kid";
 
     private static String nonce;
 
@@ -143,7 +152,7 @@ public class OidcProvider {
     public Response tokenEndpoint(
             @FormParam(CLIENT_ID) String clientId, @FormParam(CLIENT_SECRET) String clientSecret,
             @FormParam(GRANT_TYPE) String grantType, @FormParam(CODE) String code,
-            @FormParam(REDIRECT_URI) String redirectUri) {
+            @FormParam(REDIRECT_URI) String redirectUri) throws JOSEException, IOException, ParseException {
 
         ResponseBuilder builder;
         JsonObjectBuilder jsonBuilder = Json.createObjectBuilder();
@@ -163,23 +172,32 @@ public class OidcProvider {
         } else {
 
             Date now = new Date();
-            JWTClaimsSet.Builder jstClaimsBuilder =
-                new JWTClaimsSet.Builder()
-                                .issuer("http://localhost:8080/openid-server/webresources/oidc-provider-demo")
-                                .subject(getSubject())
-                                .audience(List.of(CLIENT_ID_VALUE))
-                                .expirationTime(new Date(now.getTime() + 1000 * 60 * 10))
-                                .notBeforeTime(now)
-                                .issueTime(now)
-                                .jwtID(randomUUID().toString())
-                                .claim(NONCE, nonce);
 
+            JWK jwk = getJWKSet().getKeyByKeyId(KID_VALUE);
+            JWSSigner signer = new RSASSASigner(jwk.toRSAKey());
+
+            JWSHeader jwsHeader = new JWSHeader.Builder(JWSAlgorithm.RS256)
+                    .keyID(jwk.getKeyID())
+                    .build();
+
+            JWTClaimsSet.Builder jwtClaimsBuilder = new JWTClaimsSet.Builder()
+                    .issuer("http://localhost:8080/openid-server/webresources/oidc-provider-demo")
+                    .subject(getSubject())
+                    .audience(List.of(CLIENT_ID_VALUE))
+                    .expirationTime(new Date(now.getTime() + 1000 * 60 * 10))
+                    .notBeforeTime(now)
+                    .issueTime(now)
+                    .jwtID(randomUUID().toString())
+                    .claim(NONCE, nonce);
+            
             if (!rolesInUserInfoEndpoint) {
-                jstClaimsBuilder.claim(GROUPS, userGroups);
+                jwtClaimsBuilder.claim(GROUPS, userGroups);
             }
-            JWTClaimsSet jwtClaims = jstClaimsBuilder.build();
+            JWTClaimsSet jwtClaims = jwtClaimsBuilder.build();
 
-            PlainJWT idToken = new PlainJWT(jwtClaims);
+            SignedJWT idToken = new SignedJWT(jwsHeader, jwtClaims);
+            idToken.sign(signer);
+
             jsonBuilder.add(IDENTITY_TOKEN, idToken.serialize());
             jsonBuilder.add(ACCESS_TOKEN, ACCESS_TOKEN_VALUE);
             jsonBuilder.add(TOKEN_TYPE, BEARER_TYPE);
@@ -209,7 +227,8 @@ public class OidcProvider {
                        .add("email", "john.doe@acme.org")
                        .add("email_verified", true)
                        .add("gender", "male")
-                       .add("locale", "en");
+                       .add("locale", "en")
+                       .add("preferred_username", "johndoe");
 
             if (rolesInUserInfoEndpoint) {
                 JsonArrayBuilder groupsBuilder = Json.createArrayBuilder();
@@ -227,9 +246,33 @@ public class OidcProvider {
         return builder.entity(jsonBuilder.build().toString()).build();
     }
 
+    @GET
+    @Path("/certs")
+    @Produces(APPLICATION_JSON)
+    public Response jwksEndpoint() throws IOException, ParseException {
+        ResponseBuilder builder = Response.ok();
+
+        boolean publicKeysOnly = true;
+        JsonObjectBuilder jsonBuilder = Json.createObjectBuilder(getJWKSet().toJSONObject(publicKeysOnly));
+
+        return builder.entity(jsonBuilder.build().toString()).build();
+    }
+
     private String getSubject() {
         String subjectPrefix = "/subject-";
         return subject != null && subject.startsWith(subjectPrefix) ? subject.substring(subjectPrefix.length()) : "sample_subject";
+    }
+
+    private JWKSet getJWKSet() throws IOException, ParseException {
+        String jwks = "";
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        try (InputStream inputStream = classLoader.getResourceAsStream("jsonwebkeys.json")) {
+            jwks = new BufferedReader(new InputStreamReader(inputStream))
+                    .lines()
+                    .map(String::trim)
+                    .collect(joining());
+        }
+        return JWKSet.parse(jwks);
     }
 
 }
