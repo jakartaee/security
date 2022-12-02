@@ -16,17 +16,15 @@
  */
 package ee.jakarta.tck.security.test;
 
-import static jakarta.ws.rs.core.Response.Status.NOT_FOUND;
 import static ee.jakarta.tck.security.test.client.defaulttests.OpenIdConfig.OPEN_ID_CONFIG_PROPERTIES;
 import static ee.jakarta.tck.security.test.client.defaulttests.OpenIdConfig.REDIRECT_URI;
+import static jakarta.ws.rs.core.Response.Status.NOT_FOUND;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.net.URL;
 
-import ee.jakarta.tck.security.test.client.defaulttests.OpenIdConfig;
-import ee.jakarta.tck.security.test.client.defaulttests.SecuredServletWithEL;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
@@ -41,6 +39,9 @@ import org.junit.runner.RunWith;
 
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.WebClient;
+
+import ee.jakarta.tck.security.test.client.defaulttests.OpenIdConfig;
+import ee.jakarta.tck.security.test.client.defaulttests.SecuredServletWithEL;
 
 /**
  * @author Gaurav Gupta
@@ -63,15 +64,20 @@ public class InvalidRedirectURIIT {
 
     @Deployment(name = "openid-server", testable = false)
     public static Archive<?> createServerDeployment() {
-        return OpenIdTestUtil.createServerDeployment();
+        WebArchive war =  OpenIdTestUtil.createServerDeployment();
+
+        System.out.println("\n" + war.toString(true) + "\n");
+        return war;
     }
 
     @Deployment(name = "openid-client", testable = false)
     public static Archive<?> createClientDeployment() {
         StringAsset config = new StringAsset(REDIRECT_URI + "=invalid_callback");
-        WebArchive war = OpenIdTestUtil.createClientDeployment(SecuredServletWithEL.class, OpenIdConfig.class)
-                .addAsWebInfResource(config, "classes" + OPEN_ID_CONFIG_PROPERTIES);
-        System.out.println(war.toString(true));
+        WebArchive war =
+            OpenIdTestUtil.createClientDeployment(SecuredServletWithEL.class, OpenIdConfig.class)
+                          .addAsWebInfResource(config, "classes" + OPEN_ID_CONFIG_PROPERTIES);
+
+        System.out.println(war.toString(true) + "\n");
         return war;
     }
 
