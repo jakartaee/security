@@ -22,16 +22,19 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 import java.net.URL;
 
+import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.jboss.shrinkwrap.resolver.api.maven.Maven;
+
+import com.gargoylesoftware.htmlunit.TextPage;
+import com.gargoylesoftware.htmlunit.WebClient;
+
 import ee.jakarta.tck.security.test.client.CallbackServlet;
 import ee.jakarta.tck.security.test.client.UnsecuredServlet;
 import ee.jakarta.tck.security.test.client.UserNameServlet;
 import ee.jakarta.tck.security.test.server.ApplicationConfig;
 import ee.jakarta.tck.security.test.server.OidcProvider;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
-
-import com.gargoylesoftware.htmlunit.TextPage;
-import com.gargoylesoftware.htmlunit.WebClient;
 
 /**
  * @author Gaurav Gupta
@@ -47,9 +50,19 @@ public class OpenIdTestUtil {
                 .addClass(ApplicationConfig.class)
                 .addAsResource("openid-configuration.json")
                 .addAsResource("jsonwebkeys.json")
-                .addAsWebInfResource("beans.xml");
+                .addAsWebInfResource("beans.xml")
+                .addAsLibraries(nimbus())
+                ;
 
         return war;
+    }
+
+    public static JavaArchive[] nimbus() {
+        return Maven.resolver()
+                .loadPomFromFile("pom.xml")
+                .resolve("com.nimbusds:nimbus-jose-jwt")
+                .withTransitivity()
+                .as(JavaArchive.class);
     }
 
     public static WebArchive createClientDeployment(Class<?>... additionalClasses) {
