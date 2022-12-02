@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
+    Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation. All rights reserved.
     Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -33,11 +34,15 @@
         <failOnMissingWebXml>false</failOnMissingWebXml>
     </properties>
 
-   <dependencies>
+    <dependencies>
         <dependency>
             <groupId>org.eclipse.ee4j.security.tck</groupId>
             <artifactId>common</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
+    
+    <build>
+        <finalName>app-mem-basic-decorate</finalName>
+    </build>
 </project>
