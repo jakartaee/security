@@ -54,7 +54,7 @@
         <port.orb.mutual>13920</port.orb.mutual>
         <port.orb.ssl>13820</port.orb.ssl>
         <port.harness.log>12000</port.harness.log>
-        <glassfish.version>7.0.0-M2</glassfish.version>
+        <glassfish.version>7.0.0-M10</glassfish.version>
     </properties>
 
     <dependencies>
