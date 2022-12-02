@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation. All rights reserved.
  * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -28,8 +29,8 @@ import org.junit.runner.RunWith;
 
 
 @RunWith(Arquillian.class)
-public class AppLDAP2IT extends ArquillianBase {
-    
+public class AppLDAP3IT extends ArquillianBase {
+
     @Deployment(testable = false)
     public static Archive<?> createDeployment() {
         return mavenWar();
@@ -40,19 +41,19 @@ public class AppLDAP2IT extends ArquillianBase {
         assertDefaultAuthenticated(
             readFromServer("/servlet?name=reza&password=secret1"));
     }
-    
+
     @Test
     public void testNotAuthenticated() {
         assertDefaultNotAuthenticated(
             readFromServer("/servlet"));
     }
-    
+
     @Test
     public void testNotAuthenticatedWrongName() {
         assertDefaultNotAuthenticated(
             readFromServer("/servlet?name=romo&password=secret1"));
     }
-    
+
     @Test
     public void testNotAuthenticatedWrongPassword() {
         assertDefaultNotAuthenticated(
