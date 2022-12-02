@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020 Payara Foundation and/or its affiliates and others.
+ * Copyright (c) 2018, 2022 Payara Foundation and/or its affiliates and others.
  * All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,16 +27,16 @@ import jakarta.security.enterprise.AuthenticationException;
 import jakarta.security.enterprise.AuthenticationStatus;
 import jakarta.security.enterprise.authentication.mechanism.http.HttpAuthenticationMechanism;
 import jakarta.security.enterprise.authentication.mechanism.http.HttpMessageContext;
+import jakarta.security.enterprise.authentication.mechanism.http.HttpMessageContextWrapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpServletResponseWrapper;
 
 /**
  * This is a CDI decorator that decorates the authentication mechanism (in this test
  * the one that is installed via the annotation on the {@link Servlet} class.
  *
  * @author Arjan Tijms
- *
+ * @author <a href="mailto:darran.lofthouse@jboss.com">Darran Lofthouse</a>
  */
 @Decorator
 @Priority(100)
@@ -50,49 +50,25 @@ public abstract class AuthenticationMechanismDecorator implements HttpAuthentica
 
     @Override
     public AuthenticationStatus validateRequest(HttpServletRequest request, HttpServletResponse response, HttpMessageContext httpMessageContext) throws AuthenticationException {
-
-        // Wrap the response, so we can catch the error code being sent
-        // (the error code causes the response to be committed)
-        ResponseWrapper responseWrapper = new ResponseWrapper(response);
-        httpMessageContext.getMessageInfo().setResponseMessage(responseWrapper);
-
-        try {
-
-            // Invoke the original authentication mechanism
-            AuthenticationStatus status = delagate.validateRequest(request, responseWrapper, httpMessageContext);
-
-            // If there was an error, add our custom header and pass on the error
-            // to the original response
-            if (responseWrapper.getError() != null) {
-                response.addHeader("foo", "bar");
-                response.sendError(responseWrapper.getError());
-            }
-
-            return status;
-
-        } catch (IOException e) {
-            throw new AuthenticationException(e);
-        } finally {
-            // Restore the original response
-            httpMessageContext.getMessageInfo().setResponseMessage(response);
-        }
+        // Wrap the context, so we can set a header if the request is unauthorized.
+        HttpMessageContext contextWrapper = new MessageContextWrapper(response, httpMessageContext);
+        // Invoke the original authentication mechanism
+        return delagate.validateRequest(request, response, contextWrapper);
     }
 
-    private static class ResponseWrapper extends HttpServletResponseWrapper {
+    private static class MessageContextWrapper extends HttpMessageContextWrapper {
 
-        private Integer error;
+        private final HttpServletResponse response;
 
-        public ResponseWrapper(HttpServletResponse response) {
-            super(response);
+        public MessageContextWrapper(HttpServletResponse response, HttpMessageContext httpMessageContext) {
+            super(httpMessageContext);
+            this.response = response;
         }
 
         @Override
-        public void sendError(int sc) throws IOException {
-            error = sc;
-        }
-
-        public Integer getError() {
-            return error;
+        public AuthenticationStatus responseUnauthorized() {
+            response.addHeader("foo", "bar");
+            return super.responseUnauthorized();
         }
 
     }
