@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -34,7 +35,8 @@ import jakarta.servlet.http.HttpServletResponse;
 @LdapIdentityStoreDefinition(
     url = "#{'ldap://localhost:33389/'}", // usage of expression just for test
     callerBaseDn = "ou=caller,dc=jsr375,dc=net",
-    groupSearchBase = "ou=group,dc=jsr375,dc=net"
+    groupSearchBase = "ou=group,dc=jsr375,dc=net",
+    groupSearchFilter = "(&(member=%s)(objectclass=groupofnames))"
 )
 @DeclareRoles({ "foo", "bar", "kaz" })
 @WebServlet("/servlet")
