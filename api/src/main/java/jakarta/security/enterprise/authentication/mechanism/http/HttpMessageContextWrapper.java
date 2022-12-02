@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -39,11 +39,11 @@ import jakarta.servlet.http.HttpServletResponse;
 public class HttpMessageContextWrapper implements HttpMessageContext {
 
     private final HttpMessageContext httpMessageContext;
- 
+
     public HttpMessageContextWrapper(HttpMessageContext httpMessageContext) {
         this.httpMessageContext = httpMessageContext;
     }
-    
+
     public HttpMessageContext getWrapped() {
         return httpMessageContext;
     }
@@ -105,7 +105,9 @@ public class HttpMessageContextWrapper implements HttpMessageContext {
 
     @Override
     public HttpMessageContext withRequest(HttpServletRequest request) {
-        return getWrapped().withRequest(request);
+        getWrapped().withRequest(request);
+
+        return this;
     }
 
     @Override
@@ -167,5 +169,5 @@ public class HttpMessageContextWrapper implements HttpMessageContext {
     public Set<String> getGroups() {
         return getWrapped().getGroups();
     }
-    
+
 }
