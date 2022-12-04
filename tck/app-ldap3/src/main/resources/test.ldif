@@ -53,6 +53,16 @@ objectclass: top
 objectclass: organizationalUnit
 ou: group
 
+dn: cn=foo,ou=group,dc=jsr375,dc=net
+objectclass: top
+objectclass: groupOfNames
+cn: foo
+
+dn: cn=kaz,ou=group,dc=jsr375,dc=net
+objectclass: top
+objectclass: groupOfNames
+cn: kaz
+
 dn: ou=apps,dc=jsr375,dc=net
 objectclass: top
 objectclass: organizationalUnit
