@@ -58,6 +58,11 @@ objectclass: top
 objectclass: groupOfNames
 cn: foo
 
+dn: cn=bar,ou=group,dc=jsr375,dc=net
+objectclass: top
+objectclass: groupOfNames
+cn: bar
+
 dn: cn=kaz,ou=group,dc=jsr375,dc=net
 objectclass: top
 objectclass: groupOfNames
