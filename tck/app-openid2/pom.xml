@@ -135,15 +135,16 @@
                         <configuration>
                             <target>
                                 <echo level="info">Replacing in ${tomcat.dir}</echo>
-                                <replace token="8080" value="8081" dir="${tomcat.dir}/conf" summary="yes">
-                                    <include name="server.xml" />
-                                </replace>
-                                <replace token="8080" value="8081" dir="${tomcat.dir}/webapps/openid-connect-server-webapp/WEB-INF" summary="yes">
+                                
+                                <replace token="http://localhost:8080" value="https://localhost:8443" dir="${tomcat.dir}/webapps/openid-connect-server-webapp/WEB-INF" summary="yes">
                                     <include name="server-config.xml" />
                                 </replace>
                                 <replace token="http://localhost/" value="http://localhost:8080/openid-client/Callback" dir="${tomcat.dir}/webapps/openid-connect-server-webapp/WEB-INF/classes/db/hsql" summary="yes">
                                     <include name="clients.sql" />
                                 </replace>
+                                
+                                <copy file="server.xml" todir="${tomcat.dir}/conf"/>
+                                <copy file="localhost-rsa.jks" todir="${tomcat.dir}/conf"/>
 
                                 <chmod dir="${tomcat.dir}/bin" perm="ugo+rx" includes="*" />
 
@@ -178,7 +179,40 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>keytool-maven-plugin</artifactId>
+                <version>1.6</version>
+                <executions>
+                    <execution>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>importCertificate</goal>
+                        </goals>
+                        <configuration>
+                            <file>tomcat.cert</file>
+                            <alias>tomcat</alias>
+                            <keystore>${glassfish.root}/glassfish7/glassfish/domains/domain1/config/cacerts.jks</keystore>
+                            <storepass>changeit</storepass>
+                            <keypass>changeit</keypass>
+                            <noprompt>true</noprompt>
+                            <trustcacerts>true</trustcacerts>
+                            <verbose>true</verbose>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <configuration>
+                    <systemProperties>
+                        <javax.net.ssl.trustStore>${glassfish.root}/glassfish7/glassfish/domains/domain1/config/cacerts.jks</javax.net.ssl.trustStore>
+                    </systemProperties>
+                </configuration>
+            </plugin>
         </plugins>
+        
         <pluginManagement>
             <plugins>
                 <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->

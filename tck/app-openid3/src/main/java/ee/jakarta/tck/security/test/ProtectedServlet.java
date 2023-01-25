@@ -38,7 +38,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
     // The Mitre "openid-connect-server-webapp" provider that we deploy via pom.xml
     // The OpenId authentication mechanism directs us to here when logging in.
-    providerURI =  "http://localhost:8081/openid-connect-server-webapp",
+    providerURI =  "https://localhost:8443/openid-connect-server-webapp",
 
     // The ID of default client provided by Mitre.
     // See openid-connect-server-webapp/WEB-INF/classes/db/hsql/clients.sql:
