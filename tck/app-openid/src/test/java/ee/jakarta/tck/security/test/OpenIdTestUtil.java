@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.net.URL;
 
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
@@ -54,6 +55,15 @@ public class OpenIdTestUtil {
                 .addAsLibraries(nimbus())
                 ;
 
+        if (Boolean.parseBoolean(System.getProperty("oidcProviderUsesHttps"))) {
+            String httpsPort = System.getProperty("oidcProviderHttpsPort");
+            System.out.println("Profile requested using HTTPS endpoints with port " + httpsPort + " for the server deployment.");
+
+            if (httpsPort != null && !httpsPort.isEmpty()) {
+                String content = "oidcProviderHttpsPort=" + httpsPort;
+                war.add(new StringAsset(content), "/oidcProviderHttpsPort.properties");
+            }
+        }
         return war;
     }
 
