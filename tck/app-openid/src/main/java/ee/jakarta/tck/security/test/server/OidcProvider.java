@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -43,11 +43,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 import java.util.logging.Logger;
 
 import com.nimbusds.jose.JOSEException;
@@ -93,6 +95,8 @@ public class OidcProvider {
     private static final String ACCESS_TOKEN_VALUE = "sample_access_token";
     private static final String KID_VALUE = "sample_kid";
 
+    private static final String HTTPS_HOST = "https://localhost:";
+
     private static String nonce;
 
     boolean rolesInUserInfoEndpoint;
@@ -112,14 +116,38 @@ public class OidcProvider {
     @Produces(APPLICATION_JSON)
     public Response getConfiguration() {
         String result = null;
+        String oidcProviderHttpsPort = null;
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+
         try (InputStream inputStream = classLoader.getResourceAsStream("openid-configuration.json")) {
             result = new BufferedReader(new InputStreamReader(inputStream)).lines().collect(joining("\n"));
         } catch (IOException ex) {
             LOGGER.log(SEVERE, null, ex);
         }
 
+        try (InputStream inputStream = classLoader.getResourceAsStream("oidcProviderHttpsPort.properties")) {
+            if (inputStream != null) {
+                Properties props = new Properties();
+                props.load(inputStream);
+                oidcProviderHttpsPort = props.getProperty("oidcProviderHttpsPort");
+            }
+        } catch (IOException ex) {}
+
+        if (oidcProviderHttpsPort != null && !oidcProviderHttpsPort.isEmpty()) {
+            String httpsHostAndPort = HTTPS_HOST + oidcProviderHttpsPort;
+            result = useHttpsHostAndPort(result, "http://localhost:8080/openid-server/webresources/oidc-provider-demo/auth", httpsHostAndPort);
+            result = useHttpsHostAndPort(result, "http://localhost:8080/openid-server/webresources/oidc-provider-demo/token", httpsHostAndPort);
+            result = useHttpsHostAndPort(result, "http://localhost:8080/openid-server/webresources/oidc-provider-demo/userinfo", httpsHostAndPort);
+            result = useHttpsHostAndPort(result, "http://localhost:8080/openid-server/webresources/oidc-provider-demo/revoke", httpsHostAndPort);
+            result = useHttpsHostAndPort(result, "http://localhost:8080/openid-server/webresources/oidc-provider-demo/certs", httpsHostAndPort);
+        }
+
         return Response.ok(result).header("Access-Control-Allow-Origin", "*").build();
+    }
+
+    private String useHttpsHostAndPort(String result, String endpoint, String httpsHostAndPort) {
+        String path = endpoint.substring(21);
+        return result.replace(endpoint, httpsHostAndPort + path);
     }
 
     @GET
