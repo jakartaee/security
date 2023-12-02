@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Contributors to Eclipse Foundation.
+ * Copyright (c) 2021, 2023 Contributors to Eclipse Foundation.
  * Copyright (c) 2015, 2021 Oracle and/or its affiliates and others. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -97,6 +97,8 @@ public @interface LoginToContinue {
      * @since 3.0
      */
     public static final class Literal extends AnnotationLiteral<LoginToContinue> implements LoginToContinue {
+        private static final long serialVersionUID = 1L;
+
         private final String loginPage;
         private final boolean useForwardToLogin;
         private final String useForwardToLoginExpression;
