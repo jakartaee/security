@@ -70,8 +70,8 @@ public class Client extends BaseIDStoreClient {
    *
    * @test_Strategy:
    * 
-   * Test applications can also supply their own implementation. And given
-   * IdentityStorePermission. Implement 1 IdentityStoreHandler, if all
+   * Test applications can also supply their own implementation. 
+   * Implement 1 IdentityStoreHandler, if all
    * validation is true, then all the groups in which PROVIDE_GROUP is
    * specified. Meanwhile, one extra groupo "customIdentiyStoreHandler" would be
    * added in the groupset. If any validation is false, return INVALID

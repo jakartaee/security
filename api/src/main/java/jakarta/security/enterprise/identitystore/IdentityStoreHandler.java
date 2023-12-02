@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to Eclipse Foundation.
  * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -33,8 +34,8 @@ import jakarta.security.enterprise.credential.Credential;
  * Beans should inject only this handler, and not {@link IdentityStore}
  * directly, as multiple stores may exist.
  * <p>
- * Implementations of Jakarta Security must supply a default implementation of 
- * {@code IdentityStoreHandler} that behaves as described in the Jakarta Security 
+ * Implementations of Jakarta Security must supply a default implementation of
+ * {@code IdentityStoreHandler} that behaves as described in the Jakarta Security
  * specification document.
  * Applications do not need to supply an {@code IdentityStoreHandler}
  * unless application-specific behavior is desired.
@@ -48,13 +49,6 @@ public interface IdentityStoreHandler {
      * Implementations of this method will typically invoke the {@code validate()}
      * and {@code getCallerGroups()} methods of one or more {@link IdentityStore}s
      * and return an aggregated result.
-     * <p>
-     * Note that the {@link IdentityStore} may check for {@link IdentityStorePermission}
-     * if {@code getCallerGroups()} is called and a {@link SecurityManager} is configured.
-     * (The default built-in stores do perform this check; application-supplied stores
-     * may or may not.) An implementation of this method should therefore invoke
-     * {@code getCallerGroups()} in the context of a {@link java.security.PrivilegedAction},
-     * and arrange to be granted the appropriate {@link IdentityStorePermission} permission.
      *
      * @param credential The credential to validate.
      * @return The validation result.
