@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022-2023 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,9 +21,10 @@ module jakarta.security {
     exports jakarta.security.enterprise.identitystore;
     exports jakarta.security.enterprise.identitystore.openid;
 
-    requires jakarta.servlet;
+    requires transitive jakarta.servlet;
+    requires transitive jakarta.security.auth.message;
+    requires transitive jakarta.json;
+
     requires jakarta.cdi;
-    requires jakarta.security.auth.message;
     requires jakarta.el;
-    requires jakarta.json;
 }
