@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
+    Copyright (c) 2019, 2023 Contributors to the Eclipse Foundation.
     Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -17,20 +18,19 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>org.eclipse.ee4j</groupId>
         <artifactId>project</artifactId>
-        <version>1.0.6</version>
+        <version>1.0.9</version>
         <relativePath/>
     </parent>
 
     <groupId>jakarta.security.enterprise</groupId>
     <artifactId>jakarta.security.enterprise-api</artifactId>
-    <version>3.0.1-SNAPSHOT</version>
-    <packaging>bundle</packaging>
+    <version>4.0.0-SNAPSHOT</version>
 
     <name>Jakarta Security</name>
     <description>
@@ -70,43 +70,43 @@
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
-            <version>6.0.0</version>
+            <version>6.1.0-M1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>jakarta.interceptor</groupId>
             <artifactId>jakarta.interceptor-api</artifactId>
-            <version>2.1.0</version>
+            <version>2.2.0-M1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>jakarta.el</groupId>
             <artifactId>jakarta.el-api</artifactId>
-            <version>5.0.0</version>
+            <version>6.0.0-M1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>jakarta.enterprise</groupId>
             <artifactId>jakarta.enterprise.cdi-api</artifactId>
-            <version>4.0.0</version>
+            <version>4.1.0-M1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>jakarta.authentication</groupId>
             <artifactId>jakarta.authentication-api</artifactId>
-            <version>3.0.0</version>
+            <version>3.1.0-M1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>jakarta.authorization</groupId>
             <artifactId>jakarta.authorization-api</artifactId>
-            <version>2.1.0</version>
+            <version>3.0.0-M1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>jakarta.json</groupId>
             <artifactId>jakarta.json-api</artifactId>
-            <version>2.1.0</version>
+            <version>2.1.3</version>
         </dependency>
 
         <dependency>
@@ -137,11 +137,10 @@
             </resource>
         </resources>
         <plugins>
-            <!-- Sets minimal Maven version to 3.5.4 -->
+            <!-- Sets minimal Maven version to 3.6.0 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.0.0</version>
                 <executions>
                     <execution>
                         <id>enforce-maven</id>
@@ -151,7 +150,7 @@
                         <configuration>
                             <rules>
                                 <requireMavenVersion>
-                                    <version>3.5.4</version>
+                                    <version>3.6.0</version>
                                 </requireMavenVersion>
                             </rules>
                         </configuration>
@@ -182,16 +181,26 @@
                 </executions>
             </plugin>
             
+            <!-- Restricts the Java version to 17 -->
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+                <configuration>
+                    <release>17</release>
+                    <compilerArgument>-Xlint:unchecked</compilerArgument>
+                </configuration>
+            </plugin>
+            
             <!-- 
                 First sets properties for the maven-bundle-plugin and later checks if they are indeed used. 
             -->
             <plugin>
                 <groupId>org.glassfish.build</groupId>
                 <artifactId>spec-version-maven-plugin</artifactId>
-                <version>2.1</version>
+                <version>2.2</version>
                 <configuration>
                     <spec>
-                        <specVersion>3.0</specVersion>
+                        <specVersion>4.0</specVersion>
                         <specImplVersion>${project.version}</specImplVersion>
                         <apiPackage>jakarta.security.enterprise</apiPackage>
                     </spec>
@@ -206,31 +215,52 @@
                 </executions>
             </plugin>
             
-            <!--
-                This plugin is responsible for packaging artifacts
-                as OSGi bundles. Please refer to
-                http://felix.apache.org/site/apache-felix-maven-bundle-plugin-bnd.html
-                for more information about how to use this plugin.
-            -->
+            <!-- Creates the OSGi MANIFEST.MF file -->
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
-                <version>5.1.4</version>
-                <extensions>true</extensions>
+                <version>5.1.9</version>
                 <configuration>
+                    <supportedProjectTypes>
+                        <supportedProjectType>jar</supportedProjectType>
+                    </supportedProjectTypes>
                     <instructions>
                         <Bundle-Version>${spec.bundle.version}</Bundle-Version>
                         <Bundle-SymbolicName>${spec.bundle.symbolic-name}</Bundle-SymbolicName>
                         <Extension-Name>${spec.extension.name}</Extension-Name>
                         <Implementation-Version>${spec.implementation.version}</Implementation-Version>
-                        <Specification-Version>${spec.specification.version}</Specification-Version>
+                        <Specification-Version>${spec.specification.version}</Specification-Version>                        
                         <Bundle-Description>
                             Jakarta Security ${spec.specification.version} Specification
                         </Bundle-Description>
                         <Specification-Vendor>Oracle Corporation</Specification-Vendor>
                         <Implementation-Vendor>${project.organization.name}</Implementation-Vendor>
-                        <Export-Package>jakarta.security.enterprise.*</Export-Package>
+                        <Implementation-Vendor-Id>org.glassfish</Implementation-Vendor-Id>
+                        <_noimportjava>true</_noimportjava>
+                        <_runee>JavaSE-21</_runee>
                     </instructions>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>bundle-manifest</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>manifest</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            <!-- Adds the manifest file created by the org.apache.felix:maven-bundle-plugin -->
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+                    </archive>
+                    <excludes>
+                        <exclude>**/*.java</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
             
@@ -238,9 +268,7 @@
                Create Javadoc for API jar
             -->
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.3.1</version>
                 <executions>
                     <execution>
                         <id>attach-api-javadocs</id>
@@ -248,17 +276,16 @@
                             <goal>jar</goal>
                         </goals>
                         <configuration>
-                            <source>11</source>
                             <quiet>true</quiet>
-                            <additionalJOption>-Xdoclint:none</additionalJOption>
+                            <doclint>none</doclint>
                             <detectJavaApiLink>false</detectJavaApiLink>
                             <description>Jakarta Security API documentation</description>
                             <doctitle>Jakarta Security API documentation</doctitle>
                             <windowtitle>Jakarta Security API documentation</windowtitle>
                             <header><![CDATA[<br>Jakarta Security API v${project.version}]]></header>
                             <bottom><![CDATA[
-Comments to: <a href="mailto:es-dev@eclipse.org">es-dev@eclipse.org</a>.<br>
-Copyright &#169; 2019, 2022 Eclipse Foundation. All rights reserved.<br>
+Comments to: <a href="mailto:jakarta-security-dev@eclipse.org">jakarta-security-dev</a>.<br>
+Copyright &#169; 2019, 2023 Eclipse Foundation. All rights reserved.<br>
 Use is subject to <a href="{@docRoot}/doc-files/speclicense.html" target="_top">license terms</a>.]]>
                             </bottom>
                             <docfilessubdirs>true</docfilessubdirs>
@@ -271,6 +298,33 @@ Use is subject to <a href="{@docRoot}/doc-files/speclicense.html" target="_top">
                                 </group>
                             </groups>
                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>1.5.0</version>
+                <configuration>
+                    <flattenMode>ossrh</flattenMode>
+                </configuration>
+                <executions>
+                    <!-- enable flattening -->
+                    <execution>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                    </execution>
+                    <!-- ensure proper cleanup -->
+                    <execution>
+                        <id>flatten.clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
