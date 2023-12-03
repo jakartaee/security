@@ -517,12 +517,6 @@ supr java.lang.Enum<jakarta.security.enterprise.identitystore.IdentityStore$Vali
 CLSS public abstract interface jakarta.security.enterprise.identitystore.IdentityStoreHandler
 meth public abstract jakarta.security.enterprise.identitystore.CredentialValidationResult validate(jakarta.security.enterprise.credential.Credential)
 
-CLSS public jakarta.security.enterprise.identitystore.IdentityStorePermission
-cons public init(java.lang.String)
-cons public init(java.lang.String,java.lang.String)
-supr java.security.BasicPermission
-hfds serialVersionUID
-
 CLSS public abstract interface !annotation jakarta.security.enterprise.identitystore.LdapIdentityStoreDefinition
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])

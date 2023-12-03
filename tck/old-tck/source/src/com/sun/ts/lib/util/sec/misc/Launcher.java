@@ -63,28 +63,6 @@ public class Launcher {
 
     // Also set the context class loader for the primordial thread.
     Thread.currentThread().setContextClassLoader(loader);
-
-    // Finally, install a security manager if requested
-    String s = System.getProperty("java.security.manager");
-    if (s != null) {
-      SecurityManager sm = null;
-      if ("".equals(s) || "default".equals(s)) {
-        sm = new java.lang.SecurityManager();
-      } else {
-        try {
-          sm = (SecurityManager) loader.loadClass(s).newInstance();
-        } catch (IllegalAccessException e) {
-        } catch (InstantiationException e) {
-        } catch (ClassNotFoundException e) {
-        } catch (ClassCastException e) {
-        }
-      }
-      if (sm != null) {
-        System.setSecurityManager(sm);
-      } else {
-        throw new InternalError("Could not create SecurityManager: " + s);
-      }
-    }
   }
 
   /*
@@ -172,16 +150,8 @@ public class Launcher {
     /**
      * Override loadClass so we can checkPackageAccess.
      */
-    public synchronized Class loadClass(String name, boolean resolve)
-        throws ClassNotFoundException {
-      int i = name.lastIndexOf('.');
-      if (i != -1) {
-        SecurityManager sm = System.getSecurityManager();
-        if (sm != null) {
-          sm.checkPackageAccess(name.substring(0, i));
-        }
-      }
-      return (super.loadClass(name, resolve));
+    public synchronized Class loadClass(String name, boolean resolve) throws ClassNotFoundException {
+      return super.loadClass(name, resolve);
     }
 
     /**

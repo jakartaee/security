@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to Eclipse Foundation.
  * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,14 +23,13 @@ import static jakarta.security.enterprise.identitystore.IdentityStore.Validation
 import static java.lang.invoke.MethodType.methodType;
 import static java.util.Collections.emptySet;
 
-import java.lang.invoke.MethodHandles;
-import java.util.EnumSet;
-import java.util.Set;
-
 import jakarta.security.auth.message.module.ServerAuthModule;
 import jakarta.security.enterprise.CallerPrincipal;
 import jakarta.security.enterprise.authentication.mechanism.http.HttpAuthenticationMechanism;
 import jakarta.security.enterprise.credential.Credential;
+import java.lang.invoke.MethodHandles;
+import java.util.EnumSet;
+import java.util.Set;
 
 /**
  * <code>IdentityStore</code> is a mechanism for validating a caller's credentials
@@ -93,21 +93,10 @@ public class ExampleIdentityStore implements IdentityStore {
     /**
      * Returns groups for the caller, who is identified by the {@link CallerPrincipal}
      * (and potentially other values) found in the {@code validationResult} parameter.
-     * <p>
-     * Callers (i.e., {@link IdentityStoreHandler}s) should have
-     * {@link IdentityStorePermission} permission to invoke this method.
-     * Implementations should check for this permission before doing any work:
-     * <blockquote><pre>{@code
-SecurityManager security = System.getSecurityManager();
-if (security != null) {
-    security.checkPermission(new IdentityStorePermission("getGroups");
-}
-     * }</pre></blockquote>
      *
      * @param validationResult The {@link CredentialValidationResult} returned
      * by a previous call to {@link #validate(Credential)}.
      * @return The {@link Set} of groups found for the caller, if any, or an empty {@link Set} otherwise.
-     * @throws SecurityException May be thrown if the calling code does not have {@link IdentityStorePermission}.
      */
     default Set<String> getCallerGroups(CredentialValidationResult validationResult) {
         return emptySet();
