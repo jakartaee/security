@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to Eclipse Foundation.
  * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -82,6 +83,23 @@ public interface SecurityContext {
      * is not in the given role.
      */
     boolean isCallerInRole(String role);
+
+    /**
+     *  A list of all static (declared) application roles that the authenticated caller is in or the empty list if the caller is either not
+     *  authenticated or is not in any declared role.
+     *
+     *  <p>
+     *  A static (declared) role is a role that is declared upfront in the application, for example via the {@link DeclareRoles}
+     *  annotation, and is discovered during startup.
+     *
+     *  <p>
+     *  Next to the declared roles, it's possible that the underlying authorization system optionally works with a potentially infinite set
+     *  of dynamic roles. Such dynamic (undeclared) roles ARE NOT contained in the set returned by this method.
+     *
+     * @return A list of all static (declared) roles the current caller is in, or the empty list if that caller is not authenticated or has
+     * no static (declared) roles.
+     */
+    Set<String> getAllDeclaredCallerRoles();
 
     /**
      * Checks whether the caller has access to the provided "web resource" using the given methods,
