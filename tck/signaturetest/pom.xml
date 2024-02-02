@@ -23,7 +23,7 @@
 	<parent>
         <groupId>org.eclipse.ee4j.security.tck</groupId>
         <artifactId>jakarta-security-tck</artifactId>
-        <version>3.0.1-SNAPSHOT</version>
+        <version>4.0.0-SNAPSHOT</version>
     </parent>
 
     <groupId>jakarta.security.tck.sigtest</groupId>
@@ -357,7 +357,7 @@
                                 </goals>
                                 <configuration>
                                     <!--additionalClasspathElements>
-                                        <additionalClasspathElement>${project.build.directory}/glassfish7/glassfish/modules/jakarta.security.enterprise-api.jar</additionalClasspathElement>
+                                        <additionalClasspathElement>${project.build.directory}/glassfish8/glassfish/modules/jakarta.security.enterprise-api.jar</additionalClasspathElement>
                                     </additionalClasspathElements-->
                                     <dependenciesToScan>jakarta.security.tck.sigtest:security-tck-sigtest:{project.version}</dependenciesToScan>
                                     <systemPropertyVariables>

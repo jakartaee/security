@@ -35,7 +35,7 @@
         <tck.home>${project.basedir}</tck.home>
         <tck.tests.home>${tck.home}/src/com/sun/ts/tests/securityapi</tck.tests.home> 
         <tck.mode>standalone</tck.mode>
-        <glassfish.home>${project.build.directory}/glassfish7</glassfish.home>
+        <glassfish.home>${project.build.directory}/glassfish8</glassfish.home>
         <glassfish.version>7.0.0-M4</glassfish.version>
         <glassfish.asadmin>${glassfish.home}/glassfish/bin/asadmin</glassfish.asadmin>
        

@@ -23,7 +23,7 @@
 	<parent>
         <groupId>org.eclipse.ee4j.security.tck</groupId>
         <artifactId>jakarta-security-tck</artifactId>
-        <version>3.0.1-SNAPSHOT</version>
+        <version>4.0.0-SNAPSHOT</version>
     </parent>
 
 	<artifactId>app-custom-session</artifactId>
