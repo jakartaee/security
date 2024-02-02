@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,41 +21,48 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public final class Assert {
-    
+
+    public static void assertDefaultNoAccess(String response) {
+        assertFalse(
+            "Should not have access to servlet, but had access.\n" +
+            response,
+            response.contains("This is a servlet"));
+    }
+
     public static void assertDefaultAuthenticated(String response) {
         assertAuthenticated("web", "reza", response, "foo", "bar");
     }
-    
+
     public static void assertDefaultNotAuthenticated(String response) {
         assertNotAuthenticated("web", "reza", response, "foo", "bar");
     }
-    
+
     public static void assertAuthenticated(String userType, String name, String response, String... roles) {
         assertTrue(
-            "Should be authenticated as user " + name + " but was not \n Response: \n" + 
+            "Should be authenticated as user " + name + " but was not \n Response: \n" +
             response + "\n search: " + userType + " username: " + name,
             response.contains(userType + " username: " + name));
-        
+
         for (String role : roles) {
             assertTrue(
-                "Authenticated user should have role \"" + role + "\", but did not \n Response: \n" + 
+                "Authenticated user should have role \"" + role + "\", but did not \n Response: \n" +
                 response,
                 response.contains(userType + " user has role \"" + role + "\": true"));
         }
     }
-    
+
     public static void assertNotAuthenticated(String userType, String name, String response, String... roles) {
         assertFalse(
-            "Should not be authenticated as user " + name + " but was \n Response: \n" + 
+            "Should not be authenticated as user " + name + " but was \n Response: \n" +
             response + "\n search: " + userType + " username: " + name,
             response.contains(userType + " username: " + name));
-        
+
         for (String role : roles) {
             assertFalse(
-                "Authenticated user should not have role \"" + role + "\", but did \n Response: \n" + 
+                "Authenticated user should not have role \"" + role + "\", but did \n Response: \n" +
                 response,
                 response.contains(userType + " user has role \"" + role + "\": true"));
         }
-     }
+    }
 
 }

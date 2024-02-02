@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -127,7 +127,6 @@ public class ArquillianBase {
     }
 
     protected <P extends Page> P pageFromServer(String path) {
-
     	if (base.toString().endsWith("/") && path.startsWith("/")) {
     		path = path.substring(1);
     	}
@@ -142,6 +141,10 @@ public class ArquillianBase {
                 responsePath = page.getUrl().toString();
                 if (localResponse != null) {
                     response = localResponse.getContentAsString();
+
+                    if (System.getProperty("tck.log.response") != null) {
+                        printLastResponse();
+                    }
                 }
             }
 
@@ -155,11 +158,11 @@ public class ArquillianBase {
     protected void printLastResponse() {
         logger.info(
             "\n\n" +
-            "Requested path: " + responsePath +
+            "Requested path:\n" + responsePath +
             "\n\n" +
 
-            "Response :" + formatHTML(response) +
-            "\n\n");
+            "Response :\n" + formatHTML(response) +
+            "\n\n\n");
     }
 
     protected void printPage(Page page) {

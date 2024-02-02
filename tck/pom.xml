@@ -40,7 +40,11 @@
                 M O D U L E S
                 
                 Each module represent a different test, with the exception of the "common"
-                module which contains utility code.  
+                module which contains utility code.
+                
+                To print responses received by the tests (except those from the old TCK)
+                
+                execute with mvn ... -Dtck.log.response
                 
     -->
     <modules>
