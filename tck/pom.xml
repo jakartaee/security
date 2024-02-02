@@ -107,7 +107,7 @@
         
         <!-- Below Servers need to be updated to their Jakarta.* versions and currently don't work -->
         
-        <tomee.version>7.0.4</tomee.version>
+        <tomee.version>7.0.9</tomee.version>
         
         <!-- Note: Liberty 18.0.0.2+ has EE Security included -->
         <openliberty.version>18.0.0.1</openliberty.version>
