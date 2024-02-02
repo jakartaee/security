@@ -23,7 +23,7 @@
     <parent>
 		<groupId>org.eclipse.ee4j.security.tck</groupId>
 		<artifactId>old-security-tck-parent</artifactId>
-		<version>3.0.1-SNAPSHOT</version>
+		<version>4.0.0-SNAPSHOT</version>
 	</parent>
 
     <artifactId>glassfish-external-tck-security</artifactId>
@@ -39,7 +39,7 @@
         <tck.home>${project.build.directory}/security-tck</tck.home>
         <tck.tests.home>${tck.home}/src/com/sun/ts/tests</tck.tests.home> 
          
-        <glassfish.home>${project.build.directory}/glassfish7</glassfish.home>
+        <glassfish.home>${project.build.directory}/glassfish8</glassfish.home>
         <glassfish.asadmin>${glassfish.home}/glassfish/bin/asadmin</glassfish.asadmin>
        
         <jacoco.includes>org/glassfish/**\:com/sun/enterprise/**</jacoco.includes>
@@ -54,7 +54,7 @@
         <port.orb.mutual>13920</port.orb.mutual>
         <port.orb.ssl>13820</port.orb.ssl>
         <port.harness.log>12000</port.harness.log>
-        <glassfish.version>7.0.0-M10</glassfish.version>
+        <glassfish.version>8.0.0-SNAPSHOT</glassfish.version>
     </properties>
 
     <dependencies>
@@ -308,6 +308,15 @@
                                 <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
                                     <arg value="stop-domain" />
                                 </exec>
+                                
+                                <if>
+                                    <not>
+                                        <equals arg1="${testResult}" arg2="0" />
+                                    </not>
+                                    <then>
+                                        <fail/>
+                                    </then>
+                                </if>
                             </target>
                         </configuration>
                     </execution>

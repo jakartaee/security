@@ -67,8 +67,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
     </properties>
 
     <build>
@@ -76,10 +76,10 @@
         	<plugins>
         		<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
         		<plugin>
-  <groupId>org.eclipse.m2e</groupId>
-  <artifactId>lifecycle-mapping</artifactId>
-  <version>1.0.0</version>
-  <configuration>
+                       <groupId>org.eclipse.m2e</groupId>
+                       <artifactId>lifecycle-mapping</artifactId>
+                       <version>1.0.0</version>
+                       <configuration>
         				<lifecycleMappingMetadata>
         					<pluginExecutions>
         						<pluginExecution>
