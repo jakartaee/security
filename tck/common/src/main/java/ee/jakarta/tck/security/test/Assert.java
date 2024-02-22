@@ -29,6 +29,13 @@ public final class Assert {
             response.contains("This is a servlet"));
     }
 
+    public static void assertDefaultAccess(String response) {
+        assertTrue(
+            "Should have access to servlet, but had no access.\n" +
+            response,
+            response.contains("This is a servlet"));
+    }
+
     public static void assertDefaultAuthenticated(String response) {
         assertAuthenticated("web", "reza", response, "foo", "bar");
     }
