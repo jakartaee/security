@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,22 +23,26 @@
  */
 package jakarta.security.enterprise.authentication.mechanism.http;
 
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.TYPE;
-import java.lang.annotation.Retention;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-import java.lang.annotation.Target;
-
-import jakarta.security.enterprise.authentication.mechanism.http.openid.ClaimsDefinition;
-import jakarta.security.enterprise.authentication.mechanism.http.openid.DisplayType;
-import jakarta.security.enterprise.authentication.mechanism.http.openid.LogoutDefinition;
 import static jakarta.security.enterprise.authentication.mechanism.http.openid.OpenIdConstant.CODE;
 import static jakarta.security.enterprise.authentication.mechanism.http.openid.OpenIdConstant.EMAIL_SCOPE;
 import static jakarta.security.enterprise.authentication.mechanism.http.openid.OpenIdConstant.OPENID_SCOPE;
 import static jakarta.security.enterprise.authentication.mechanism.http.openid.OpenIdConstant.PROFILE_SCOPE;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.PARAMETER;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
+import jakarta.enterprise.util.AnnotationLiteral;
+import jakarta.inject.Qualifier;
+import jakarta.security.enterprise.authentication.mechanism.http.openid.ClaimsDefinition;
+import jakarta.security.enterprise.authentication.mechanism.http.openid.DisplayType;
+import jakarta.security.enterprise.authentication.mechanism.http.openid.LogoutDefinition;
 import jakarta.security.enterprise.authentication.mechanism.http.openid.OpenIdProviderMetadata;
 import jakarta.security.enterprise.authentication.mechanism.http.openid.PromptType;
 import jakarta.security.enterprise.identitystore.IdentityStoreHandler;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
 
 
@@ -169,24 +173,24 @@ public @interface OpenIdAuthenticationMechanismDefinition {
     /**
      * The redirect URI (callback URI) to which the response will be sent by the OpenId
      * Connect Provider. This URI must be absolute and must exactly match one of the Redirection URI values
-     * for the Client pre-registered at the OpenID Provider. 
+     * for the Client pre-registered at the OpenID Provider.
      * <p>
-     * The value can be a Jakarta Expression Language 3.0 expression, which can contain 
-     * the implicit String variable baseURL. This variable contains the host and context path of the application 
-     * for which the OpenID Connect authentication mechanism is installed. This variable makes it easier to compose 
+     * The value can be a Jakarta Expression Language 3.0 expression, which can contain
+     * the implicit String variable baseURL. This variable contains the host and context path of the application
+     * for which the OpenID Connect authentication mechanism is installed. This variable makes it easier to compose
      * an absolute URL as required by the OpenID Connect specification.
-     * 
+     *
      * <p>
      * Examples:
      * <ul>
-     *  <li>{@code redirectURI = "${baseURL}/Callback"} - concatenates the `baseURL` variable and the "/Callback" string 
+     *  <li>{@code redirectURI = "${baseURL}/Callback"} - concatenates the `baseURL` variable and the "/Callback" string
      *    in a composite expression.
      *   </li>
-     *  <li>{@code redirectURI = "${baseURL += oidcConfig.redirectCallback}"} - concatenates the `baseURL` variable and the 
+     *  <li>{@code redirectURI = "${baseURL += oidcConfig.redirectCallback}"} - concatenates the `baseURL` variable and the
      *   `redirectCallback` property on bean `oidcConfig` in a single expression
      *  </li>
-     *  <li>{@code redirectURI = "${baseURL}#{oidcConfig.redirectCallback}"} - concatenates the `baseURL` variable and the 
-     *   `redirectCallback` property on bean `oidcConfig` in a composite expression. The `redirectCallback` property would 
+     *  <li>{@code redirectURI = "${baseURL}#{oidcConfig.redirectCallback}"} - concatenates the `baseURL` variable and the
+     *   `redirectCallback` property on bean `oidcConfig` in a composite expression. The `redirectCallback` property would
      *   be evaluated as a deferred expression during each request.
      *  </li>
      * </ul>
@@ -404,4 +408,44 @@ public @interface OpenIdAuthenticationMechanismDefinition {
      * @return
      */
     String tokenMinValidityExpression() default "";
+
+    /**
+     * List of {@link Qualifier qualifier annotations}.
+     *
+     * <p>
+     * An {@link HttpAuthenticationMechanism} injection point
+     * with these qualifier annotations injects a bean that is
+     * produced by this {@code OpenIdAuthenticationMechanismDefinition}.</p>
+     *
+     * <p>
+     * The default value is {@code OpenIdAuthenticationMechanism}, indicating that
+     * this {@code OpenIdAuthenticationMechanismDefinition} produces
+     * bean instances of type {@link HttpAuthenticationMechanism} qualified by
+     * {@code OpenIdAuthenticationMechanism}.
+     *
+     * @return list of qualifiers.
+     * @since 4.0
+     */
+    Class<?>[] qualifiers() default { OpenIdAuthenticationMechanism.class };
+
+    @Qualifier
+    @Retention(RUNTIME)
+    @Target({FIELD, METHOD, TYPE, PARAMETER})
+    public static @interface OpenIdAuthenticationMechanism {
+
+        /**
+         * Supports inline instantiation of the {@link OpenIdAuthenticationMechanism} qualifier.
+         *
+         * @since 4.0
+         */
+        public static final class Literal extends AnnotationLiteral<OpenIdAuthenticationMechanism> implements OpenIdAuthenticationMechanism {
+            private static final long serialVersionUID = 1L;
+
+            /**
+             * Instance of the {@link OpenIdAuthenticationMechanisms} qualifier.
+             */
+            public static final Literal INSTANCE = new Literal();
+        }
+
+    }
 }
