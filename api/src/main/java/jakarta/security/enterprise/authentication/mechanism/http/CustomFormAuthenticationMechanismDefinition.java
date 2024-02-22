@@ -79,7 +79,7 @@ public @interface CustomFormAuthenticationMechanismDefinition {
             private static final long serialVersionUID = 1L;
 
             /**
-             * Instance of the {@link CustomFormAuthenticationMechanisms} qualifier.
+             * Instance of the {@link CustomFormAuthenticationMechanism} qualifier.
              */
             public static final Literal INSTANCE = new Literal();
         }

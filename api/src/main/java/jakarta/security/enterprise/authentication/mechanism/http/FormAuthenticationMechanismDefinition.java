@@ -75,7 +75,7 @@ public @interface FormAuthenticationMechanismDefinition {
             private static final long serialVersionUID = 1L;
 
             /**
-             * Instance of the {@link FormAuthenticationMechanisms} qualifier.
+             * Instance of the {@link FormAuthenticationMechanism} qualifier.
              */
             public static final Literal INSTANCE = new Literal();
         }
