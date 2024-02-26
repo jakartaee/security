@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to Eclipse Foundation.
+ * Copyright (c) 2023, 2024 Contributors to Eclipse Foundation.
  * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -89,7 +89,7 @@ public interface SecurityContext {
      *  authenticated or is not in any declared role.
      *
      *  <p>
-     *  A static (declared) role is a role that is declared upfront in the application, for example via the {@link DeclareRoles}
+     *  A static (declared) role is a role that is declared upfront in the application, for example via the {@code jakarta.annotation.security.DeclareRoles}
      *  annotation, and is discovered during startup.
      *
      *  <p>
