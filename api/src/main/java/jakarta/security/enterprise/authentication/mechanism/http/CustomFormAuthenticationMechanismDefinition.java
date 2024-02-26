@@ -27,6 +27,7 @@ import jakarta.enterprise.util.AnnotationLiteral;
 import jakarta.enterprise.util.Nonbinding;
 import jakarta.inject.Qualifier;
 import jakarta.security.enterprise.SecurityContext;
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
@@ -41,6 +42,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RUNTIME)
 @Target(TYPE)
+@Repeatable(CustomFormAuthenticationMechanismDefinition.List.class)
 public @interface CustomFormAuthenticationMechanismDefinition {
 
     @Nonbinding
@@ -64,6 +66,16 @@ public @interface CustomFormAuthenticationMechanismDefinition {
      * @since 4.0
      */
     Class<?>[] qualifiers() default { CustomFormAuthenticationMechanism.class };
+
+    /**
+     * Enables multiple <code>CustomFormAuthenticationMechanismDefinition</code>
+     * annotations on the same type.
+     */
+    @Retention(RUNTIME)
+    @Target(TYPE)
+    public @interface List {
+        CustomFormAuthenticationMechanismDefinition[] value();
+    }
 
     @Qualifier
     @Retention(RUNTIME)

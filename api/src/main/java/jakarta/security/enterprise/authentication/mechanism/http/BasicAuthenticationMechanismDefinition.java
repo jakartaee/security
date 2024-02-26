@@ -25,6 +25,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import jakarta.enterprise.util.AnnotationLiteral;
 import jakarta.inject.Qualifier;
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
@@ -37,6 +38,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RUNTIME)
 @Target(TYPE)
+@Repeatable(BasicAuthenticationMechanismDefinition.List.class)
 public @interface BasicAuthenticationMechanismDefinition {
 
     /**
@@ -67,6 +69,16 @@ public @interface BasicAuthenticationMechanismDefinition {
      * @since 4.0
      */
     Class<?>[] qualifiers() default { BasicAuthenticationMechanism.class };
+
+    /**
+     * Enables multiple <code>BasicAuthenticationMechanismDefinition</code>
+     * annotations on the same type.
+     */
+    @Retention(RUNTIME)
+    @Target(TYPE)
+    public @interface List {
+        BasicAuthenticationMechanismDefinition[] value();
+    }
 
     @Qualifier
     @Retention(RUNTIME)

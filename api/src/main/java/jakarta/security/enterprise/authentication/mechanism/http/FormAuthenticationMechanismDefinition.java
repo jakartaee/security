@@ -26,6 +26,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import jakarta.enterprise.util.AnnotationLiteral;
 import jakarta.enterprise.util.Nonbinding;
 import jakarta.inject.Qualifier;
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
@@ -37,6 +38,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RUNTIME)
 @Target(TYPE)
+@Repeatable(FormAuthenticationMechanismDefinition.List.class)
 public @interface FormAuthenticationMechanismDefinition {
 
     @Nonbinding
@@ -60,6 +62,16 @@ public @interface FormAuthenticationMechanismDefinition {
      * @since 4.0
      */
     Class<?>[] qualifiers() default { FormAuthenticationMechanism.class };
+
+    /**
+     * Enables multiple <code>FormAuthenticationMechanismDefinition</code>
+     * annotations on the same type.
+     */
+    @Retention(RUNTIME)
+    @Target(TYPE)
+    public @interface List {
+        FormAuthenticationMechanismDefinition[] value();
+    }
 
     @Qualifier
     @Retention(RUNTIME)

@@ -41,6 +41,7 @@ import jakarta.security.enterprise.authentication.mechanism.http.openid.LogoutDe
 import jakarta.security.enterprise.authentication.mechanism.http.openid.OpenIdProviderMetadata;
 import jakarta.security.enterprise.authentication.mechanism.http.openid.PromptType;
 import jakarta.security.enterprise.identitystore.IdentityStoreHandler;
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
@@ -115,6 +116,7 @@ import java.lang.annotation.Target;
  */
 @Target({TYPE, METHOD})
 @Retention(RUNTIME)
+@Repeatable(OpenIdAuthenticationMechanismDefinition.List.class)
 public @interface OpenIdAuthenticationMechanismDefinition {
 
     /**
@@ -427,6 +429,16 @@ public @interface OpenIdAuthenticationMechanismDefinition {
      * @since 4.0
      */
     Class<?>[] qualifiers() default { OpenIdAuthenticationMechanism.class };
+
+    /**
+     * Enables multiple <code>OpenIdAuthenticationMechanismDefinition</code>
+     * annotations on the same type.
+     */
+    @Retention(RUNTIME)
+    @Target(TYPE)
+    public @interface List {
+        OpenIdAuthenticationMechanismDefinition[] value();
+    }
 
     @Qualifier
     @Retention(RUNTIME)
