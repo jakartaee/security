@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,10 +17,12 @@
 
 package ee.jakarta.tck.security.test;
 
+import java.io.Serializable;
 import java.security.Principal;
 
-public class CustomPrincipal implements Principal {
+public class CustomPrincipal implements Principal, Serializable {
 
+    private static final long serialVersionUID = 1L;
     private final String name;
 
     public CustomPrincipal(String name) {
