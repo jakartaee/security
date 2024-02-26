@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to Eclipse Foundation.
  * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,13 +17,18 @@
 
 package jakarta.security.enterprise.authentication.mechanism.http;
 
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+import jakarta.enterprise.util.AnnotationLiteral;
+import jakarta.enterprise.util.Nonbinding;
+import jakarta.inject.Qualifier;
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
-
-import jakarta.enterprise.util.Nonbinding;
 
 /**
  * Annotation used to define a container authentication mechanism that implements
@@ -32,9 +38,60 @@ import jakarta.enterprise.util.Nonbinding;
  */
 @Retention(RUNTIME)
 @Target(TYPE)
+@Repeatable(FormAuthenticationMechanismDefinition.List.class)
 public @interface FormAuthenticationMechanismDefinition {
 
     @Nonbinding
     LoginToContinue loginToContinue();
+
+    /**
+     * List of {@link Qualifier qualifier annotations}.
+     *
+     * <p>
+     * An {@link HttpAuthenticationMechanism} injection point
+     * with these qualifier annotations injects a bean that is
+     * produced by this {@code FormAuthenticationMechanismDefinition}.</p>
+     *
+     * <p>
+     * The default value is {@code FormAuthenticationMechanism}, indicating that
+     * this {@code FormAuthenticationMechanismDefinition} produces
+     * bean instances of type {@link HttpAuthenticationMechanism} qualified by
+     * {@code FormAuthenticationMechanism}.
+     *
+     * @return list of qualifiers.
+     * @since 4.0
+     */
+    Class<?>[] qualifiers() default { FormAuthenticationMechanism.class };
+
+    /**
+     * Enables multiple <code>FormAuthenticationMechanismDefinition</code>
+     * annotations on the same type.
+     */
+    @Retention(RUNTIME)
+    @Target(TYPE)
+    public @interface List {
+        FormAuthenticationMechanismDefinition[] value();
+    }
+
+    @Qualifier
+    @Retention(RUNTIME)
+    @Target({FIELD, METHOD, TYPE, PARAMETER})
+    public static @interface FormAuthenticationMechanism {
+
+        /**
+         * Supports inline instantiation of the {@link FormAuthenticationMechanism} qualifier.
+         *
+         * @since 4.0
+         */
+        public static final class Literal extends AnnotationLiteral<FormAuthenticationMechanism> implements FormAuthenticationMechanism {
+            private static final long serialVersionUID = 1L;
+
+            /**
+             * Instance of the {@link FormAuthenticationMechanism} qualifier.
+             */
+            public static final Literal INSTANCE = new Literal();
+        }
+
+    }
 
 }
