@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
+    Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
     Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -80,8 +80,28 @@
         <module>app-custom-rememberme</module>
 
         <module>app-custom-identity-store-handler</module>
+        
+        <!-- app-[authentication-mechanism]-[service] -->
+        
+        <!-- Overriding the default handler to delegate to two custom authentication 
+             mechanisms 
+        -->
+        <module>app-custom-authentication-mechanism-handler</module>
+        
+        <!-- Overriding the default handler to delegate to three instances of the  
+             basic authentication mechanisms 
+        -->
+        <module>app-custom-authentication-mechanism-handler2</module>
 
+        
+        <!-- Interaction with other technologies besides Servlet and CDI -->
+        
+        <!-- Securing Jakarta REST endpoints -->
         <module>app-jaxrs</module>
+        
+        <!-- Setting a Jakarta Authorization policy -->
+        <module>app-mem-policy</module>
+        <module>app-mem-policy2</module>
         
         <!-- 
             Runs a variety of tests using the old (javatest based) TCK.
@@ -104,7 +124,7 @@
         <zipname>${project.artifactId}-${project.version}</zipname>
         <licenseFile>${project.basedir}/LICENSE_EFTL.md</licenseFile>
         
-        <security-api.version>4.0.0-M1</security-api.version>
+        <security-api.version>4.0.0-SNAPSHOT</security-api.version>
         
         <buildDirectory>${project.basedir}/target</buildDirectory>
         
@@ -155,7 +175,7 @@
         <dependency>
             <groupId>jakarta.security.enterprise</groupId>
             <artifactId>jakarta.security.enterprise-api</artifactId>
-            <version>4.0.0-M1</version>
+            <version>4.0.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
