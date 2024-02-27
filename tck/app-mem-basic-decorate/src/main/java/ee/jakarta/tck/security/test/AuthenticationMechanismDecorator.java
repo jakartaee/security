@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2018, 2022 Payara Foundation and/or its affiliates and others.
  * All rights reserved.
  *
@@ -16,12 +17,10 @@
  */
 package ee.jakarta.tck.security.test;
 
-import java.io.IOException;
-import java.io.Serializable;
-
 import jakarta.annotation.Priority;
 import jakarta.decorator.Decorator;
 import jakarta.decorator.Delegate;
+import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
 import jakarta.security.enterprise.AuthenticationException;
 import jakarta.security.enterprise.AuthenticationStatus;
@@ -30,6 +29,7 @@ import jakarta.security.enterprise.authentication.mechanism.http.HttpMessageCont
 import jakarta.security.enterprise.authentication.mechanism.http.HttpMessageContextWrapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.Serializable;
 
 /**
  * This is a CDI decorator that decorates the authentication mechanism (in this test
@@ -45,6 +45,7 @@ public abstract class AuthenticationMechanismDecorator implements HttpAuthentica
     private static final long serialVersionUID = 1L;
 
     @Inject
+    @Any
     @Delegate
     private HttpAuthenticationMechanism delagate;
 
