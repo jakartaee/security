@@ -20,6 +20,8 @@ package jakarta.security.enterprise.authentication.mechanism.http;
 import static jakarta.security.enterprise.AuthenticationStatus.SUCCESS;
 
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.AmbiguousResolutionException;
+import jakarta.enterprise.inject.spi.Bean;
 import jakarta.security.enterprise.AuthenticationException;
 import jakarta.security.enterprise.AuthenticationStatus;
 import jakarta.servlet.Filter;
@@ -44,19 +46,23 @@ import jakarta.servlet.http.HttpServletResponse;
  * <b>must</b> behave as described below:
  *
  * <ol>
- *   <li> Before servicing any calls as defined by this interface, the implementation must check if there is more than
- *        one enabled bean of type {@code HttpAuthenticationMechanism} available.
+ *   <li> Before servicing any calls as defined by this interface, the implementation must (implicitly) check if there is more
+ *        than one enabled bean of type {@code HttpAuthenticationMechanism} available, irrespective of any qualifiers.
  *   </li>
  *   <li> If there is more than one enabled bean of type {@code HttpAuthenticationMechanism} available, the implementation
- *        must throw an {@link IllegalStateException}.
+ *        must apply the ambiguous dependency resolution rules to this set of {@linkplain Bean beans}. For instance by using
+ *        {@link jakarta.enterprise.inject.spi.BeanContainer#resolve(java.util.Set)}.
  *   </li>
  *   <li>
- *       If there is one enabled bean of type {@code HttpAuthenticationMechanism} available, the implementation
- *       must remember this one enabled bean.
+ *        If the ambiguous dependency resolution rules fail, an {@link AmbiguousResolutionException} must be thrown (or the
+ *        one thrown by {@link jakarta.enterprise.inject.spi.BeanContainer#resolve(java.util.Set)} propagated).
  *   </li>
  *   <li>
- *       When servicing any calls as defined by this interface, the implementation must call the method in the
- *       {@code HttpAuthenticationMechanism} bean with the same name and arguments, and where applicable return
+ *       If the ambiguous dependency resolution rules succeed, the implementation must remember the one resulting bean.
+ *   </li>
+ *   <li>
+ *       When servicing any calls as defined by this interface, the implementation must call the method on the
+ *       remembered {@code HttpAuthenticationMechanism} bean with the same name and arguments, and where applicable return
  *       the result from that call.
  *   </li>
  *  </ol>
