@@ -100,7 +100,7 @@
         <dependency>
             <groupId>jakarta.authorization</groupId>
             <artifactId>jakarta.authorization-api</artifactId>
-            <version>3.0.0-M1</version>
+            <version>3.0.0-M2</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -237,7 +237,7 @@
                         <Implementation-Vendor>${project.organization.name}</Implementation-Vendor>
                         <Implementation-Vendor-Id>org.glassfish</Implementation-Vendor-Id>
                         <_noimportjava>true</_noimportjava>
-                        <_runee>JavaSE-21</_runee>
+                        <_runee>JavaSE-17</_runee>
                     </instructions>
                 </configuration>
                 <executions>
@@ -285,7 +285,7 @@
                             <header><![CDATA[<br>Jakarta Security API v${project.version}]]></header>
                             <bottom><![CDATA[
 Comments to: <a href="mailto:jakarta-security-dev@eclipse.org">jakarta-security-dev</a>.<br>
-Copyright &#169; 2019, 2023 Eclipse Foundation. All rights reserved.<br>
+Copyright &#169; 2019, 2024 Eclipse Foundation. All rights reserved.<br>
 Use is subject to <a href="{@docRoot}/doc-files/speclicense.html" target="_top">license terms</a>.]]>
                             </bottom>
                             <docfilessubdirs>true</docfilessubdirs>
