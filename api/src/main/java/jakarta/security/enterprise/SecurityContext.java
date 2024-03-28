@@ -37,7 +37,7 @@ import jakarta.servlet.http.HttpServletResponse;
 public interface SecurityContext {
 
     /**
-     * Retrieve the platform-specific <code>java.security.Principal</code> that represents
+     * Retrieve the platform-specific {@code java.security.Principal} that represents
      * the name of authenticated caller, or null if the current caller is not authenticated.
      *
      * @return Principal representing the name of the current authenticated user, or null if not authenticated.
@@ -57,7 +57,7 @@ public interface SecurityContext {
      * Modifications to the returned Set will not affect the internal Principal Set.
      *
      * @param pType Class object representing the type of Principal to return.
-     * @param <T> The actual type represented by the <code>pType</code> argument
+     * @param <T> The actual type represented by the {@code pType} argument
      *
      * @return Set of Principals of the given type, or an empty set.
      */
@@ -65,21 +65,21 @@ public interface SecurityContext {
 
     /**
      * Checks whether the authenticated caller is included in the specified logical <em>application</em> "role".
-     * If the caller is not authenticated, this always returns <code>false</code>.
+     * If the caller is not authenticated, this always returns {@code false}.
      *
      * <p>
      * This method <em>can not</em> be used to test for roles that are mapped to specific named Jakarta Servlets or
-     * named Jakarta Enterprise Beans. For a Servlet an example of this would be the <code>role-name</code> nested in a
-     * <code>security-role-ref</code> element nested in a <code>servlet</code> element in <code>web.xml</code>.
+     * named Jakarta Enterprise Beans. For a Servlet an example of this would be the {@code role-name} nested in a
+     * {@code security-role-ref} element nested in a {@code servlet} element in {@code web.xml}.
      *
      * <p>
      * Should code in either such Jakarta Servlet or Jakarta Enterprise Bean wish to take such mapped (aka referenced, linked)
      * roles into account, the facilities for that specific container should be used instead. For instance for Servlet that
      * would be {@link HttpServletRequest#isUserInRole(String)} and for Jakarta Enterprise Beans that would be
-     * <code>jakarta.ejb.SessionContext#isCallerInRole(String)</code>.
+     * {@code jakarta.ejb.SessionContext#isCallerInRole(String)}.
      *
-     * @param role a <code>String</code> specifying the name of the logical application role
-     * @return <code>true</code> if the authenticated caller is in the given role, false if the caller is not authentication or
+     * @param role a {@code String} specifying the name of the logical application role
+     * @return {@code true} if the authenticated caller is in the given role, false if the caller is not authentication or
      * is not in the given role.
      */
     boolean isCallerInRole(String role);
@@ -109,12 +109,14 @@ public interface SecurityContext {
      * A caller has access if the web resource is either not protected (constrained), or when it is protected by a role
      * and the caller is in that role.
      *
-     * @param resource the name of the web resource to test access for. This is a <code>URLPatternSpec</code> that
-     * identifies the application specific web resources to which the permission pertains. For a full specification of this
-     * pattern see {@link jakarta.security.jacc.WebResourcePermission#WebResourcePermission(String, String)}.
-     * @param methods one or more methods to check for whether the caller has access to the web resource using one of those methods.
+     * @param resource the name of the web resource to test access for. This is a {@code URLPatternSpec} that identifies
+     * the application specific web resources to which the permission pertains. For a full specification of this pattern
+     * see {@link jakarta.security.jacc.WebResourcePermission#WebResourcePermission(String, String)}.
+     * @param methods HTTP methods to check for whether the caller has access to the web resource using one of those
+     * methods. If no methods are provided, this method will return {@code true} only if the caller can access the resource using all HTTP methods
      *
-     * @return <code>true</code> if the caller has access to the web resource using one of the given methods, <code>false</code> otherwise.
+     * @return {@code true} if the caller has access to the web resource using one of the given methods, or using all
+     * supported HTTP methods, if no method is provided. Otherwise returns {@code false}.
      */
     boolean hasAccessToWebResource(String resource, String... methods);
 
@@ -130,14 +132,14 @@ public interface SecurityContext {
      * Whether the authentication dialog is to be started or continued depends on the (logical) state of the authentication dialog. If
      * such dialog is currently in progress, a call to this method will continue it. If such dialog is not in progress a new one will be
      * started. A new dialog can be forced to be started regardless of one being in progress or not by providing a value of
-     * <code>true</code> for the {@link AuthenticationParameters#newAuthentication} parameter with this call.
+     * {@code true} for the {@link AuthenticationParameters#newAuthentication} parameter with this call.
      *
      * <p>
      * This method requires an {@link HttpServletRequest} and {@link HttpServletResponse} argument to be passed in, and
      * can therefore only be used in a valid Servlet context.
      *
-     * @param request The <code>HttpServletRequest</code> associated with the current web resource invocation.
-     * @param response The <code>HttpServletResponse</code> associated with the given <code>HttpServletRequest</code>.
+     * @param request The {@code HttpServletRequest} associated with the current web resource invocation.
+     * @param response The {@code HttpServletResponse} associated with the given {@code HttpServletRequest}.
      * @param parameters The parameters that are provided along with a programmatic authentication request, for instance the credentials.
      * collected by the application for continuing an authentication dialog.
      *
