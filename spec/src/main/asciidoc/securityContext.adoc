@@ -59,14 +59,68 @@ As an example, consider the following Servlet definition:
 public class ProtectedServlet extends HttpServlet { ... }
 ----
 
-And the following call to _hasAccessToWebResource()_:
+And the following calls to _hasAccessToWebResource()_:
 
 [source,java]
 ----
-securityContext.hasAccessToWebResource("/protectedServlet", GET)
+securityContext.hasAccessToWebResource("/protectedServlet")
 ----
 
-The above _hasAccessToWebResource()_ call would return true if and only if the caller is in role "foo".
+[source,java]
+----
+securityContext.hasAccessToWebResource("/protectedServlet", "GET")
+----
+
+[source,java]
+----
+securityContext.hasAccessToWebResource("/protectedServlet", "GET", "POST")
+----
+
+All the above _hasAccessToWebResource()_ calls would return `true` if and only if the caller is in role "foo".
+
+'''
+
+As another example, consider the following definition, which gives access to the resource:
+
+* for the role "bar" only via the GET method
+* for the role "foo" via all methods except the GET method
+
+[source,java]
+----
+@WebServlet("/protectedServlet")
+@ServletSecurity(
+  value = @HttpConstraint(rolesAllowed = "foo"),
+  httpMethodConstraints = {
+    @HttpMethodConstraint(value = "GET", rolesAllowed = "bar"),
+ })
+public class ProtectedServlet extends HttpServlet { ... }
+----
+
+And the following calls to _hasAccessToWebResource()_:
+
+[source,java]
+----
+securityContext.hasAccessToWebResource("/protectedServlet", "GET")
+----
+
+The above _hasAccessToWebResource()_ call would return `true` if and only if the caller is in role "bar".
+
+[source,java]
+----
+securityContext.hasAccessToWebResource("/protectedServlet", "POST", "PUT")
+----
+
+The above _hasAccessToWebResource()_ call would return `true` if and only if the caller is in role "foo".
+
+On the other hand, the following call, with no method arguments:
+
+[source,java]
+----
+securityContext.hasAccessToWebResource("/protectedServlet")
+----
+
+would always return `false` because no role has access via all HTTP methods - role "bar" has access via the GET method, roles "foo" has access via all other methods but not via the GET.
+
 
 === Triggering the Authentication Process
 
