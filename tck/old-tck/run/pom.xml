@@ -78,7 +78,7 @@
             <plugin>
                 <groupId>com.googlecode.maven-download-plugin</groupId>
                 <artifactId>download-maven-plugin</artifactId>
-                <version>1.6.8</version>
+                <version>1.9.0</version>
                 <executions>
                     <execution>
                         <id>download-ant</id>
@@ -243,6 +243,7 @@
                             <target xmlns:if="ant:if" xmlns:unless="ant:unless">
                                 <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="maven.plugin.classpath" />
                                 <limit maxwait="20">
+                                    <echo if:set="glassfish.suspend">******** SUSPENDING GF ********</echo>
                                     <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
                                         <arg value="start-domain"/>
                                         <arg value="--suspend" if:set="glassfish.suspend"/>
