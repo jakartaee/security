@@ -115,7 +115,7 @@
         <!-- 
             Checks the API signature of the API module.
         -->
-        <module>signaturetest</module>
+        <module>security-signaturetest</module>
     </modules>
 
     <properties>
@@ -349,6 +349,7 @@
                     </execution>
                 </executions>
             </plugin>
+            
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
@@ -370,7 +371,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
-                <version>3.0.0-M7</version>
+                <version>3.2.5</version>
                 <executions>
                     <execution>
                         <phase>post-integration-test</phase>
@@ -415,6 +416,15 @@
                 <glassfish.version>8.0.0-SNAPSHOT</glassfish.version>
                 <glassfish.port>8080</glassfish.port>
                 <glassfish.root>${maven.multiModuleProjectDirectory}/target</glassfish.root>
+                
+                <!--
+                    Exact artefact used by GlassFish that holds the API classes. The actual API
+                    jar in the GlassFish root folder is installed to these coordinates below.
+                    This is used by the signature test in module /security-signaturetest 
+                -->
+                <sigtest.api.groupId>jakarta.security</sigtest.api.groupId>
+                <sigtest.api.artifactId>jakarta.security-vendor-api</sigtest.api.artifactId>
+                <sigtest.api.version>${glassfish.version}</sigtest.api.version>
             </properties>
 
             <dependencies>
@@ -483,6 +493,32 @@
                             </execution>
                         </executions>
                     </plugin>
+                    
+                    <!--
+                        Installs the jakarta.security.enterprise.jar from GF on the filesystem to the
+                        coordinates expected by the signature test.
+                    -->
+                    <plugin>
+                        <artifactId>maven-install-plugin</artifactId>
+                        <version>3.1.2</version>
+                        <executions>
+                            <execution>
+                                <id>unpack</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>install-file</goal>
+                                </goals>
+                                <configuration>
+                                    <file>${glassfish.root}/glassfish8/glassfish/modules/jakarta.security.enterprise-api.jar</file>
+                                    <groupId>${sigtest.api.groupId}</groupId>
+                                    <artifactId>${sigtest.api.artifactId}</artifactId>
+                                    <version>${sigtest.api.version}</version>
+                                    <packaging>jar</packaging>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-failsafe-plugin</artifactId>
