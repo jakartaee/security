@@ -152,7 +152,7 @@ public class Client extends BaseUrlClient {
     String password = "secret1";
 
     StringBuffer sb = new StringBuffer(100);
-    sb.append("Have qualifier @Default: true").append("|");
+    sb.append("Have qualifier @BasicAuthenticationMechanism: true").append("|");
     sb.append("Have scope @ApplicationScoped: true");
 
     TEST_PROPS.setProperty(TEST_NAME,

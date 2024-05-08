@@ -30,43 +30,33 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@FormAuthenticationMechanismDefinition(loginToContinue = @LoginToContinue(loginPage = "/form-login-servlet", errorPage = "/form-login-error-servlet"))
+@FormAuthenticationMechanismDefinition(
+    loginToContinue = 
+        @LoginToContinue(
+            loginPage = "/form-login-servlet", 
+            errorPage = "/form-login-error-servlet"))
 
 @WebServlet("/servlet")
 @DeclareRoles({ "Administrator", "Manager", "Employee" })
 @ServletSecurity(@HttpConstraint(rolesAllowed = "Administrator"))
 public class FormServlet extends HttpServlet {
 
-  private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-  @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
+    @Override
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-    PrintWriter out = response.getWriter();
+        PrintWriter out = response.getWriter();
 
-    out.println("The user principal is: " + request.getUserPrincipal().getName()
-        + "<BR>");
-    out.println("getRemoteUser(): " + request.getRemoteUser() + "<BR>");
-    out.println("getAuthType(): " + request.getAuthType() + "<BR>");
+        out.println("The user principal is: " + request.getUserPrincipal().getName() + "<BR>");
+        out.println("getRemoteUser(): " + request.getRemoteUser() + "<BR>");
+        out.println("getAuthType(): " + request.getAuthType() + "<BR>");
 
-    // Surround these with !'s so they are easier to search for.
-    // (i.e. we can search for !true! or !false!)
-    out.println("isUserInRole(\"Administrator\"): !"
-        + request.isUserInRole("Administrator") + "!<BR>");
-    out.println("isUserInRole(\"Manager\"): !" + request.isUserInRole("Manager")
-        + "!<BR>");
-    out.println("isUserInRole(\"Employee\"): !"
-        + request.isUserInRole("Employee") + "!<BR>");
-  }
-
-  /*
-   * @Override public void doPost(HttpServletRequest request,
-   * HttpServletResponse response) throws ServletException, IOException { if
-   * ("true".equals(request.getParameter("logout"))) { request.logout();
-   * request.getSession().invalidate(); }
-   * 
-   * doGet(request, response); }
-   */
+        // Surround these with !'s so they are easier to search for.
+        // (i.e. we can search for !true! or !false!)
+        out.println("isUserInRole(\"Administrator\"): !" + request.isUserInRole("Administrator") + "!<BR>");
+        out.println("isUserInRole(\"Manager\"): !" + request.isUserInRole("Manager") + "!<BR>");
+        out.println("isUserInRole(\"Employee\"): !" + request.isUserInRole("Employee") + "!<BR>");
+    }
 
 }

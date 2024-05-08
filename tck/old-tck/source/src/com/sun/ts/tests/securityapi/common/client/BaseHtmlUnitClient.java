@@ -122,6 +122,12 @@ public class BaseHtmlUnitClient extends EETest {
     } else {
       client.getOptions().setThrowExceptionOnFailingStatusCode(true);
     }
+    
+    if (System.getProperty("glassfish.suspend") != null) {
+        client.getOptions().setTimeout(0);
+    }
+    
+    client.getOptions().setTimeout(0);
 
     TestUtil.logMsg("setThrowExceptionOnFailingStatusCode is set to: "
         + webClient.getOptions().isThrowExceptionOnFailingStatusCode());

@@ -31,45 +31,40 @@ import jakarta.security.enterprise.identitystore.IdentityStore;
 @RequestScoped
 public class TestIdentityStore implements IdentityStore {
 
-  private final Map<String, String> callerToPassword;
+    private final Map<String, String> callerToPassword;
 
-  private final Map<String, Set<String>> callerToGroups;
+    private final Map<String, Set<String>> callerToGroups;
 
-  {
-    callerToPassword = new HashMap<String, String>();
-    callerToPassword.put("tom", "secret1");
-    callerToPassword.put("emma", "secret2");
-    callerToPassword.put("bob", "secret3");
+    {
+        callerToPassword = new HashMap<String, String>();
+        callerToPassword.put("tom", "secret1");
+        callerToPassword.put("emma", "secret2");
+        callerToPassword.put("bob", "secret3");
 
-    callerToGroups = new HashMap<String, Set<String>>();
-    callerToGroups.put("tom",
-        new HashSet<String>(Arrays.asList("Administrator", "Manager")));
-    callerToGroups.put("emma",
-        new HashSet<String>(Arrays.asList("Administrator", "Employee")));
-    callerToGroups.put("bob",
-        new HashSet<String>(Arrays.asList("Administrator")));
-  }
-
-  @Override
-  public CredentialValidationResult validate(Credential credential) {
-    if (credential instanceof UsernamePasswordCredential) {
-      return validate((UsernamePasswordCredential) credential);
+        callerToGroups = new HashMap<String, Set<String>>();
+        callerToGroups.put("tom", new HashSet<String>(Arrays.asList("Administrator", "Manager")));
+        callerToGroups.put("emma", new HashSet<String>(Arrays.asList("Administrator", "Employee")));
+        callerToGroups.put("bob", new HashSet<String>(Arrays.asList("Administrator")));
     }
 
-    return CredentialValidationResult.NOT_VALIDATED_RESULT;
-  }
+    @Override
+    public CredentialValidationResult validate(Credential credential) {
+        if (credential instanceof UsernamePasswordCredential) {
+            return validate((UsernamePasswordCredential) credential);
+        }
 
-  private CredentialValidationResult validate(
-      UsernamePasswordCredential usernamePasswordCredential) {
-    String user = usernamePasswordCredential.getCaller();
-    String password = callerToPassword.get(user);
-
-    if (password != null
-        && usernamePasswordCredential.getPassword().compareTo(password)) {
-      return new CredentialValidationResult(user, callerToGroups.get(user));
+        return CredentialValidationResult.NOT_VALIDATED_RESULT;
     }
 
-    return CredentialValidationResult.INVALID_RESULT;
-  }
+    private CredentialValidationResult validate(UsernamePasswordCredential usernamePasswordCredential) {
+        String user = usernamePasswordCredential.getCaller();
+        String password = callerToPassword.get(user);
+
+        if (password != null && usernamePasswordCredential.getPassword().compareTo(password)) {
+            return new CredentialValidationResult(user, callerToGroups.get(user));
+        }
+
+        return CredentialValidationResult.INVALID_RESULT;
+    }
 
 }

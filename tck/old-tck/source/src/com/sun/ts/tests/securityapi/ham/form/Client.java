@@ -387,7 +387,7 @@ public class Client extends EETest {
       TestUtil.logMsg("received response content  1: " + response.content);
 
       String content = response.content;
-      String searchString1 = "Have qualifier @Default: true";
+      String searchString1 = "Have qualifier @FormAuthenticationMechanism: true";
       String searchString2 = "Have scope @ApplicationScoped: true";
       if (content.indexOf(searchString1) == -1
           || content.indexOf(searchString2) == -1) {
