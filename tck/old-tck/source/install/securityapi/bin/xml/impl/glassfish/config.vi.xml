@@ -65,19 +65,12 @@
          <ant antfile="s1as.xml" target="stop.javadb.asadmin" dir="${common.bin.dir}/xml/impl/glassfish"/>
     </target>
 
-    <target name="enable.security.manager"  depends="configPlatform">
-	<antcall target="create-jvm-options" >
-	 	<param name="jvm.options" value=" -Djava.security.manager"/>
-    	</antcall>
-    </target>
-
     <target name="config.vi" depends="start.javadb.asadmin,start.javadb">
        <ant antfile="s1as.xml" dir="${common.bin.dir}/xml/impl/glassfish" target="restart.server"/>
        <ant antfile="initdb.xml" dir="${bin.dir}" target="init.derby"/>
        <antcall target="add.jdbc.pools.securityapi"/> 
        <antcall target="drop.jdbc.resources.securityapi"/> 
        <antcall target="add.jdbc.resources.securityapi"/> 
-       <antcall target="enable.security.manager"/>
        <ant antfile="s1as.xml" dir="${common.bin.dir}/xml/impl/glassfish" target="restart.server"/> 
     </target>
 

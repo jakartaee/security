@@ -1382,11 +1382,6 @@
         </antcall>
     </target>
 
-    <target name="enable.security.manager" depends="configPlatform">
-	  <antcall target="create-jvm-options" >
-        	<param name="jvm.options" value=" -Djava.security.manager"/>
-          </antcall>
-    </target>
     <target name="disable.security.manager" depends="configPlatform">
            <antcall target="delete-jvm-options" >
                 <param name="jvm.options" value=" -Djava.security.manager"/>
