@@ -40,55 +40,49 @@ import jakarta.servlet.http.HttpServletResponse;
 @ServletSecurity(@HttpConstraint(rolesAllowed = "Administrator"))
 public class Servlet2 extends HttpServlet {
 
-  private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-  @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
+    @Override
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-    System.out.println("Inside  Servlet2 ....." + "<BR>");
+        System.out.println("Inside  Servlet2 ....." + "<BR>");
 
-    response.getWriter().write("This is a servlet \n");
+        response.getWriter().write("This is a servlet \n");
 
-    try {
-      BeanManager bm = CDI.current().getBeanManager();
+        try {
+            BeanManager bm = CDI.current().getBeanManager();
 
-      Set<Bean<?>> beans = bm.getBeans(HttpAuthenticationMechanism.class,
-          new AnnotationLiteral<Any>() {
-          });
-      for (Bean<?> bean : beans) {
-        response.getWriter().println("Class: " + bean.getBeanClass().getName());
-        response.getWriter().println("Types: " + bean.getTypes().toString());
-        response.getWriter()
-            .println("Qualifier: " + split(bean.getQualifiers()));
-        response.getWriter()
-            .println("Scope: " + bean.getScope().getSimpleName());
-        response.getWriter().println("Have qualifier @Default: "
-            + haveQualifierDefault(bean.getQualifiers()));
-        response.getWriter().println("Have scope @ApplicationScoped: "
-            + (bean.getScope() == ApplicationScoped.class));
-      }
-    } catch (Exception e) {
-      throw new ServletException(e);
+            Set<Bean<?>> beans = bm.getBeans(HttpAuthenticationMechanism.class, new AnnotationLiteral<Any>() {
+            });
+            for (Bean<?> bean : beans) {
+                response.getWriter().println("Class: " + bean.getBeanClass().getName());
+                response.getWriter().println("Types: " + bean.getTypes().toString());
+                response.getWriter().println("Qualifier: " + split(bean.getQualifiers()));
+                response.getWriter().println("Scope: " + bean.getScope().getSimpleName());
+                response.getWriter().println("Have qualifier @CustomFormAuthenticationMechanism: " + haveQualifierDefault(bean.getQualifiers()));
+                response.getWriter().println("Have scope @ApplicationScoped: " + (bean.getScope() == ApplicationScoped.class));
+            }
+        } catch (Exception e) {
+            throw new ServletException(e);
+        }
     }
-  }
 
-  private String split(Set<Annotation> set) {
-    StringBuilder sb = new StringBuilder();
-    for (Annotation a : set) {
-      sb.append(a.annotationType().getSimpleName()).append(",");
+    private String split(Set<Annotation> set) {
+        StringBuilder sb = new StringBuilder();
+        for (Annotation a : set) {
+            sb.append(a.annotationType().getSimpleName()).append(",");
+        }
+        return sb.substring(0, sb.length() - 1);
     }
-    return sb.substring(0, sb.length() - 1);
-  }
 
-  private boolean haveQualifierDefault(Set<Annotation> set) {
-
-    for (Annotation a : set) {
-      if (a.annotationType() == Default.class) {
-        return true;
-      }
+    private boolean haveQualifierDefault(Set<Annotation> set) {
+        for (Annotation a : set) {
+            if (a.annotationType().toString().contains("CustomFormAuthenticationMechanism")) {
+                return true;
+            }
+        }
+        
+        return false;
     }
-    return false;
-  }
 
 }

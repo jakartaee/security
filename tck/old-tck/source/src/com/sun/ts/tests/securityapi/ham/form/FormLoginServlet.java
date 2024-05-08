@@ -27,21 +27,17 @@ import jakarta.servlet.http.HttpServletResponse;
 @WebServlet({ "/form-login-servlet" })
 public class FormLoginServlet extends HttpServlet {
 
-  private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-  @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
-    response.getWriter()
-        .write("<html><body> Login\n"
-            + "<form method=\"POST\" action=\"j_security_check\">"
-            + "<p><strong>Username </strong>"
-            + "<input type=\"text\" name=\"j_username\">" +
+    @Override
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.getWriter().write(
+                
+                "<html><body> Login\n" + "<form method=\"POST\" action=\"j_security_check\">"
+                + "<p><strong>Username </strong>" + "<input type=\"text\" name=\"j_username\">" +
 
-            "<p><strong>Password </strong>"
-            + "<input type=\"password\" name=\"j_password\">" + "<p>"
-            + "<input type=\"submit\" value=\"Submit\">" + "</form>"
-            + "</body></html>");
-  }
+                "<p><strong>Password </strong>" + "<input type=\"password\" name=\"j_password\">" + "<p>"
+                + "<input type=\"submit\" value=\"Submit\">" + "</form>" + "</body></html>");
+    }
 
 }

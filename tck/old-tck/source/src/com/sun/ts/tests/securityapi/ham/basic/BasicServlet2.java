@@ -64,7 +64,7 @@ public class BasicServlet2 extends HttpServlet {
             .println("Qualifier: " + split(bean.getQualifiers()));
         response.getWriter()
             .println("Scope: " + bean.getScope().getSimpleName());
-        response.getWriter().println("Have qualifier @Default: "
+        response.getWriter().println("Have qualifier @BasicAuthenticationMechanism: "
             + haveQualifierDefault(bean.getQualifiers()));
         response.getWriter().println("Have scope @ApplicationScoped: "
             + (bean.getScope() == ApplicationScoped.class));
@@ -85,7 +85,7 @@ public class BasicServlet2 extends HttpServlet {
   private boolean haveQualifierDefault(Set<Annotation> set) {
 
     for (Annotation a : set) {
-      if (a.annotationType() == Default.class) {
+      if (a.annotationType().toString().contains("BasicAuthenticationMechanism")) {
         return true;
       }
     }

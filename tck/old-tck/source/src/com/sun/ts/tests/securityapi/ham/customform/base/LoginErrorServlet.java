@@ -33,19 +33,18 @@ import jakarta.servlet.http.HttpServletResponse;
 @WebServlet({ "/login-error-servlet" })
 public class LoginErrorServlet extends HttpServlet {
 
-  private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-  @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
-    PrintWriter out = response.getWriter();
+    @Override
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        PrintWriter out = response.getWriter();
 
-    String userPrincipal = null;
-    if (request.getUserPrincipal() != null) {
-      userPrincipal = request.getUserPrincipal().getName();
+        String userPrincipal = null;
+        if (request.getUserPrincipal() != null) {
+            userPrincipal = request.getUserPrincipal().getName();
+        }
+
+        out.println("The user principal is: " + userPrincipal + "<BR>");
     }
-
-    out.println("The user principal is: " + userPrincipal + "<BR>");
-  }
 
 }

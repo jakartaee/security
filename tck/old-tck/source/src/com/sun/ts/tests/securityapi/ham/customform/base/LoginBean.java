@@ -35,51 +35,46 @@ import jakarta.servlet.http.HttpServletResponse;
 @RequestScoped
 public class LoginBean {
 
-  private String pwd;
+    private String pwd;
 
-  private String user;
+    private String user;
 
-  @Inject
-  private SecurityContext securityContext;
+    @Inject
+    private SecurityContext securityContext;
 
-  public String getPwd() {
-    return pwd;
-  }
-
-  public void setPwd(String pwd) {
-    this.pwd = pwd;
-  }
-
-  public String getUser() {
-    return user;
-  }
-
-  public void setUser(String user) {
-    this.user = user;
-  }
-
-  public void login() {
-
-    FacesContext context = FacesContext.getCurrentInstance();
-    Credential credential = new UsernamePasswordCredential(user,
-        new Password(pwd));
-
-    HttpServletRequest request = (HttpServletRequest) context
-        .getExternalContext().getRequest();
-    HttpServletResponse response = (HttpServletResponse) context
-        .getExternalContext().getResponse();
-
-    AuthenticationStatus status = securityContext.authenticate(request,
-        response, withParams().credential(credential));
-
-    if (status.equals(AuthenticationStatus.SUCCESS)) {
-      // Authentication mechanism has send a redirect, should not
-      // send anything to response from JSF now.
-      context.responseComplete();
-    } else if (status.equals(AuthenticationStatus.SEND_FAILURE)) {
-      context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-          "Authentication failed", null));
+    public String getPwd() {
+        return pwd;
     }
 
-  }
+    public void setPwd(String pwd) {
+        this.pwd = pwd;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public void login() {
+
+        FacesContext context = FacesContext.getCurrentInstance();
+        Credential credential = new UsernamePasswordCredential(user, new Password(pwd));
+
+        HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
+        HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
+
+        AuthenticationStatus status = securityContext.authenticate(request, response, withParams().credential(credential));
+
+        if (status.equals(AuthenticationStatus.SEND_CONTINUE)) {
+            // Authentication mechanism has send a redirect, should not
+            // send anything to response from JSF now.
+            context.responseComplete();
+        } else if (status.equals(AuthenticationStatus.SEND_FAILURE)) {
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Authentication failed", null));
+        }
+
+    }
 }
