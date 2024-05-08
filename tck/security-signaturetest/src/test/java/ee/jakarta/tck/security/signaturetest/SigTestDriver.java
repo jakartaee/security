@@ -51,11 +51,32 @@ public class SigTestDriver extends SignatureTestDriver {
 
     private static final String EXCLUDE_JDK_CLASS_FLAG = "-IgnoreJDKClass";
 
-    private static String[] excludeJdkClasses = { "java.util.Map", "java.lang.Object", "java.io.ByteArrayInputStream",
-            "java.io.InputStream", "java.lang.Deprecated", "java.io.Writer", "java.io.OutputStream", "java.util.List",
-            "java.util.Collection", "java.lang.instrument.IllegalClassFormatException", "javax.transaction.xa.XAException",
-            "java.lang.annotation.Repeatable", "java.lang.InterruptedException", "java.lang.CloneNotSupportedException",
-            "java.lang.Throwable", "java.lang.Thread", "java.lang.Enum" };
+    private static String[] excludeJdkClasses = {
+            "java.util.Map",
+            "java.lang.Object",
+            "java.io.ByteArrayInputStream",
+            "java.io.InputStream",
+            "java.lang.Deprecated",
+            "java.io.Writer",
+            "java.io.OutputStream",
+            "java.util.List",
+            "java.util.Collection",
+            "java.util.concurrent.ExecutorService",
+            "java.util.concurrent.Future",
+            "java.util.HashSet",
+            "java.util.LinkedHashSet",
+            "java.util.SequencedCollection",
+            "java.util.SequencedSet",
+            "java.lang.instrument.IllegalClassFormatException",
+            "javax.transaction.xa.XAException",
+            "java.lang.AutoCloseable",
+            "java.lang.annotation.Repeatable",
+            "java.lang.InterruptedException",
+            "java.lang.CloneNotSupportedException",
+            "java.lang.Throwable",
+            "java.lang.Thread",
+            "java.lang.Enum"
+    };
 
     // ---------------------------------------- Methods from SignatureTestDriver
 
