@@ -70,6 +70,8 @@ import jakarta.servlet.http.HttpServletResponse;
  * <p>
  * Applications do not need to supply an {@code HttpAuthenticationMechanismHandler} unless application-specific
  * behavior is desired.
+ *
+ *  @since 4.0
  */
 public interface HttpAuthenticationMechanismHandler {
 
