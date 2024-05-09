@@ -645,6 +645,8 @@ intf java.lang.annotation.Annotation
 meth public abstract !hasdefault int priority()
 meth public abstract !hasdefault jakarta.security.enterprise.identitystore.IdentityStore$ValidationType[] useFor()
 meth public abstract !hasdefault jakarta.security.enterprise.identitystore.InMemoryIdentityStoreDefinition$Credentials[] value()
+meth public abstract !hasdefault java.lang.String priorityExpression()
+meth public abstract !hasdefault java.lang.String useForExpression()
 
 CLSS public abstract interface static !annotation jakarta.security.enterprise.identitystore.InMemoryIdentityStoreDefinition$Credentials
  outer jakarta.security.enterprise.identitystore.InMemoryIdentityStoreDefinition
