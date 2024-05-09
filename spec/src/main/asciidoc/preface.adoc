@@ -88,7 +88,7 @@ Arjan Tijms (OmniFish)
 
 | James Mulvey (IBM)
 | Padmanabha Bhat (Oracle)
-| Rudy De Busscher
+| Rudy De Busscher (Payara)
 
 | Steven Liu (Oracle)
 | Teddy Torres (IBM)
