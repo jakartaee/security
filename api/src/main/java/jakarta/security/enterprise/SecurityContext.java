@@ -98,6 +98,8 @@ public interface SecurityContext {
      *
      * @return A list of all static (declared) roles the current caller is in, or the empty list if that caller is not authenticated or has
      * no static (declared) roles.
+     *
+     * @since 4.0
      */
     Set<String> getAllDeclaredCallerRoles();
 

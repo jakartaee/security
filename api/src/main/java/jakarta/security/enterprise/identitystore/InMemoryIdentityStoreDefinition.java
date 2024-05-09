@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to Eclipse Foundation.
+ * Copyright (c) 2023, 2024 Contributors to Eclipse Foundation.
  * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,7 +14,6 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-
 package jakarta.security.enterprise.identitystore;
 
 import static jakarta.security.enterprise.identitystore.IdentityStore.ValidationType.PROVIDE_GROUPS;
@@ -50,8 +49,7 @@ import java.lang.annotation.Target;
  * </code>
  * </pre>
  *
- * <b>NOTE: DRAFT API. MAY CHANGE IN THE FINAL VERSION</b>
- *
+ * @since 4.0
  */
 @Retention(RUNTIME)
 @Target(TYPE)
@@ -71,11 +69,27 @@ public @interface InMemoryIdentityStoreDefinition {
     int priority() default 90;
 
     /**
+     * Allow <code>priority</code> to be specified as a Jakarta Expression Language expression.
+     * If set, overrides any value set with <code>priority</code>.
+     *
+     * @return the <code>priority</code> Jakarta Expression Language expression
+     */
+    String priorityExpression() default "";
+
+    /**
      * Determines what the identity store is used for
      *
      * @return the type the identity store is used for
      */
     ValidationType[] useFor() default {VALIDATE, PROVIDE_GROUPS};
+
+    /**
+     * Allow <code>useFor</code> to be specified as an Jakarta Expression Language expression.
+     * If set, overrides any value set with useFor.
+     *
+     * @return the <code>useFor</code> Jakarta Expression Language expression
+     */
+    String useForExpression() default "";
 
     /**
      * <code>Credentials</code> define a single caller identity for
