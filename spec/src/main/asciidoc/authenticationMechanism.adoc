@@ -2,7 +2,13 @@
 
 == Authentication Mechanism
 
-This chapter describes the _HttpAuthenticationMechanism_ interface and contract. _HttpAuthenticationMechanism_ is used to authenticate callers of web applications, and is specified only for use in the servlet container. It is explicitly not defined for use with other containers (enterprise beans, messaging, connectors, etc.).
+This chapter describes the _HttpAuthenticationMechanism_ and _HttpAuthenticationMechanismHandler_ interfaces and contracts. 
+
+_HttpAuthenticationMechanism_ is used to authenticate callers of web applications, and is specified only for use in the servlet container. It is explicitly not defined for use with other containers (enterprise beans, messaging, connectors, etc.).
+
+The _HttpAuthenticationMechanismHandler_ interface defines a mechanism for invoking on _HttpAuthenticationMechanism_ to authenticate callers of web applications. The container should not interact directly with an _HttpAuthenticationMechanism_, but instead invoke the _HttpAuthenticationMechanismHandler_ to authenticate callers. The _HttpAuthenticationMechanismHandler_, in turn, invokes on the _HttpAuthenticationMechanism_. An _HttpAuthenticationMechanismHandler_ can also orchestrate an authentication across multiple _HttpAuthenticationMechanismHandler_ instances, returning an aggregated result.
+
+A default _HttpAuthenticationMechanismHandler_ implementation is supplied by the container, but applications can also supply their own implementation. The orchestration behavior of the default _HttpAuthenticationMechanismHandler_ is described in the "<<Handling Multiple Authentication Mechanisms>>" section below.
 
 === Introduction
 
@@ -12,11 +18,11 @@ During authentication, the caller presents proof of identity -- a token or crede
 
 In some cases (for example, username/password authentication) the interaction between the caller and the application is simple. In other cases, a lengthier dialog is required -- an application may send a random nonce to the caller, which must then use that nonce in the construction of an authentication token, or there may be interactions with a third party that vouches for the caller's identity, or the authenticity of the provided credential.
 
-The Jakarta EE Platform already specifies mechanisms for authenticating users of web applications. The Jakarta Servlet Specification, version 4.0 [https://jakarta.ee/specifications/servlet/6.0/[SERVLET60]] specifies a declarative mechanism for configuring an application to provide BASIC, DIGEST, FORM, or CERT authentication, with authentication performed automatically by the container based on the application's configuration, which, in the case of FORM authentication, can include custom form pages.
+The Jakarta EE Platform already specifies mechanisms for authenticating users of web applications. The Jakarta Servlet Specification, version 6.1 [https://jakarta.ee/specifications/servlet/6.1/[SERVLET61]] specifies a declarative mechanism for configuring an application to provide BASIC, DIGEST, FORM, or CERT authentication, with authentication performed automatically by the container based on the application's configuration, which, in the case of FORM authentication, can include custom form pages.
 
-In addition, The Jakarta Authentication Specification, version 3.0 [https://jakarta.ee/specifications/authentication/3.0/[AUTHENTICATION30]] specifies a general-purpose mechanism for securing messages sent between Jakarta EE clients and servers. Jakarta Authentication defines an SPI called _ServerAuthModule_, which enables development of authentication modules to handle any credential type, or engage in interaction of arbitrary complexity with clients and third parties. [https://jakarta.ee/specifications/authentication/3.0/[AUTHENTICATION30]] also defines the Servlet Container Profile, which specifies how Jakarta Authentication mechanisms, including _ServerAuthModules_, are integrated with the servlet container.
+In addition, The Jakarta Authentication Specification, version 3.1 [https://jakarta.ee/specifications/authentication/3.1/[AUTHENTICATION31]] specifies a general-purpose mechanism for securing messages sent between Jakarta EE clients and servers. Jakarta Authentication defines an SPI called _ServerAuthModule_, which enables development of authentication modules to handle any credential type, or engage in interaction of arbitrary complexity with clients and third parties. [https://jakarta.ee/specifications/authentication/3.1/[AUTHENTICATION31]] also defines the Servlet Container Profile, which specifies how Jakarta Authentication mechanisms, including _ServerAuthModules_, are integrated with the servlet container.
 
-While both existing mechanisms are important and useful, each has limitations from the point of view of an application developer. The servlet container's _login-config_ mechanism is limited to the _auth-method_ types defined by [https://jakarta.ee/specifications/servlet/6.0/[SERVLET60]] -- it doesn't support other credential types, or complex interactions with callers. It also relies on unspecified container mechanisms to associate identity stores with applications. There is no way for an application to ensure that callers are authenticated against the desired identity store, or, indeed, against _any_ identity store.
+While both existing mechanisms are important and useful, each has limitations from the point of view of an application developer. The servlet container's _login-config_ mechanism is limited to the _auth-method_ types defined by [https://jakarta.ee/specifications/servlet/6.1/[SERVLET61]] -- it doesn't support other credential types, or complex interactions with callers. It also relies on unspecified container mechanisms to associate identity stores with applications. There is no way for an application to ensure that callers are authenticated against the desired identity store, or, indeed, against _any_ identity store.
 
 Jakarta Authentication, by way of contrast, is extremely flexible and powerful, but is also complex. Writing an _AuthModule_, and arranging for the web container to use it for authentication, is a non-trivial exercise. Additionally, there is no declarative configuration syntax for Jakarta Authentication, and there is no well-defined mechanism for a container to override an application's programmatically-registered _AuthModule_. A container can choose to register its own _AuthModule_, or to remove one registered by an application, but Jakarta Authentication will always use the most-recently-registered module -- the outcome is dependent on the order in which the application and the container attempt to register their respective modules.
 
@@ -67,6 +73,49 @@ The _HttpMessageContextWrapper_ class implements a wrapper that can be used, in 
 
 See javadoc for a detailed description of _HttpMessageContext_ and _HttpMessageContextWrapper_. See below for more on the Jakarta Authentication bridge module.
 
+==== Handling Multiple Authentication Mechanisms
+
+Access to the _HttpAuthenticationMechanism_ is abstracted by the _HttpAuthenticationMechanismHandler_ interface, which provides the very same methods, but is otherwise not related in type (that is, does not inherit from _HttpAuthenticationMechanism_).
+
+
+[source,java]
+----
+AuthenticationStatus validateRequest(HttpServletRequest request,
+                                     HttpServletResponse response,
+                                     HttpMessageContext httpMessageContext
+                                    ) throws AuthenticationException;
+   
+AuthenticationStatus secureResponse(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    HttpMessageContext httpMessageContext
+                                   ) throws AuthenticationException;
+
+void cleanSubject(HttpServletRequest request,
+                  HttpServletResponse response,
+                  HttpMessageContext httpMessageContext);
+----
+
+For the container, the semantics of the validateRequest()_, _secureResponse_ and _cleanSubject_ methods are as described for the _HttpAuthenticationMechanism_ method with the same signature.
+
+The purpose of the _HttpAuthenticationMechanismHandler_ is to allow for multiple authentication mechanisms to logically act as a single _HttpAuthenticationMechanism_ to the container. A compliant implementation of this specification MUST provide a default implementation of the _HttpAuthenticationMechanismHandler_ that is an enabled CDI bean with qualifier @Default, and scope @ApplicationScoped, as defined by the CDI specification. This default implementation MUST do the following:
+
+* Before servicing any calls as defined by this interface, the implementation must (implicitly) check if there is more
+  than one enabled bean of type _HttpAuthenticationMechanism_ available, irrespective of any qualifiers.
+* If there is more than one enabled bean of type _HttpAuthenticationMechanism_ available, the implementation
+  must apply the ambiguous dependency resolution rules to this set of _Bean_. For instance by using
+ _jakarta.enterprise.inject.spi.BeanContainer#resolve_
+* If the ambiguous dependency resolution rules fail, an _AmbiguousResolutionException_ must be thrown (or the
+  one thrown by _jakarta.enterprise.inject.spi.BeanContainer#resolve_ propagated).
+* If the ambiguous dependency resolution rules succeed, the implementation must remember the one resulting bean.
+* When servicing any calls as defined by this interface, the implementation must call the method on the
+  remembered _HttpAuthenticationMechanism_ bean with the same name and arguments, and where applicable return
+  the result from that call.
+  
+Applications do not need to supply an _HttpAuthenticationMechanismHandler_ unless application-specific
+behavior is desired. 
+
+When applications do supply an _HttpAuthenticationMechanismHandler_, by default it replaces the container provided default implementation. However, using container specific configuration (and only using container specific configuration), the container _MAY_ override this again. 
+
 === Installation and Configuration
 
 An _HttpAuthenticationMechanism_ must be a CDI bean, and is therefore visible to the container through CDI if it is packaged in a bean archive, which generally includes Jakarta EE modules and application archives, as well as other archives and classes that are not part of an application, but are required by the Jakarta EE specification to be visible to applications. See the CDI specification for details on bean archives and bean discovery. An _HttpAuthenticationMechanism_ is assumed to be normal scoped.
@@ -79,13 +128,13 @@ The container decides which _HttpAuthenticationMechanism_ to place in service us
 
 * The container MAY override an application's chosen _HttpAuthenticationMechanism_ with one selected by the container, but SHOULD do so only if explicitly configured to.
 * If the container does not override the application, it MUST place in service any _HttpAuthenticationMechanism_ that is provided, either directly or via annotation, by the application.
-* If the application makes more than one _HttpAuthenticationMechanism_ available, either directly or via annotation or both, the results are undefined by this specification.
+* If the application makes more than one _HttpAuthenticationMechanism_ available, either directly or via annotation or both, the results are dependent on the _HttpAuthenticationMechanismHandler_ currently in use.
 * If the application does not supply an _HttpAuthenticationMechanism_, or select one of the built-in mechanisms, the container MAY choose an _HttpAuthenticationMechanism_ to place in service, but is NOT REQUIRED to do so.
 * If the application does not make an _HttpAuthenticationMechanism_ available, and the container does not choose one to place in service, then _HttpAuthenticationMechanism_ is not used.
 
-The container MUST use Jakarta Authentication when placing an _HttpAuthenticationMechanism_ in service. The container MUST supply a "bridge" _ServerAuthModule_ that integrates _HttpAuthenticationMechanism_ with Jakarta Authentication. The bridge module MUST look up the correct _HttpAuthenticationMechanism_ using CDI, then delegate to the _HttpAuthenticationMechanism_ when the bridge module's methods are invoked. Since the method signatures and return values of the two interfaces are similar, but not the same, the bridge module MUST convert back and forth.
+The container MUST use Jakarta Authentication when placing an _HttpAuthenticationMechanism_ in service. The container MUST supply a "bridge" _ServerAuthModule_ that integrates _HttpAuthenticationMechanismHandler_ with Jakarta Authentication. The bridge module MUST look up the correct _HttpAuthenticationMechanismHandler_ using CDI, then delegate to the _HttpAuthenticationMechanismHandler_ when the bridge module's methods are invoked. Since the method signatures and return values of the two interfaces are similar, but not the same, the bridge module MUST convert back and forth.
 
-When an _HttpAuthenticationMechanism_ is placed in service, the container MUST supply a bridge _ServerAuthModule_ and the necessary supporting modules (_AuthContext_, _AuthConfig_, _AuthConfigProvider_), and arrange for the _AuthConfigProvider_ to be registered with the Jakarta Authentication _AuthConfigFactory_, such that the bridge module is registered for the application context.
+When an _HttpAuthenticationMechanism_ is placed in service, the container MUST supply a bridge _ServerAuthModule_ and MAY also supply the  supporting modules (_AuthContext_, _AuthConfig_, _AuthConfigProvider_), and arrange for either the _ServerAuthModule_ or the _AuthConfigProvider_ to be registered with the Jakarta Authentication _AuthConfigFactory_, such that the bridge module is registered for the application context.
 
 When an _HttpAuthenticationMechanism_ is placed in service, the container MUST NOT register any _AuthConfigProvider_ other than the one corresponding to the bridge _ServerAuthModule_. Given the nature of Jakarta Authentication, however, it's possible that some other entity could register a different _AuthConfigProvider_ after the container has registered the bridge module's _AuthConfigProvider_. The container is NOT REQUIRED to prevent this.
 
@@ -98,7 +147,10 @@ A Jakarta EE container MUST support built-in beans for the following _HttpAuthen
 * Custom FORM - A variant on FORM, with the difference that continuing the authentication dialog as described in [https://jakarta.ee/specifications/servlet/6.0/[SERVLET60]], section 13.6.3, step 3, and further clarified in section 13.6.3.1, does not happen by posting back to j_security_check, but by invoking _SecurityContext.authenticate()_ with the credentials the application collected. This bean is activated and configured via the _@CustomFormAuthenticationMechanismDefinition_ annotation.
 * OpenID Connect - Authenticates according to the Authorization Code flow and Refresh tokens as defined by the OpenID Connect specification. See [https://openid.net/specs/openid-connect-core-1_0.html#CodeFlowAuth[OPENID10FLOW]] and [https://openid.net/specs/openid-connect-core-1_0.html#RefreshTokens[OPENID10REFRESH]]. This bean is activated and configured via the _@OpenIdAuthenticationMechanismDefinition_ annotation.
 
-All of these beans MUST have the qualifier @Default and the scope @ApplicationScoped, as defined by the CDI specification.
+All of these beans MUST have the scope _@ApplicationScoped_, as defined by the CDI specification.
+
+All of these beans MUST have the qualifiers as set by their _qualifiers_ attribute; either the default (as it appears in the API definition) or those as explicitly set by the application. It is allowed to use multiple _*AuthenticationMechanismDefinition_ annotations of the same type (e.g. two instances of _BasicAuthenticationMechanismDefinition_), but in that case they should differ in their qualifiers. Note that when multiple
+authentication mechanisms are defined, a custom _HttpAuthenticationMechanismHandler_ is required.
 
 All of the built-in beans MUST support authentication using _IdentityStore_, described in Chapter 3, "<<identityStore.adoc#identity-store,Identity Store>>", but MAY fall-back to container-specific methods if no _IdentityStore_ is available.
 
@@ -125,8 +177,11 @@ public @interface BasicAuthenticationMechanismDefinition {
      * @return Name of realm
      */
     String realmName() default "";
+    
+    Class<?>[] qualifiers() default { BasicAuthenticationMechanism.class };
 }
 ----
+
 
 ==== FORM Annotation
 
@@ -140,6 +195,8 @@ public @interface FormAuthenticationMechanismDefinition {
  
     @Nonbinding
     LoginToContinue loginToContinue();
+    
+    Class<?>[] qualifiers() default { FormAuthenticationMechanism.class };
 }
 ----
 
@@ -157,6 +214,8 @@ public @interface CustomFormAuthenticationMechanismDefinition {
  
     @Nonbinding
     LoginToContinue loginToContinue();
+    
+    Class<?>[] qualifiers() default { CustomFormAuthenticationMechanism.class };
 }
 ----
 
@@ -444,6 +503,8 @@ public @interface OpenIdAuthenticationMechanismDefinition {
      * @return
      */
     String tokenMinValidityExpression() default "";
+    
+    Class<?>[] qualifiers() default { OpenIdAuthenticationMechanism.class };
 }
 ----
 
@@ -639,7 +700,7 @@ The `cleanSubject` method of the authentication mechanism has the following requ
 
 ==== LoginToContinue Annotation
 
-The _LoginToContinue_ annotation provides an application with the ability to declaratively add "login to continue" functionality to an authentication mechanism. "Login to continue" conceptually refers to the algorithm (flow) described by the numbered steps in [https://jakarta.ee/specifications/servlet/6.0/[SERVLET60]], Section 13.6.3, "Form Based Authentication".
+The _LoginToContinue_ annotation provides an application with the ability to declaratively add "login to continue" functionality to an authentication mechanism. "Login to continue" conceptually refers to the algorithm (flow) described by the numbered steps in [https://jakarta.ee/specifications/servlet/6.1/[SERVLET61]], Section 13.6.3, "Form Based Authentication".
 
 The annotation is also used to configure the login page, error page, and redirect/forward behavior for the built-in form-based authentication mechanisms (implicitly suggesting, but not requiring, that those authentication mechanisms use the backing interceptor for this annotation, which is described below).
 
@@ -825,7 +886,7 @@ See also the <<AutoApplySession Notes>> section below.
 
 ==== Implementation Notes ====
 
-Section 14.4, item 18, of [https://jakarta.ee/specifications/servlet/6.0/[SERVLET60]] describes requirements for supporting BASIC and FORM authentication via the web.xml _login-config_ element. This specification requires that implementations of BASIC and FORM be made available as _HttpAuthenticationMechanism_ CDI beans. The servlet container is NOT REQUIRED to implement separate and independent mechanisms to satisfy each requirement. Instead, the container MAY choose to provide a single mechanism, for each of BASIC and FORM, that meets the requirements of both specifications; i.e., an implementation that can be configured via _login-config_, but which is also made available as an _HttpAuthenticationMechanism_ if the application uses the corresponding annotation. Equally, the container is NOT REQUIRED to provide a unified implementation, and MAY satisfy the two requirements using separate, independent implementations.
+Section 14.4, item 18, of [https://jakarta.ee/specifications/servlet/6.1/[SERVLET61]] describes requirements for supporting BASIC and FORM authentication via the web.xml _login-config_ element. This specification requires that implementations of BASIC and FORM be made available as _HttpAuthenticationMechanism_ CDI beans. The servlet container is NOT REQUIRED to implement separate and independent mechanisms to satisfy each requirement. Instead, the container MAY choose to provide a single mechanism, for each of BASIC and FORM, that meets the requirements of both specifications; i.e., an implementation that can be configured via _login-config_, but which is also made available as an _HttpAuthenticationMechanism_ if the application uses the corresponding annotation. Equally, the container is NOT REQUIRED to provide a unified implementation, and MAY satisfy the two requirements using separate, independent implementations.
 
 An implementation of BASIC or FORM is NOT REQUIRED to support _IdentityStore_ when configured via _login-config_, regardless of whether the container has provided a single mechanism or separate mechanisms to satisfy the _login-config_ and _HttpAuthenticationMechanism_ requirements. Implementations MAY support _IdentityStore_ for all configuration methods.
 
@@ -833,11 +894,11 @@ If an application provides an _HttpAuthenticationMechanism_, and also configures
 
 ==== Custom FORM Notes ====
 
-The Custom FORM variant is intended to align better with modern Jakarta EE technologies such as CDI, Jakarta Expression Language, Jakarta Bean Validation and specifically Jakarta Server Faces.
+The Custom FORM variant is intended to align better with modern Jakarta EE technologies such as CDI, Jakarta Expression Language, Jakarta Validation and specifically Jakarta Faces.
 
 Below is an example showing how the mechanism can be used with those technologies.
 
-Consider the following Jakarta Server Faces Facelet:
+Consider the following Jakarta Faces Facelet:
 
 [source,xml]
 ----
@@ -942,12 +1003,12 @@ httpMessageContext.getHandler().handle(new Callback[] {
 
 === Relationship to other specifications
 
-An _HttpAuthenticationMechanism_ is a CDI bean, as defined by Jakarta Contexts and Dependency Injection spec, version 4.0 [https://jakarta.ee/specifications/cdi/4.0/[CDI40]].
+An _HttpAuthenticationMechanism_ is a CDI bean, as defined by Jakarta Contexts and Dependency Injection spec, version 4.1 [https://jakarta.ee/specifications/cdi/4.1/[CDI41]].
 
 The methods defined by the _HttpAuthenticationMechanism_ closely map to the methods and semantics of a _ServerAuthModule_, as defined by the Servlet Container Profile of [https://jakarta.ee/specifications/authentication/3.0/[AUTHENTICATION30]]. (But an _HttpAuthenticationMechanism_ is itself not a _ServerAuthModule_.) The servlet container MUST use Jakarta Authentication mechanisms to arrange for an _HttpAuthenticationMechanism_ to be placed in service.
 
 This specification mandates that when a _ServerAuthModule_ is called by the Servlet container, CDI services (such as the _BeanManager_) MUST be fully available, and all scopes that are defined to be active during the _service()_ method of a servlet, or during the _doFilter()_ method of a servlet filter, MUST be active. Specifically this means that the request, session, and application scopes MUST be active, and that a _ServerAuthModule_ method such as _validateRequest()_ MUST be able to obtain a reference to the CDI _BeanManager_ programmatically (for example, by doing a JNDI lookup), and MUST be able to use that reference to obtain a valid request-scoped, session-scoped, or application-scoped bean. This specification does not mandate that a _ServerAuthModule_ must itself be a CDI bean, or that a _ServerAuthModule_ must be injectable.
 
-An _HttpAuthenticationMechanism_ implementation is logically equivalent to a built-in authentication mechanism as defined by [https://jakarta.ee/specifications/servlet/6.0/[SERVLET60]] (i.e., HTTP Basic Authentication, HTTP Digest Authentication, Form Based Authentication, and HTTPS Client Authentication); more specifically, it corresponds to an "additional container authentication mechanism", as described in section 13.6.5 of [https://jakarta.ee/specifications/servlet/6.0/[SERVLET60]].
+An _HttpAuthenticationMechanism_ implementation is logically equivalent to a built-in authentication mechanism as defined by [https://jakarta.ee/specifications/servlet/6.0/[SERVLET60]] (i.e., HTTP Basic Authentication, HTTP Digest Authentication, Form Based Authentication, and HTTPS Client Authentication); more specifically, it corresponds to an "additional container authentication mechanism", as described in section 13.6.5 of [https://jakarta.ee/specifications/servlet/6.1/[SERVLET61]].
 
-The BASIC and FORM authentication mechanisms as defined by this specification are logically equivalent to the similarly named authentication mechanisms in [https://jakarta.ee/specifications/servlet/6.0/[SERVLET60]], respectively sections 13.6.1, "HTTP Basic Authentication", and 13.6.3, "Form Based Authentication".
+The BASIC and FORM authentication mechanisms as defined by this specification are logically equivalent to the similarly named authentication mechanisms in [https://jakarta.ee/specifications/servlet/6.1/[SERVLET61]], respectively sections 13.6.1, "HTTP Basic Authentication", and 13.6.3, "Form Based Authentication".
