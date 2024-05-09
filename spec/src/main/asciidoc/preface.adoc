@@ -68,14 +68,14 @@ Alexander Kosowski (April 2014 -- September 2016)
 
 ==== Project Lead at the Eclipse Foundation
 
-Arjan Tijms
+Arjan Tijms (OmniFish)
 
 ==== Committers at the Eclipse Foundation
 
 [cols="3*", options="noheader"]
 |===
 | Ajay Reddy (IBM)
-| Arjan Tijms
+| Arjan Tijms (OmniFish)
 | Bill Shannon (Oracle)
 
 | Darran Lofthouse (Red Hat)
@@ -88,7 +88,7 @@ Arjan Tijms
 
 | James Mulvey (IBM)
 | Padmanabha Bhat (Oracle)
-| Rudy De Busscher (Payara)
+| Rudy De Busscher
 
 | Steven Liu (Oracle)
 | Teddy Torres (IBM)

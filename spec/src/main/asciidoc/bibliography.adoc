@@ -7,25 +7,25 @@
 
 The following documents are referenced by this specification.
 
-[CDI40]::
-Jakarta Contexts and Dependency Injection, version 4.0 +
-https://jakarta.ee/specifications/cdi/4.0/
+[CDI41]::
+Jakarta Contexts and Dependency Injection, version 4.1 +
+https://jakarta.ee/specifications/cdi/4.1/
 
 [JEB32]::
 Jakarta Enterprise Beans, version 3.2 +
 https://jakarta.ee/specifications/enterprise-beans/3.2/
 
-[EL50]::
-Jakarta Expression Language, version 5.0 +
-https://jakarta.ee/specifications/expression-language/5.0/
+[EL60]::
+Jakarta Expression Language, version 6.0 +
+https://jakarta.ee/specifications/expression-language/6.0/
 
-[AUTHORIZATION21]::
-Jakarta Authorization, version 2.1 +
-https://jakarta.ee/specifications/authorization/2.1/
+[AUTHORIZATION30]::
+Jakarta Authorization, version 3.0 +
+https://jakarta.ee/specifications/authorization/3.0/
 
-[AUTHENTICATION30]::
-Jakarta Authentication, version 3.0 +
-https://jakarta.ee/specifications/authentication/3.0/
+[AUTHENTICATION31]::
+Jakarta Authentication, version 3.1 +
+https://jakarta.ee/specifications/authentication/3.1/
 
 [RFC2119]::
 RFC 2119, "Key words for use in RFCs to Indicate Requirement Level" +
@@ -36,12 +36,12 @@ RFC 7617, "The 'Basic' HTTP Authentication Scheme" +
 https://tools.ietf.org/html/rfc7617
 
 [SECAPI]::
-Jakarta Security, version 3.0 +
-https://jakarta.ee/specifications/security/3.0/
+Jakarta Security, version 4.0 +
+https://jakarta.ee/specifications/security/4.0/
 
 [SERVLET60]::
-Jakarta Servlet, version 6.0 +
-https://jakarta.ee/specifications/servlet/6.0/
+Jakarta Servlet, version 6.1 +
+https://jakarta.ee/specifications/servlet/6.1/
 
 [SHIROTERM]::
 "Apache Shiro Terminology" +

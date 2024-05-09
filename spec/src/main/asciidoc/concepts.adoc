@@ -18,7 +18,7 @@ HAM::
 Abbreviation for _HttpAuthenticationMechanism_, an interface defined by this specification.
 
 Identity Store::
-An Identity Store is a component that can access application-specific security data such as users, groups, roles, and permissions. It can be thought of as a security-specific DAO (Data Access Object). Synonyms: security provider, repository, store, login module (JAAS), identity manager, service provider, relying party, authenticator, user service. Identity Stores usually have a 1-to-1 correlation with a data source such as a relational database, LDAP directory, file system, or other similar resource. As such, implementations of the _IdentityStore_ interface use data source-specific APIs to discover authorization data (roles, permissions, etc), such as JDBC, File IO, Hibernate or JPA, or any other Data Access API.
+An Identity Store is a component that can access application-specific security data such as users, groups, roles, and permissions. It can be thought of as a security-specific DAO (Data Access Object). Synonyms: security provider, repository, store, login module (JAAS), identity manager, service provider, relying party, authenticator, user service. Identity Stores usually have a 1-to-1 correlation with a data source such as a relational database, LDAP directory, file system, or other similar resource. As such, implementations of the _IdentityStore_ interface use data source-specific APIs to discover authorization data (roles, permissions, etc), such as JDBC, File IO, Hibernate or Jakarta Persistence, or any other Data Access API.
 
 SAM::
 Abbreviation for _ServerAuthModule_, an interface defined by Jakarta Authentication.
@@ -37,7 +37,9 @@ An application server MAY provide a default mapping from caller principal names 
 
 ==== Caller Principal Types
 
-This specification defines a principal type called _CallerPrincipal_ to represent the identity of an application caller. Historically, application servers have used different principal types to represent an application's callers, and various Jakarta EE specifications (e.g., Jakarta Authentication), provide abstractions to accommodate, "the container's representation of the caller principal".
+This specification defines a principal type called _CallerPrincipal_ to represent the identity of an application caller. 
+
+Historically, application servers have used different principal types to represent an application's callers, and various Jakarta EE specifications (e.g., Jakarta Authentication and Jakarta Authorization), provide abstractions to accommodate, "the container's representation of the caller principal". Jakarta Authentication by means of its _CallerPrincipalCallback_ allows applications to set the caller principal (into a _Subject_) while Jakarta Authorization by means of its _PrincipalMapper#getCallerPrincipal(Subject)_ allows applications to get the caller principal (from a _Subject_).
 
 This specification RECOMMENDS that Jakarta EE application servers that rely on container-specific caller principal types derive those types by extending _CallerPrincipal_, so that portable applications can rely on a consistent representation of the caller principal.
 
@@ -71,16 +73,16 @@ LoginToContinue
 RememberMe
 ----
 
-Attributes on these annotations, as well as on the annotations referenced from them, can be provided either as actual values, or as Jakarta Expression Language 5.0 expressions. In cases where the return type of an attribute is not String, an "Expression Language alternative" attribute is provided, with "Expression" appended to the name. If an "Expression Language alternative" attribute has a non-empty value, it takes precedence over the attribute it's an alternative to, and must contain a valid Expression Language expression that evaluates to the same type as the attribute it's an alternative to.
+Attributes on these annotations, as well as on the annotations referenced from them, can be provided either as actual values, or as Jakarta Expression Language 6.0 expressions. In cases where the return type of an attribute is not String, an "Expression Language alternative" attribute is provided, with "Expression" appended to the name. If an "Expression Language alternative" attribute has a non-empty value, it takes precedence over the attribute it's an alternative to, and must contain a valid Expression Language expression that evaluates to the same type as the attribute it's an alternative to.
 
 For more information, see the package javadoc for the jakarta.security.enterprise package.
  
-Jakarta Expression Language, version 5.0 [https://jakarta.ee/specifications/expression-language/5.0/[EL50]] is a Jakarta EE specification.
+Jakarta Expression Language, version 6.0 [https://jakarta.ee/specifications/expression-language/6.0/[EL60]] is a Jakarta EE specification.
 
 ==== Built-in beans, not otherwise specified
 
 Several other sections in this specification mention built-in beans. This section details the required built-in beans that are not specified elsewhere.
 
-A Jakarta EE or embeddable EJB container must provide the following built-in beans, all of which have qualifier `@Default`:
+A Jakarta EE container must provide the following built-in beans, all of which have qualifier `@Default`:
 
 * a bean with bean type `java.security.Principal`, allowing injection of a `Principal` representing the current caller identity.

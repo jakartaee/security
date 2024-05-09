@@ -23,6 +23,8 @@ Principal getCallerPrincipal();
 <T extends Principal> Set<T> getPrincipalsByType(Class<T> pType);
 
 boolean isCallerInRole(String role);
+
+Set<String> getAllDeclaredCallerRoles();
 ----
 
 The _getCallerPrincipal()_ method retrieves the _Principal_ representing the caller. This is the container-specific representation of the caller principal, and the type may differ from the type of the caller principal originally established by an _HttpAuthenticationMechanism_. This method returns null for an unauthenticated caller. (Note that this behavior differs from the behavior of _EJBContext.getCallerPrincipal()_, which, per Jakarta Enterprise Beans spec, version 3.2 [https://jakarta.ee/specifications/enterprise-beans/3.2/[JEB32]], returns a principal with a "product-specific unauthenticated principal name" to represent an unauthenticated caller.)
@@ -35,6 +37,8 @@ See the Chapter 1, "<<concepts.adoc#concepts,Concepts>>", for more information o
 
 The _isCallerInRole()_ method takes a String argument that represents the role that is to be tested for. It is undefined by this specification how the role determination is made, but the result MUST be the same as if the corresponding container-specific call had been made (i.e., _HttpServletRequest.isUserInRole()_, _EJBContext.isCallerInRole()_), and MUST be consistent with the result implied by other specifications that prescribe role-mapping behavior.
 
+The _getAllDeclaredCallerRoles()_ method returns a list of all static (declared) application roles that the authenticated caller is in or the empty list if the caller is either not authenticated or is not in any declared role. It is possible that the underlying authorization system optionally works with a potentially infinite set of dynamic roles. Such dynamic (undeclared) roles ARE NOT contained in the set returned by this method.
+
 === Testing for Access
 
 The _SecurityContext_ interface defines a method for programmatically testing access to a resource:
@@ -44,9 +48,11 @@ The _SecurityContext_ interface defines a method for programmatically testing ac
 boolean hasAccessToWebResource(String resource, String... methods);
 ----
 
-The _hasAccessToWebResource()_ method determines if the caller has access to the specified web resource for the specified HTTP methods, as determined by the security constraints configured for the application. See section 13.8 of [https://jakarta.ee/specifications/servlet/6.0/[SERVLET60]] for a description of web application security constraints.
+The _hasAccessToWebResource()_ method determines if the caller has access to the specified web resource for the specified HTTP methods, as determined by the security constraints configured for the application. See section 13.8 of [https://jakarta.ee/specifications/servlet/6.1/[SERVLET61]] for a description of web application security constraints. If no HTTP methods are specified in the call the semantics are to make the determination for all supported HTTP methods.
 
 The resource parameter is an _URLPatternSpec_ that identifies an application-specific web resource. See the javadoc for more detail.
+
+In an environment where Jakarta Authorization 3.0 [https://jakarta.ee/specifications/authorization/3.0/[AUTHORIZATION30]] is available, the container SHOULD ultimately call _jakarta.security.jacc.Policy.implies(Permission, Subject)_ with _Permission_ being a _WebResourcePermission(resource, methods)_ instance.
 
 This method can only be used to check access to resources in the current application -- it cannot be called cross-application, or cross-container, to check access to resources in a different application.
 
@@ -139,7 +145,7 @@ The _authenticate()_ method allows an application to signal to the container tha
 
 === Relationship to Other Specifications
 
-The _SecurityContext_ implementation is a CDI bean, as defined by [https://jakarta.ee/specifications/cdi/4.0/[CDI40]].
+The _SecurityContext_ implementation is a CDI bean, as defined by [https://jakarta.ee/specifications/cdi/4.1/[CDI41]].
 
 Various specifications in Jakarta EE provide similar or even identical methods to those provided be the _SecurityContext_. It is the intention of this specification to eventually supersede those methods and provide a cross-specification, platform alternative. The following gives an overview:
 

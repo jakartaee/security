@@ -254,6 +254,7 @@ A Jakarta EE container MUST support built-in beans for the following _IdentitySt
 
 * LDAP -- Supports caller data that is stored in an external LDAP server. This bean is activated and configured via the _@LdapIdentityStoreDefinition_ annotation.
 * Database -- Supports caller data that is stored in an external database accessible via a DataSource bound to JNDI. This bean is activated and configured via the _@DatabaseIdentityStoreDefinition_ annotation.
+* In-memory -- Supports caller data that is stored in an annotation. This bean is activated and configured via the _@InMemoryIdentityStoreDefinition_ annotation.
 
 Each of these beans MUST have the qualifier @Default and the scope @ApplicationScoped, as defined by the CDI specification.
 
@@ -364,6 +365,34 @@ The default hash algorithm, _Pbkdf2PasswordHash_, is an interface denoting a sta
 
 See javadoc for further details on _PasswordHash_ and the _DatabaseIdentityStoreDefinition_ annotation.
 
+==== In-memory Annotation
+
+The _@InMemoryIdentityStoreDefinition_ annotation configures an instance of the built-in in-memory identity store.
+
+[source,java]
+----
+@Retention(RUNTIME)
+@Target(TYPE)
+public @interface InMemoryIdentityStoreDefinition {
+
+    Credentials[] value() default {};
+
+    int priority() default 90;
+
+    ValidationType[] useFor() default {VALIDATE, PROVIDE_GROUPS};
+
+    @Retention(RUNTIME)
+    @Target({ TYPE, METHOD, FIELD, PARAMETER })
+    public @interface Credentials {
+        String callerName();
+        String password();
+        String[] groups() default {};
+    }
+}
+----
+
+This identity store is provided as a convenience for the purpose such as testing, debugging, demos, etc, and is not generally advised to be used in production. Applications can already provide very similar custom identity stores, but in that case the container can not detect its usage as potentially unwanted. Therefore, for testing etc the usage of the _@InMemoryIdentityStoreDefinition_ is encouraged. A container MAY warn about the usage of this specific identity store. The container MAY provide container specific configuration that allows the container to prevent the application to start when this identity store is used.
+
 === Relationship to Other Specifications
 
-_IdentityStore_ and _IdentityStoreHandler_ implementations are CDI beans, as defined by [https://jakarta.ee/specifications/cdi/4.0/[CDI40]].
+_IdentityStore_ and _IdentityStoreHandler_ implementations are CDI beans, as defined by [https://jakarta.ee/specifications/cdi/4.1/[CDI41]].
