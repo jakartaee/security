@@ -63,6 +63,7 @@ This specification defines a number of annotations:
 ----
 DatabaseIdentityStoreDefinition
 LdapIdentityStoreDefinition
+InMemoryIdentityStoreDefinition
 
 BasicAuthenticationMechanismDefinition
 CustomFormAuthenticationMechanismDefinition
