@@ -1,15 +1,15 @@
 remote_theme: jakartaee/jekyll-theme-jakarta-ee
 
 title: [tck_security_v3_0]
-description: [Oracle Jakarta Security 3.0 Technology Compatibility Kit User's Guide for Technology Licensees,
-              Release 3.0]
+description: [Oracle Jakarta Security 4.0 Technology Compatibility Kit User's Guide for Technology Licensees,
+              Release 4.0]
 
 # sidebar links url
 links:
   source: https://github.com/jakartaee/security
-  download: https://jakarta.ee/specifications/security/3.0/
+  download: https://jakarta.ee/specifications/security/4.0/
   #mailinglist: https://javaee.groups.io/g/tck_security_v1_0
   #javadocs:
-  docs: https://jakarta.ee/specifications/security/3.0/apidocs/
+  docs: https://jakarta.ee/specifications/security/4.0/apidocs/
   #faq:
 
