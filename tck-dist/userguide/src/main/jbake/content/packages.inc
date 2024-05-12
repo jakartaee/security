@@ -1,8 +1,11 @@
-
 ** `jakarta.security.enterprise`
 
-** `jakarta.security.enterprise.authenticaiton.mechanism.http`
+** `jakarta.security.enterprise.authentication.mechanism.http`
+
+** `jakarta.security.enterprise.authentication.mechanism.http.openid`
 
 ** `jakarta.security.enterprise.credential`
 
 ** `jakarta.security.enterprise.identitystore`
+
+** `jakarta.security.enterprise.identitystore.openid`
