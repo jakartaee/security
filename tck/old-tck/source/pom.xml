@@ -338,8 +338,6 @@
                                 
                                 <tck-setting key="report.dir" value="${tck.home}/securityapireport/securityapi"/>
                                 <tck-setting key="work.dir" value="${tck.home}/securityapiwork/securityapi"/>
-                                                                                                                                
-                                <!--tck-setting key="security.classes" value="${web.home}/modules/jakarta.servlet-api.jar$;${web.home}/modules/jakarta.security.enterprise-api.jar$;${web.home}/modules/jakarta.security.auth.message-api.jar$;${web.home}/modules/jakarta.annotation-api.jar$;${web.home}/modules/jakarta.inject-api.jar$;${web.home}/modules/jakarta.enterprise.cdi-api.jar$;${web.home}/modules/jakarta.faces.jar$;${web.home}/modules/jakarta.interceptor-api.jar$;${web.home}/modules/jakarta.authentication-api.jar$;${web.home}/modules/jakarta.ejb-api.jar$;/${ts.home}/lib/unboundid-ldapsdk.jar"/-->
 
                                 <mkdir dir="${tck.home}/securityapireport"/>
                                 <mkdir dir="${tck.home}/securityapireport/securityapi"/>
