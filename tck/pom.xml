@@ -124,7 +124,7 @@
         <zipname>${project.artifactId}-${project.version}</zipname>
         <licenseFile>${project.basedir}/LICENSE_EFTL.md</licenseFile>
         
-        <security-api.version>4.0.0-SNAPSHOT</security-api.version>
+        <security-api.version>4.0.0</security-api.version>
         
         <buildDirectory>${project.basedir}/target</buildDirectory>
         
@@ -175,7 +175,7 @@
         <dependency>
             <groupId>jakarta.security.enterprise</groupId>
             <artifactId>jakarta.security.enterprise-api</artifactId>
-            <version>4.0.0-SNAPSHOT</version>
+            <version>${security-api.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
