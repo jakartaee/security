@@ -119,6 +119,9 @@
     </modules>
 
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        
         <maven.compiler.release>17</maven.compiler.release>
         
         <zipname>${project.artifactId}-${project.version}</zipname>
@@ -342,12 +345,22 @@
                         <configuration>
                             <rules>
                                 <requireMavenVersion>
-                                    <version>3.6.3</version>
+                                    <version>3.8.6</version>
                                 </requireMavenVersion>
                             </rules>
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            
+            <!-- Restricts the Java version to 17 -->
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+                <configuration>
+                    <release>17</release>
+                    <compilerArgument>-Xlint:unchecked</compilerArgument>
+                </configuration>
             </plugin>
             
             <plugin>
