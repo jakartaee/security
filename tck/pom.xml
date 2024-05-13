@@ -430,6 +430,11 @@
                 <glassfish.port>8080</glassfish.port>
                 <glassfish.root>${maven.multiModuleProjectDirectory}/target</glassfish.root>
                 
+                <security.api.update>false</security.api.update>
+                
+                <soteria.update>false</soteria.update>
+                <soteria.version>4.0.0</soteria.version>
+                
                 <!--
                     Exact artefact used by GlassFish that holds the API classes. The actual API
                     jar in the GlassFish root folder is installed to these coordinates below.
@@ -453,6 +458,31 @@
             <build>
                 <plugins>
                     <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <version>1.12</version>
+                        <executions>
+                            <execution>
+                                <id>negate-prop</id>
+                                <phase>initialize</phase>
+                                <goals>
+                                    <goal>bsh-property</goal>
+                                </goals>
+                                <configuration>
+                                    <source>
+                                        soteria.noupdate = !${soteria.update};
+                                        security.api.noupdate = !${security.api.update};
+                                    </source>
+                                    <properties>
+                                        <property>soteria.noupdate</property>
+                                        <property>security.api.noupdate</property>
+                                    </properties>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    
+                    <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-dependency-plugin</artifactId>
                         <executions>
@@ -474,6 +504,61 @@
                                             <type>zip</type>
                                             <overWrite>true</overWrite>
                                             <outputDirectory>${glassfish.root}</outputDirectory>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>
+                            
+                            <!-- Optionally update Security API jar in GlassFish -->
+                            <execution>
+                                <id>update-security-api</id>
+                                <phase>process-test-classes</phase>
+                                <goals>
+                                    <goal>copy</goal>
+                                </goals>
+                                <configuration>
+                                    <skip>${security.api.noupdate}</skip>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>jakarta.security.enterprise</groupId>
+                                            <artifactId>jakarta.security.enterprise-api</artifactId>
+                                            <version>${security-api.version}</version>
+                                            <type>jar</type>
+                                            <overWrite>true</overWrite>
+                                            <outputDirectory>${glassfish.root}/glassfish8/glassfish/modules</outputDirectory>
+                                            <destFileName>jakarta.security-api.jar</destFileName>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>
+
+                            <!-- Optionally update Security IMPL (Soteria) jar in GlassFish -->
+                            <execution>
+                                <id>update-security-impl</id>
+                                <phase>process-test-classes</phase>
+                                <goals>
+                                    <goal>copy</goal>
+                                </goals>
+                                <configuration>
+                                    <skip>${soteria.noupdate}</skip>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>org.glassfish.soteria</groupId>
+                                            <artifactId>soteria</artifactId>
+                                            <version>${soteria.version}</version>
+                                            <type>jar</type>
+                                            <overWrite>true</overWrite>
+                                            <outputDirectory>${glassfish.root}/glassfish8/glassfish/modules</outputDirectory>
+                                            <destFileName>soteria.jar</destFileName>
+                                        </artifactItem>
+                                        <artifactItem>
+                                            <groupId>org.glassfish.soteria</groupId>
+                                            <artifactId>soteria.spi.bean.decorator.weld</artifactId>
+                                            <version>${soteria.version}</version>
+                                            <type>jar</type>
+                                            <overWrite>true</overWrite>
+                                            <outputDirectory>${glassfish.root}/glassfish8/glassfish/modules</outputDirectory>
+                                            <destFileName>soteria.spi.bean.decorator.weld.jar</destFileName>
                                         </artifactItem>
                                     </artifactItems>
                                 </configuration>
@@ -545,108 +630,7 @@
             </build>
         </profile>
         
-        <!-- This container is like glassfish-ci-managed but updates soteria  -->
-        <profile>
-            <id>glassfish-ci-managed-update</id>
-
-            <properties>
-                <glassfish.version>8.0.0-SNAPSHOT</glassfish.version>
-                <glassfish.port>8080</glassfish.port>
-                <glassfish.root>${maven.multiModuleProjectDirectory}/target</glassfish.root>
-                
-                <soteria.version>3.0.0</soteria.version>
-                <weld-decorator.version>3.0.0</weld-decorator.version>
-            </properties>
-
-            <dependencies>
-                <!-- The actual Arquillian connector -->
-                <dependency>
-                    <groupId>org.omnifaces.arquillian</groupId>
-                    <artifactId>arquillian-glassfish-server-managed</artifactId>
-                    <version>1.2</version>
-                    <scope>test</scope>
-                </dependency>
-            </dependencies>
-
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-dependency-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>unpack</id>
-                                <phase>process-test-classes</phase>
-                                <goals>
-                                    <goal>unpack</goal>
-                                </goals>
-                                <configuration>
-                                    <outputDirectory>${glassfish.root}</outputDirectory>
-                                    <markersDirectory>${glassfish.root}/dependency-maven-plugin-markers</markersDirectory>
-                                    <artifactItems>
-                                        <artifactItem>
-                                            <groupId>org.glassfish.main.distributions</groupId>
-                                            <artifactId>glassfish</artifactId>
-                                            <version>${glassfish.version}</version>
-                                            <type>zip</type>
-                                            <overWrite>true</overWrite>
-                                            <outputDirectory>${glassfish.root}</outputDirectory>
-                                        </artifactItem>
-                                    </artifactItems>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>copy</id>
-                                <phase>process-test-classes</phase>
-                                <goals>
-                                    <goal>copy</goal>
-                                </goals>
-                                <configuration>
-                                    <artifactItems>
-                                        <artifactItem>
-                                            <groupId>jakarta.security.enterprise</groupId>
-                                            <artifactId>jakarta.security.enterprise-api</artifactId>
-                                            <version>${security-api.version}</version>
-                                            <type>jar</type>
-                                            <overWrite>true</overWrite>
-                                            <outputDirectory>${glassfish.root}/glassfish8/glassfish/modules</outputDirectory>
-                                            <destFileName>jakarta.security.enterprise-api.jar</destFileName>
-                                        </artifactItem>
-                                        <artifactItem>
-                                            <groupId>org.glassfish.soteria</groupId>
-                                            <artifactId>jakarta.security.enterprise</artifactId>
-                                            <version>${soteria.version}</version>
-                                            <type>jar</type>
-                                            <overWrite>true</overWrite>
-                                            <outputDirectory>${glassfish.root}/glassfish8/glassfish/modules</outputDirectory>
-                                            <destFileName>jakarta.security.enterprise.jar</destFileName>
-                                        </artifactItem>
-                                        <artifactItem>
-                                            <groupId>org.glassfish.soteria</groupId>
-                                            <artifactId>soteria.spi.bean.decorator.weld</artifactId>
-                                            <version>${weld-decorator.version}</version>
-                                            <type>jar</type>
-                                            <overWrite>true</overWrite>
-                                            <outputDirectory>${glassfish.root}/glassfish8/glassfish/modules</outputDirectory>
-                                            <destFileName>soteria.spi.bean.decorator.weld.jar</destFileName>
-                                        </artifactItem>
-                                    </artifactItems>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-failsafe-plugin</artifactId>
-                        <configuration>
-                            <systemProperties>
-                                <glassfish.home>${glassfish.root}/glassfish8</glassfish.home>
-                            </systemProperties>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
+        
         
         
         <!-- ### Payara ### -->
