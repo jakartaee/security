@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2015, 2020 Oracle and/or its affiliates and others.
- * All rights reserved.
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2015, 2020 Oracle and/or its affiliates and others. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -29,8 +29,8 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.gargoylesoftware.htmlunit.DefaultCredentialsProvider;
-import com.gargoylesoftware.htmlunit.WebResponse;
+import org.htmlunit.DefaultCredentialsProvider;
+import org.htmlunit.WebResponse;
 
 
 @RunWith(Arquillian.class)
@@ -48,7 +48,7 @@ public class AppMemBasicDecorateIT extends ArquillianBase {
     public void testAuthenticated() {
 
     	DefaultCredentialsProvider credentialsProvider = new DefaultCredentialsProvider();
-    	credentialsProvider.addCredentials("reza", "secret1");
+    	credentialsProvider.addCredentials("reza", "secret1".toCharArray());
 
     	getWebClient().setCredentialsProvider(credentialsProvider);
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -37,8 +37,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
-import com.gargoylesoftware.htmlunit.WebClient;
+import org.htmlunit.FailingHttpStatusCodeException;
+import org.htmlunit.WebClient;
 
 import ee.jakarta.tck.security.test.client.defaulttests.OpenIdConfig;
 import ee.jakarta.tck.security.test.client.defaulttests.SecuredServletWithEL;

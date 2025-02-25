@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2022, 2024 Contributors to Eclipse Foundation.
+    Copyright (c) 2022, 2025 Contributors to Eclipse Foundation.
     Copyright (c) 2022 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -38,7 +38,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <sigtest.plugin.version>2.2</sigtest.plugin.version>
+        <sigtest.plugin.version>2.6</sigtest.plugin.version>
         <junit.jupiter.version>5.10.2</junit.jupiter.version>
         <security.api.version>4.0.0-SNAPSHOT</security.api.version>
         <servlet.api.version>6.1.0</servlet.api.version>
