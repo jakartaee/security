@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,8 +21,8 @@ import static ee.jakarta.tck.security.test.ShrinkWrap.mavenWar;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import com.gargoylesoftware.htmlunit.DefaultCredentialsProvider;
-import com.gargoylesoftware.htmlunit.WebResponse;
+import org.htmlunit.DefaultCredentialsProvider;
+import org.htmlunit.WebResponse;
 import jakarta.security.enterprise.authentication.mechanism.http.HttpAuthenticationMechanismHandler;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -71,7 +71,7 @@ public class AppCustomAuthenticationMechanismHandler2IT extends ArquillianBase {
         // For completion, check that authentication mechanism also actually authenticates
 
         DefaultCredentialsProvider credentialsProvider = new DefaultCredentialsProvider();
-        credentialsProvider.addCredentials("reza", "secret1");
+        credentialsProvider.addCredentials("reza", "secret1".toCharArray());
 
         getWebClient().setCredentialsProvider(credentialsProvider);
 
@@ -103,7 +103,7 @@ public class AppCustomAuthenticationMechanismHandler2IT extends ArquillianBase {
         // For completion, check that authentication mechanism also actually authenticates
 
         DefaultCredentialsProvider credentialsProvider = new DefaultCredentialsProvider();
-        credentialsProvider.addCredentials("reza", "secret1");
+        credentialsProvider.addCredentials("reza", "secret1".toCharArray());
 
         getWebClient().setCredentialsProvider(credentialsProvider);
 
@@ -135,7 +135,7 @@ public class AppCustomAuthenticationMechanismHandler2IT extends ArquillianBase {
         // For completion, check that authentication mechanism also actually authenticates
 
         DefaultCredentialsProvider credentialsProvider = new DefaultCredentialsProvider();
-        credentialsProvider.addCredentials("reza", "secret1");
+        credentialsProvider.addCredentials("reza", "secret1".toCharArray());
 
         getWebClient().setCredentialsProvider(credentialsProvider);
 
