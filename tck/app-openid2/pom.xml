@@ -192,7 +192,7 @@
                         <configuration>
                             <file>tomcat.cert</file>
                             <alias>tomcat</alias>
-                            <keystore>${glassfish.root}/glassfish7/glassfish/domains/domain1/config/cacerts.jks</keystore>
+                            <keystore>${glassfish.root}/glassfish7/glassfish/domains/domain1/config/cacerts.p12</keystore>
                             <storepass>changeit</storepass>
                             <keypass>changeit</keypass>
                             <noprompt>true</noprompt>
@@ -207,7 +207,7 @@
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <configuration>
                     <systemProperties>
-                        <javax.net.ssl.trustStore>${glassfish.root}/glassfish7/glassfish/domains/domain1/config/cacerts.jks</javax.net.ssl.trustStore>
+                        <javax.net.ssl.trustStore>${glassfish.root}/glassfish7/glassfish/domains/domain1/config/cacerts.p12</javax.net.ssl.trustStore>
                     </systemProperties>
                 </configuration>
             </plugin>
