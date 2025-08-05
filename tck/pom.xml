@@ -422,9 +422,9 @@
             <dependencies>
                 <!-- The actual Arquillian connector -->
                 <dependency>
-                    <groupId>org.omnifaces.arquillian</groupId>
+                    <groupId>ee.omnifish.arquillian</groupId>
                     <artifactId>arquillian-glassfish-server-managed</artifactId>
-                    <version>1.2</version>
+                    <version>2.0.1</version>
                     <scope>test</scope>
                 </dependency>
             </dependencies>
