@@ -206,9 +206,13 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <configuration>
-                    <systemProperties>
+                    <systemPropertyVariables>
                         <javax.net.ssl.trustStore>${glassfish.root}/glassfish7/glassfish/domains/domain1/config/cacerts.p12</javax.net.ssl.trustStore>
-                    </systemProperties>
+                        
+                        <glassfish.systemProperties>
+                            javax.net.debug=ssl,trustmanager,ssl:handshake
+                        </glassfish.systemProperties>
+                    </systemPropertyVariables>
                 </configuration>
             </plugin>
         </plugins>
