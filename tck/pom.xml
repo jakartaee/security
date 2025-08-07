@@ -298,7 +298,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>3.0.0-M5</version>
+                    <version>3.5.3</version>
                 </plugin>
 
                 <plugin>
@@ -371,7 +371,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
-                <version>3.0.0-M7</version>
+                <version>3.5.3</version>
                 <executions>
                     <execution>
                         <phase>post-integration-test</phase>
@@ -386,20 +386,20 @@
             </plugin>
         </plugins>
     </build>
-    
-	<reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-report-plugin</artifactId>
-				<version>3.0.0-M6</version>
-				<configuration>
-					<skipSurefireReport>${skipSurefireReport}</skipSurefireReport>
-					<aggregate>true</aggregate>
-				</configuration>
-			</plugin>
-		</plugins>
-	</reporting>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>3.5.3</version>
+                <configuration>
+                    <skipSurefireReport>${skipSurefireReport}</skipSurefireReport>
+                    <aggregate>true</aggregate>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
 
     <profiles>
 
@@ -413,10 +413,16 @@
             </activation>
 
             <properties>
-                <glassfish.version>7.0.0-M10</glassfish.version>
+                <glassfish.version>7.0.25</glassfish.version>
                 <glassfish.port>8080</glassfish.port>
                 <glassfish.suspend>false</glassfish.suspend>
+                <glassfish.dirName>glassfish7</glassfish.dirName>
                 <glassfish.root>${maven.multiModuleProjectDirectory}/target</glassfish.root>
+                <glassfish.home>${glassfish.root}/${glassfish.dirName}</glassfish.home>
+                <glassfish.javax.net.debug></glassfish.javax.net.debug>
+                <trustStore.suffix>jks</trustStore.suffix>
+                <trustStore.path>${glassfish.home}/glassfish/domains/domain1/config/cacerts.${trustStore.suffix}</trustStore.path>
+                <trustStore.password>changeit</trustStore.password>
             </properties>
 
             <dependencies>
@@ -473,10 +479,10 @@
                                 <configuration>
                                     <skip>${skipITs}</skip>
                                     <target>
-                                        <echo level="info">Replacing in ${glassfish.root}</echo>
+                                        <echo level="info">Replacing in ${glassfish.home}</echo>
                                         <replace token="8080"
                                             value="${glassfish.port}"
-                                            dir="${glassfish.root}/glassfish7/glassfish/domains/domain1/config/"
+                                            dir="${glassfish.home}/glassfish/domains/domain1/config/"
                                             summary="yes">
                                             <include name="domain.xml" />
                                         </replace>
@@ -489,9 +495,14 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-failsafe-plugin</artifactId>
                         <configuration>
-                            <systemProperties>
-                                <glassfish.home>${glassfish.root}/glassfish7</glassfish.home>
-                            </systemProperties>
+                            <systemPropertyVariables>
+                                <glassfish.home>${glassfish.home}</glassfish.home>
+                                <javax.net.ssl.trustStore>${trustStore.path}</javax.net.ssl.trustStore>
+                                <javax.net.ssl.trustStorePassword>${trustStore.password}</javax.net.ssl.trustStorePassword>
+                                <glassfish.systemProperties>
+                                    javax.net.debug=${glassfish.javax.net.debug}
+                                </glassfish.systemProperties>
+                            </systemPropertyVariables>
                         </configuration>
                     </plugin>
                 </plugins>
@@ -503,11 +514,16 @@
             <id>glassfish-ci-managed-update</id>
 
             <properties>
-                <glassfish.version>7.0.0-M10</glassfish.version>
+                <glassfish.version>7.0.25</glassfish.version>
                 <glassfish.port>8080</glassfish.port>
                 <glassfish.suspend>false</glassfish.suspend>
+                <glassfish.dirName>glassfish7</glassfish.dirName>
                 <glassfish.root>${maven.multiModuleProjectDirectory}/target</glassfish.root>
-                
+                <glassfish.home>${glassfish.root}/${glassfish.dirName}</glassfish.home>
+                <trustStore.suffix>jks</trustStore.suffix>
+                <trustStore.path>${glassfish.home}/glassfish/domains/domain1/config/cacerts.${trustStore.suffix}</trustStore.path>
+                <trustStore.password>changeit</trustStore.password>
+
                 <soteria.version>3.0.0</soteria.version>
                 <weld-decorator.version>3.0.0</weld-decorator.version>
             </properties>
@@ -563,7 +579,7 @@
                                             <version>${security-api.version}</version>
                                             <type>jar</type>
                                             <overWrite>true</overWrite>
-                                            <outputDirectory>${glassfish.root}/glassfish7/glassfish/modules</outputDirectory>
+                                            <outputDirectory>${glassfish.home}/glassfish/modules</outputDirectory>
                                             <destFileName>jakarta.security.enterprise-api.jar</destFileName>
                                         </artifactItem>
                                         <artifactItem>
@@ -572,7 +588,7 @@
                                             <version>${soteria.version}</version>
                                             <type>jar</type>
                                             <overWrite>true</overWrite>
-                                            <outputDirectory>${glassfish.root}/glassfish7/glassfish/modules</outputDirectory>
+                                            <outputDirectory>${glassfish.home}/glassfish/modules</outputDirectory>
                                             <destFileName>jakarta.security.enterprise.jar</destFileName>
                                         </artifactItem>
                                         <artifactItem>
@@ -581,7 +597,7 @@
                                             <version>${weld-decorator.version}</version>
                                             <type>jar</type>
                                             <overWrite>true</overWrite>
-                                            <outputDirectory>${glassfish.root}/glassfish7/glassfish/modules</outputDirectory>
+                                            <outputDirectory>${glassfish.home}/glassfish/modules</outputDirectory>
                                             <destFileName>soteria.spi.bean.decorator.weld.jar</destFileName>
                                         </artifactItem>
                                     </artifactItems>
@@ -593,9 +609,11 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-failsafe-plugin</artifactId>
                         <configuration>
-                            <systemProperties>
-                                <glassfish.home>${glassfish.root}/glassfish7</glassfish.home>
-                            </systemProperties>
+                            <systemPropertyVariables>
+                                <glassfish.home>${glassfish.home}</glassfish.home>
+                                <javax.net.ssl.trustStore>${trustStore.path}</javax.net.ssl.trustStore>
+                                <javax.net.ssl.trustStorePassword>${trustStore.password}</javax.net.ssl.trustStorePassword>
+                            </systemPropertyVariables>
                         </configuration>
                     </plugin>
                 </plugins>
