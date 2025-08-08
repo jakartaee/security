@@ -643,6 +643,16 @@
                 </plugins>
             </build>
         </profile>
+        
+        <!-- Convenience profile to set properties for GlassFish 7.1.x -->
+        <profile>
+            <id>glassfish71</id>
+            
+            <properties>
+                <glassfish.version>7.1.0-SNAPSHOT</glassfish.version>
+                <trustStore.suffix>p12</trustStore.suffix>
+            </properties>
+        </profile>
 
 
         <!-- ### Payara ### -->
