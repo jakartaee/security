@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-  Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation
+  Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
 
   This program and the accompanying materials are made available under the
   terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,9 +18,18 @@
 <Server port="8005" shutdown="SHUTDOWN">
 
     <Listener className="org.apache.catalina.startup.VersionLoggerListener" />
+    <Listener className="org.apache.catalina.core.AprLifecycleListener" />
     <Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener" />
     <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" />
     <Listener className="org.apache.catalina.core.ThreadLocalLeakPreventionListener" />
+
+  <GlobalNamingResources>
+      <Resource name="UserDatabase" auth="Container"
+              type="org.apache.catalina.UserDatabase"
+              description="User database that can be updated and saved"
+              factory="org.apache.catalina.users.MemoryUserDatabaseFactory"
+              pathname="conf/tomcat-users.xml" />
+  </GlobalNamingResources>
 
     <Service name="Catalina">
         <Connector port="8443"
@@ -34,6 +43,10 @@
         </Connector>
 
         <Engine name="Catalina" defaultHost="localhost">
+            <Realm className="org.apache.catalina.realm.LockOutRealm">
+                <Realm className="org.apache.catalina.realm.UserDatabaseRealm"
+                resourceName="UserDatabase"/>
+            </Realm>
             <Host name="localhost" appBase="webapps" unpackWARs="true" autoDeploy="true">
                 <Valve
                     className="org.apache.catalina.valves.AccessLogValve"
