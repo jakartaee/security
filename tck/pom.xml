@@ -27,7 +27,7 @@
         <version>1.0.9</version>
         <relativePath/>
     </parent>
-    
+
     <groupId>org.eclipse.ee4j.security.tck</groupId>
     <artifactId>jakarta-security-tck</artifactId>
     <version>4.0.0-SNAPSHOT</version>
@@ -36,16 +36,20 @@
 
     <name>Jakarta Security TCK - main</name>
 
-    <!-- 
+    <!--
                 M O D U L E S
-                
+
                 Each module represent a different test, with the exception of the "common"
                 module which contains utility code.
+<<<<<<< HEAD
                 
                 To print responses received by the tests (except those from the old TCK)
                 
                 execute with mvn ... -Dtck.log.response
                 
+=======
+
+>>>>>>> refs/remotes/origin/3.x
     -->
     <modules>
         <module>common</module>
@@ -63,7 +67,7 @@
         <module>app-custom</module>
         <module>app-multiple-store</module>
         <module>app-multiple-store-backup</module>
-        
+
         <!-- app-[authentication mechanism] (with build-in identity store) -->
         <module>app-openid</module>
         <module>app-openid2</module>
@@ -111,8 +115,8 @@
             based on these original Arquillian/JUnit tests and expanded upon.
          -->
         <module>old-tck</module>
-        
-        <!-- 
+
+        <!--
             Checks the API signature of the API module.
         -->
         <module>security-signaturetest</module>
@@ -126,16 +130,21 @@
         
         <zipname>${project.artifactId}-${project.version}</zipname>
         <licenseFile>${project.basedir}/LICENSE_EFTL.md</licenseFile>
-        
         <security-api.version>4.0.0</security-api.version>
+        <arquillian.version>1.10.0.Final</arquillian.version>
         
         <buildDirectory>${project.basedir}/target</buildDirectory>
-        
-        
+
+        <!-- Used for OpenID testing with Mitre -->
+        <tomcat.version>9.0.108</tomcat.version>
+        <tomcat.root>${project.build.directory}</tomcat.root>
+        <tomcat.dir>${tomcat.root}/apache-tomcat-${tomcat.version}</tomcat.dir>
+        <tomcat.pidfile>${tomcat.dir}/pidfile</tomcat.pidfile>
+        <mitre.version>1.3.4</mitre.version>
+
         <!-- Below Servers need to be updated to their Jakarta.* versions and currently don't work -->
-        
         <tomee.version>7.0.4</tomee.version>
-        
+
         <!-- Note: Liberty 18.0.0.2+ has EE Security included -->
         <openliberty.version>18.0.0.1</openliberty.version>
 
@@ -147,21 +156,21 @@
             <dependency>
                 <groupId>org.jboss.arquillian</groupId>
                 <artifactId>arquillian-bom</artifactId>
-                <version>1.9.3.Final</version>
+                <version>${arquillian.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
             <dependency>
-                <groupId>org.jboss.shrinkwrap.resolver</groupId>
-                <artifactId>shrinkwrap-resolver-api-maven</artifactId>
-                <version>3.3.3</version>
-                <scope>test</scope>
+                <groupId>org.jboss.arquillian.container</groupId>
+                <artifactId>arquillian-container-test-api</artifactId>
+                <version>${arquillian.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.omnifaces.arquillian</groupId>
-                <artifactId>glassfish-client-ee11</artifactId>
-                <version>1.7.1</version>
+                <groupId>org.jboss.shrinkwrap.resolver</groupId>
+                <artifactId>shrinkwrap-resolver-depchain</artifactId>
+                <version>3.3.4</version>
                 <scope>test</scope>
+                <type>pom</type>
             </dependency>
             <dependency>
                 <groupId>com.unboundid</groupId>
@@ -194,7 +203,7 @@
             <version>3.0.0</version>
             <scope>provided</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
@@ -230,7 +239,7 @@
             <version>6.0.1</version>
             <scope>provided</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>jakarta.json</groupId>
             <artifactId>jakarta.json-api</artifactId>
@@ -267,12 +276,12 @@
             <artifactId>nimbus-jose-jwt</artifactId>
             <version>9.37.3</version>
         </dependency>
-        
-        
-        
-        
+
+
+
+
         <!-- Test dependencies which can be used in sub-modules -->
-    
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -285,7 +294,7 @@
             <artifactId>arquillian-junit-container</artifactId>
             <scope>test</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>org.jboss.arquillian.protocol</groupId>
             <artifactId>arquillian-protocol-servlet</artifactId>
@@ -308,7 +317,7 @@
 
     <build>
         <directory>${buildDirectory}</directory>
-    
+
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -324,7 +333,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>3.5.2</version>
+                    <version>3.5.3</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -381,11 +390,11 @@
                     </systemPropertyVariables>
                 </configuration>
             </plugin>
-            
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
-                <version>3.5.2</version>
+                <version>3.5.3</version>
                 <executions>
                     <execution>
                         <phase>post-integration-test</phase>
@@ -400,25 +409,25 @@
             </plugin>
         </plugins>
     </build>
-    
-	<reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-report-plugin</artifactId>
-				<version>3.5.2</version>
-				<configuration>
-					<skipSurefireReport>${skipSurefireReport}</skipSurefireReport>
-					<aggregate>true</aggregate>
-				</configuration>
-			</plugin>
-		</plugins>
-	</reporting>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>3.5.3</version>
+                <configuration>
+                    <skipSurefireReport>${skipSurefireReport}</skipSurefireReport>
+                    <aggregate>true</aggregate>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
 
     <profiles>
 
         <!-- ### GlassFish ### -->
-       
+
         <profile>
             <id>glassfish-ci-managed</id>
 
@@ -428,8 +437,17 @@
 
             <properties>
                 <glassfish.version>8.0.0-SNAPSHOT</glassfish.version>
+                <glassfish.arquillian.version>2.1.0</glassfish.arquillian.version>
                 <glassfish.port>8080</glassfish.port>
+                <glassfish.dirName>glassfish8</glassfish.dirName>
                 <glassfish.root>${maven.multiModuleProjectDirectory}/target</glassfish.root>
+                
+                <glassfish.home>${glassfish.root}/${glassfish.dirName}</glassfish.home>
+                <glassfish.javax.net.debug></glassfish.javax.net.debug>
+
+                <trustStore.suffix>p12</trustStore.suffix>
+                <trustStore.path>${glassfish.home}/glassfish/domains/domain1/config/cacerts.${trustStore.suffix}</trustStore.path>
+                <trustStore.password>changeit</trustStore.password>
                 
                 <security.api.update>false</security.api.update>
                 
@@ -447,11 +465,16 @@
             </properties>
 
             <dependencies>
-                <!-- The actual Arquillian connector -->
                 <dependency>
-                    <groupId>org.omnifaces.arquillian</groupId>
+                    <groupId>ee.omnifish.arquillian</groupId>
+                    <artifactId>glassfish-client-ee10</artifactId>
+                    <version>${glassfish.arquillian.version}</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>ee.omnifish.arquillian</groupId>
                     <artifactId>arquillian-glassfish-server-managed</artifactId>
-                    <version>1.7</version>
+                    <version>${glassfish.arquillian.version}</version>
                     <scope>test</scope>
                 </dependency>
             </dependencies>
@@ -580,10 +603,10 @@
                                 <configuration>
                                     <skip>${skipITs}</skip>
                                     <target>
-                                        <echo level="info">Replacing in ${glassfish.root}</echo>
+                                        <echo level="info">Replacing in ${glassfish.home}</echo>
                                         <replace token="8080"
                                             value="${glassfish.port}"
-                                            dir="${glassfish.root}/glassfish8/glassfish/domains/domain1/config/"
+                                            dir="${glassfish.home}/glassfish/domains/domain1/config/"
                                             summary="yes">
                                             <include name="domain.xml" />
                                         </replace>
@@ -622,23 +645,27 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-failsafe-plugin</artifactId>
                         <configuration>
-                            <systemProperties>
-                                <glassfish.home>${glassfish.root}/glassfish8</glassfish.home>
-                            </systemProperties>
+                            <systemPropertyVariables>
+                                <glassfish.home>${glassfish.home}</glassfish.home>
+                                <javax.net.ssl.trustStore>${trustStore.path}</javax.net.ssl.trustStore>
+                                <javax.net.ssl.trustStorePassword>${trustStore.password}</javax.net.ssl.trustStorePassword>
+                                <glassfish.systemProperties>
+                                    javax.net.debug=${glassfish.javax.net.debug}
+                                    javax.net.ssl.trustStorePassword=${trustStore.password}
+                                </glassfish.systemProperties>
+                            </systemPropertyVariables>
                         </configuration>
                     </plugin>
                 </plugins>
             </build>
         </profile>
         
-        
-        
-        
+       
         <!-- ### Payara ### -->
-        
+
         <profile>
             <id>payara-ci-managed</id>
-            
+
             <properties>
                 <payara.root>${maven.multiModuleProjectDirectory}/target</payara.root>
                 <payara.version>6.2022.1</payara.version>
@@ -824,8 +851,8 @@
                 </plugins>
             </build>
         </profile>
-        
-        
+
+
         <profile>
             <id>openliberty</id>
 
