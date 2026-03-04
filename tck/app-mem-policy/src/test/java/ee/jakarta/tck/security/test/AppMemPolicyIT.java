@@ -25,6 +25,7 @@ import static ee.jakarta.tck.security.test.ShrinkWrap.mavenWar;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -78,6 +79,9 @@ public class AppMemPolicyIT extends ArquillianBase {
      *
      * But, the caller should not be in any roles (specially, should not be in role foo)
      */
+    // Test excluded since unauthenticated requests return 401 if roles defined
+    // on a Servlet per section 13.8.3 of the Servlet 6.1 specification.
+    @Ignore
     @Test
     public void testNotAuthenticatedSpecial() {
         String response = readFromServer("/protectedServlet/foo/test");
