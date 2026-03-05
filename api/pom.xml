@@ -29,6 +29,7 @@
 
     <groupId>jakarta.security.enterprise</groupId>
     <artifactId>jakarta.security.enterprise-api</artifactId>
+    <version>5.0.0-SNAPSHOT</version>
 
     <name>Jakarta Security</name>
     <description>
