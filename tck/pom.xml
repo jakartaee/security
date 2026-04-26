@@ -57,6 +57,10 @@
         <module>app-securitycontext</module>
         <module>app-securitycontext-auth</module>
         <module>app-securitycontext-customprincipal</module>
+        <module>app-securitycontext-authenticate</module>
+        <module>app-securitycontext-callerdata</module>
+        <module>app-securitycontext-ejb</module>
+        <module>app-securitycontext-getprincipalsbytype</module>
 
         <!-- app-[identity-store] -->
         <module>app-mem</module>
