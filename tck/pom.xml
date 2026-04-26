@@ -41,15 +41,11 @@
 
                 Each module represent a different test, with the exception of the "common"
                 module which contains utility code.
-<<<<<<< HEAD
-                
-                To print responses received by the tests (except those from the old TCK)
-                
-                execute with mvn ... -Dtck.log.response
-                
-=======
 
->>>>>>> refs/remotes/origin/3.x
+                To print responses received by the tests
+
+                execute with mvn ... -Dtck.log.response
+
     -->
     <modules>
         <module>common</module>
@@ -57,6 +53,79 @@
         <module>app-securitycontext</module>
         <module>app-securitycontext-auth</module>
         <module>app-securitycontext-customprincipal</module>
+        <module>app-securitycontext-authenticate</module>
+        <module>app-securitycontext-callerdata</module>
+        <module>app-securitycontext-ejb</module>
+        <module>app-securitycontext-getprincipalsbytype</module>
+
+        <!-- app-ham-* (HttpAuthenticationMechanism scenarios migrated from old-tck) -->
+        <module>app-ham-basic</module>
+        <module>app-ham-form</module>
+        <module>app-ham-autoapplysession</module>
+        <module>app-ham-customform-base</module>
+        <module>app-ham-customform-expression</module>
+        <module>app-ham-workflow-cleansubject</module>
+        <module>app-ham-workflow-secureresponse</module>
+        <module>app-ham-workflow-validaterequest</module>
+        <module>app-ham-workflow-validaterequestduringauthen</module>
+        <module>app-ham-workflow-validaterequestwithfilter</module>
+        <module>app-ham-sam-delegation</module>
+        <module>app-ham-sam-obtainbean</module>
+        <module>app-ham-rememberme-test1</module>
+        <module>app-ham-rememberme-test2</module>
+        <module>app-ham-rememberme-test3</module>
+
+        <!-- app-idstore-* (IdentityStore scenarios migrated from old-tck) -->
+        <module>app-idstore-basic</module>
+        <module>app-idstore-noidstore</module>
+        <module>app-idstore-multi</module>
+        <module>app-idstore-useforvalidation</module>
+        <module>app-idstore-useforgroup</module>
+        <module>app-idstore-multiauthz</module>
+        <module>app-idstore-customhandler</module>
+
+        <!-- app-db-* (DatabaseIdentityStore scenarios migrated from old-tck) -->
+        <module>app-db-basic</module>
+        <module>app-db-notvalidated</module>
+        <module>app-db-useforvalidation</module>
+        <module>app-db-useforgroup</module>
+        <module>app-db-multi</module>
+        <module>app-db-hashalgorithm</module>
+        <module>app-db-hashalgorithmparam</module>
+        <module>app-db-priorityuseforexpr</module>
+        <module>app-db-priorityuseforexprbean</module>
+        <module>app-db-invalidcallerquery</module>
+        <module>app-db-invalidgroupsquery</module>
+        <module>app-db-invalidhashalgorithmparam</module>
+        <module>app-db-invalidpriorityuseforexpr</module>
+        <module>app-db-invaliddatasource</module>
+
+        <!-- app-ldap-* (LdapIdentityStore scenarios migrated from old-tck) -->
+        <module>app-ldap-basic</module>
+        <module>app-ldap-binddn</module>
+        <module>app-ldap-groupmemberof</module>
+        <module>app-ldap-groupmemberofnotexist</module>
+        <module>app-ldap-invalidbinddn</module>
+        <module>app-ldap-invalidbinddnpassword</module>
+        <module>app-ldap-invalidcallerbasedn</module>
+        <module>app-ldap-invalidcallernameattr</module>
+        <module>app-ldap-invalidcallersearchbase</module>
+        <module>app-ldap-invalidcallersearchfilter</module>
+        <module>app-ldap-invalidgroupmemberattr</module>
+        <module>app-ldap-invalidgroupnameattr</module>
+        <module>app-ldap-invalidgroupsearchbase</module>
+        <module>app-ldap-invalidgroupsearchfilter</module>
+        <module>app-ldap-invalidsearchscopeexpr</module>
+        <module>app-ldap-invalidurl</module>
+        <module>app-ldap-notvalidated</module>
+        <module>app-ldap-priorityuseforexpr</module>
+        <module>app-ldap-searchscopebothonelevel</module>
+        <module>app-ldap-searchscopebothsubtree</module>
+        <module>app-ldap-searchscopecalleronelevelgroupsubtree</module>
+        <module>app-ldap-searchscopecallersubtreegrouponelevel</module>
+        <module>app-ldap-searchscopeexpr</module>
+        <module>app-ldap-useforgroup</module>
+        <module>app-ldap-useforvalidation</module>
 
         <!-- app-[identity-store] -->
         <module>app-mem</module>
@@ -107,15 +176,6 @@
         <module>app-mem-policy</module>
         <module>app-mem-policy2</module>
         
-        <!-- 
-            Runs a variety of tests using the old (javatest based) TCK.
-            Historical note: the old TCK is actually partially newer than the new TCK.
-            The project started with a series of Arquillian/JUnit based tests, but at the time
-            the TCK process was not ready to adopt these. Javatest based tests were created
-            based on these original Arquillian/JUnit tests and expanded upon.
-         -->
-        <module>old-tck</module>
-
         <!--
             Checks the API signature of the API module.
         -->
