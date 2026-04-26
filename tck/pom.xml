@@ -41,15 +41,11 @@
 
                 Each module represent a different test, with the exception of the "common"
                 module which contains utility code.
-<<<<<<< HEAD
-                
-                To print responses received by the tests (except those from the old TCK)
-                
-                execute with mvn ... -Dtck.log.response
-                
-=======
 
->>>>>>> refs/remotes/origin/3.x
+                To print responses received by the tests
+
+                execute with mvn ... -Dtck.log.response
+
     -->
     <modules>
         <module>common</module>
@@ -180,15 +176,6 @@
         <module>app-mem-policy</module>
         <module>app-mem-policy2</module>
         
-        <!-- 
-            Runs a variety of tests using the old (javatest based) TCK.
-            Historical note: the old TCK is actually partially newer than the new TCK.
-            The project started with a series of Arquillian/JUnit based tests, but at the time
-            the TCK process was not ready to adopt these. Javatest based tests were created
-            based on these original Arquillian/JUnit tests and expanded upon.
-         -->
-        <module>old-tck</module>
-
         <!--
             Checks the API signature of the API module.
         -->
