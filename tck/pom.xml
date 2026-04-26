@@ -88,6 +88,22 @@
         <module>app-idstore-multiauthz</module>
         <module>app-idstore-customhandler</module>
 
+        <!-- app-db-* (DatabaseIdentityStore scenarios migrated from old-tck) -->
+        <module>app-db-basic</module>
+        <module>app-db-notvalidated</module>
+        <module>app-db-useforvalidation</module>
+        <module>app-db-useforgroup</module>
+        <module>app-db-multi</module>
+        <module>app-db-hashalgorithm</module>
+        <module>app-db-hashalgorithmparam</module>
+        <module>app-db-priorityuseforexpr</module>
+        <module>app-db-priorityuseforexprbean</module>
+        <module>app-db-invalidcallerquery</module>
+        <module>app-db-invalidgroupsquery</module>
+        <module>app-db-invalidhashalgorithmparam</module>
+        <module>app-db-invalidpriorityuseforexpr</module>
+        <module>app-db-invaliddatasource</module>
+
         <!-- app-[identity-store] -->
         <module>app-mem</module>
         <module>app-db</module>
