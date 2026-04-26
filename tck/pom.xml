@@ -62,6 +62,23 @@
         <module>app-securitycontext-ejb</module>
         <module>app-securitycontext-getprincipalsbytype</module>
 
+        <!-- app-ham-* (HttpAuthenticationMechanism scenarios migrated from old-tck) -->
+        <module>app-ham-basic</module>
+        <module>app-ham-form</module>
+        <module>app-ham-autoapplysession</module>
+        <module>app-ham-customform-base</module>
+        <module>app-ham-customform-expression</module>
+        <module>app-ham-workflow-cleansubject</module>
+        <module>app-ham-workflow-secureresponse</module>
+        <module>app-ham-workflow-validaterequest</module>
+        <module>app-ham-workflow-validaterequestduringauthen</module>
+        <module>app-ham-workflow-validaterequestwithfilter</module>
+        <module>app-ham-sam-delegation</module>
+        <module>app-ham-sam-obtainbean</module>
+        <module>app-ham-rememberme-test1</module>
+        <module>app-ham-rememberme-test2</module>
+        <module>app-ham-rememberme-test3</module>
+
         <!-- app-[identity-store] -->
         <module>app-mem</module>
         <module>app-db</module>
