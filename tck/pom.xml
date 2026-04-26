@@ -79,6 +79,15 @@
         <module>app-ham-rememberme-test2</module>
         <module>app-ham-rememberme-test3</module>
 
+        <!-- app-idstore-* (IdentityStore scenarios migrated from old-tck) -->
+        <module>app-idstore-basic</module>
+        <module>app-idstore-noidstore</module>
+        <module>app-idstore-multi</module>
+        <module>app-idstore-useforvalidation</module>
+        <module>app-idstore-useforgroup</module>
+        <module>app-idstore-multiauthz</module>
+        <module>app-idstore-customhandler</module>
+
         <!-- app-[identity-store] -->
         <module>app-mem</module>
         <module>app-db</module>
