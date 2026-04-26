@@ -104,6 +104,33 @@
         <module>app-db-invalidpriorityuseforexpr</module>
         <module>app-db-invaliddatasource</module>
 
+        <!-- app-ldap-* (LdapIdentityStore scenarios migrated from old-tck) -->
+        <module>app-ldap-basic</module>
+        <module>app-ldap-binddn</module>
+        <module>app-ldap-groupmemberof</module>
+        <module>app-ldap-groupmemberofnotexist</module>
+        <module>app-ldap-invalidbinddn</module>
+        <module>app-ldap-invalidbinddnpassword</module>
+        <module>app-ldap-invalidcallerbasedn</module>
+        <module>app-ldap-invalidcallernameattr</module>
+        <module>app-ldap-invalidcallersearchbase</module>
+        <module>app-ldap-invalidcallersearchfilter</module>
+        <module>app-ldap-invalidgroupmemberattr</module>
+        <module>app-ldap-invalidgroupnameattr</module>
+        <module>app-ldap-invalidgroupsearchbase</module>
+        <module>app-ldap-invalidgroupsearchfilter</module>
+        <module>app-ldap-invalidsearchscopeexpr</module>
+        <module>app-ldap-invalidurl</module>
+        <module>app-ldap-notvalidated</module>
+        <module>app-ldap-priorityuseforexpr</module>
+        <module>app-ldap-searchscopebothonelevel</module>
+        <module>app-ldap-searchscopebothsubtree</module>
+        <module>app-ldap-searchscopecalleronelevelgroupsubtree</module>
+        <module>app-ldap-searchscopecallersubtreegrouponelevel</module>
+        <module>app-ldap-searchscopeexpr</module>
+        <module>app-ldap-useforgroup</module>
+        <module>app-ldap-useforvalidation</module>
+
         <!-- app-[identity-store] -->
         <module>app-mem</module>
         <module>app-db</module>
