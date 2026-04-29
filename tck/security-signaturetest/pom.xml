@@ -25,7 +25,7 @@
     <parent>
         <groupId>org.eclipse.ee4j.security.tck</groupId>
         <artifactId>jakarta-security-tck</artifactId>
-        <version>4.0.1-SNAPSHOT</version>
+        <version>5.0.0-SNAPSHOT</version>
     </parent>
 
     <groupId>jakarta.security.tck</groupId>
@@ -68,10 +68,10 @@
                 <configuration>
                     <rules>
                         <requireMavenVersion>
-                            <version>3.8.6</version>
+                            <version>3.9.6</version>
                         </requireMavenVersion>
                         <requireJavaVersion>
-                            <version>17</version>
+                            <version>21</version>
                         </requireJavaVersion>
                     </rules>
                 </configuration>
@@ -127,13 +127,13 @@
                                 </artifactItem>
                                 
                                 <artifactItem>
-                                    <groupId>jakarta.enterprise</groupId>
-                                    <artifactId>jakarta.enterprise.cdi-api</artifactId>
-                                    <version>4.1.0</version>
+                                    <groupId>jakarta.cdi</groupId>
+                                    <artifactId>jakarta.cdi-api</artifactId>
+                                    <version>5.0.0.Alpha5</version>
                                     <type>jar</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${project.build.directory}/</outputDirectory>
-                                    <destFileName>jakarta.enterprise.cdi-api.jar</destFileName>
+                                    <destFileName>jakarta.cdi-api.jar</destFileName>
                                 </artifactItem>
                                 
                                 <artifactItem>
@@ -184,7 +184,7 @@
                             <systemPropertyVariables>
                                 <jimage.dir>${project.build.directory}/jdk-bundle</jimage.dir>
                                 <optional.tech.packages.to.ignore>java.util.SequencedCollection</optional.tech.packages.to.ignore>
-                                <signature.sigTestClasspath>${project.build.directory}/jakarta.security-vendor-api.jar:${project.build.directory}/jakarta.servlet-api.jar:${project.build.directory}/jakarta.json-api.jar:${project.build.directory}/jakarta.authentication-api.jar:${project.build.directory}/jakarta.inject-api.jar:${project.build.directory}/jakarta.enterprise.cdi-api.jar:${project.build.directory}/jakarta.interceptor-api.jar:${project.build.directory}/jdk-bundle/java.base:${project.build.directory}/jdk-bundle/java.rmi:${project.build.directory}/jdk-bundle/java.sql:${project.build.directory}/jdk-bundle/java.naming</signature.sigTestClasspath>
+                                <signature.sigTestClasspath>${project.build.directory}/jakarta.security-vendor-api.jar:${project.build.directory}/jakarta.servlet-api.jar:${project.build.directory}/jakarta.json-api.jar:${project.build.directory}/jakarta.authentication-api.jar:${project.build.directory}/jakarta.inject-api.jar:${project.build.directory}/jakarta.cdi-api.jar:${project.build.directory}/jakarta.interceptor-api.jar:${project.build.directory}/jdk-bundle/java.base:${project.build.directory}/jdk-bundle/java.rmi:${project.build.directory}/jdk-bundle/java.sql:${project.build.directory}/jdk-bundle/java.naming</signature.sigTestClasspath>
                             </systemPropertyVariables>
                         </configuration>
                     </execution>

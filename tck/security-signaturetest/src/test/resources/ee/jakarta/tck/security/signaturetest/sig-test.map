@@ -21,4 +21,4 @@
 # package that should be tested by the signature tests.
 ###############################################################
 
-jakarta.security.enterprise=4.0.0
+jakarta.security.enterprise=5.0.0-SNAPSHOT

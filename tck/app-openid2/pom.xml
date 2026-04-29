@@ -20,7 +20,7 @@
     <parent>
         <groupId>org.eclipse.ee4j.security.tck</groupId>
         <artifactId>jakarta-security-tck</artifactId>
-        <version>4.0.1-SNAPSHOT</version>
+        <version>5.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>app-openid2</artifactId>
@@ -175,7 +175,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>keytool-maven-plugin</artifactId>
-                <version>1.7</version>
+                <version>2.0.2</version>
                 <executions>
                     <execution>
                         <id>import-tomcat-cert</id>
@@ -184,7 +184,7 @@
                             <goal>importCertificate</goal>
                         </goals>
                         <configuration>
-                            <file>tomcat.cert</file>
+                            <file>${project.basedir}/tomcat.cert</file>
                             <alias>tomcat</alias>
                             <keystore>${trustStore.path}</keystore>
                             <storepass>${trustStore.password}</storepass>
