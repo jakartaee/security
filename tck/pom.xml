@@ -30,7 +30,7 @@
 
     <groupId>org.eclipse.ee4j.security.tck</groupId>
     <artifactId>jakarta-security-tck</artifactId>
-    <version>4.0.1-SNAPSHOT</version>
+    <version>5.0.0-SNAPSHOT</version>
 
     <packaging>pom</packaging>
 
@@ -43,7 +43,7 @@
                 module which contains utility code.
 
                 To print responses received by the tests
-
+                
                 execute with mvn ... -Dtck.log.response
 
     -->
@@ -186,12 +186,12 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         
-        <maven.compiler.release>17</maven.compiler.release>
+        <maven.compiler.release>21</maven.compiler.release>
         
         <zipname>${project.artifactId}-${project.version}</zipname>
         <licenseFile>${project.basedir}/LICENSE_EFTL.md</licenseFile>
-        <security-api.version>4.0.0</security-api.version>
-        <arquillian.version>1.10.0.Final</arquillian.version>
+        <security-api.version>5.0.0-SNAPSHOT</security-api.version>
+        <arquillian.version>1.10.1.Final</arquillian.version>
         
         <buildDirectory>${project.basedir}/target</buildDirectory>
 
@@ -228,19 +228,19 @@
             <dependency>
                 <groupId>org.jboss.shrinkwrap.resolver</groupId>
                 <artifactId>shrinkwrap-resolver-depchain</artifactId>
-                <version>3.3.4</version>
+                <version>3.3.5</version>
                 <scope>test</scope>
                 <type>pom</type>
             </dependency>
             <dependency>
                 <groupId>com.unboundid</groupId>
                 <artifactId>unboundid-ldapsdk</artifactId>
-                <version>7.0.2</version>
+                <version>7.0.4</version>
             </dependency>
             <dependency>
                 <groupId>com.h2database</groupId>
                 <artifactId>h2</artifactId>
-                <version>2.3.232</version>
+                <version>2.4.240</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -267,13 +267,13 @@
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
-            <version>6.1.0</version>
+            <version>6.2.0-M1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>jakarta.enterprise</groupId>
-            <artifactId>jakarta.enterprise.cdi-api</artifactId>
-            <version>4.1.0</version>
+            <groupId>jakarta.cdi</groupId>
+            <artifactId>jakarta.cdi-api</artifactId>
+            <version>5.0.0.Alpha5</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -285,7 +285,7 @@
         <dependency>
             <groupId>jakarta.validation</groupId>
             <artifactId>jakarta.validation-api</artifactId>
-            <version>3.1.1</version>
+            <version>4.0.0-M1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -296,7 +296,7 @@
         <dependency>
             <groupId>jakarta.el</groupId>
             <artifactId>jakarta.el-api</artifactId>
-            <version>6.0.1</version>
+            <version>6.1.0-M1</version>
             <scope>provided</scope>
         </dependency>
 
@@ -309,7 +309,7 @@
         <dependency>
             <groupId>jakarta.xml.bind</groupId>
             <artifactId>jakarta.xml.bind-api</artifactId>
-            <version>4.0.2</version>
+            <version>4.0.5</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -327,14 +327,14 @@
         <dependency>
             <groupId>jakarta.faces</groupId>
             <artifactId>jakarta.faces-api</artifactId>
-            <version>4.1.2</version>
+            <version>5.0.0-M2</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.nimbusds</groupId>
             <artifactId>nimbus-jose-jwt</artifactId>
-            <version>9.37.3</version>
+            <version>10.9</version>
         </dependency>
 
 
@@ -364,14 +364,14 @@
         <dependency>
             <groupId>org.htmlunit</groupId>
             <artifactId>htmlunit</artifactId>
-            <version>4.10.0</version>
+            <version>4.21.0</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
-            <version>1.18.3</version><!--$NO-MVN-MAN-VER$-->
+            <version>1.22.2</version>
         </dependency>
     </dependencies>
 
@@ -383,17 +383,17 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-war-plugin</artifactId>
-                    <version>3.4.0</version>
+                    <version>3.5.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-dependency-plugin</artifactId>
-                    <version>3.8.1</version>
+                    <version>3.10.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>3.5.3</version>
+                    <version>3.5.5</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -415,7 +415,7 @@
                         <configuration>
                             <rules>
                                 <requireMavenVersion>
-                                    <version>3.8.6</version>
+                                    <version>3.9.6</version>
                                 </requireMavenVersion>
                             </rules>
                         </configuration>
@@ -423,12 +423,12 @@
                 </executions>
             </plugin>
             
-            <!-- Restricts the Java version to 17 -->
+            <!-- Restricts the Java version to 21 -->
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.14.0</version>
+                <version>3.15.0</version>
                 <configuration>
-                    <release>17</release>
+                    <release>21</release>
                     <compilerArgument>-Xlint:unchecked</compilerArgument>
                 </configuration>
             </plugin>
@@ -454,7 +454,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
-                <version>3.5.3</version>
+                <version>3.5.5</version>
                 <executions>
                     <execution>
                         <phase>post-integration-test</phase>
@@ -475,7 +475,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
-                <version>3.5.3</version>
+                <version>3.5.5</version>
                 <configuration>
                     <skipSurefireReport>${skipSurefireReport}</skipSurefireReport>
                     <aggregate>true</aggregate>
@@ -496,11 +496,11 @@
             </activation>
 
             <properties>
-                <glassfish.version>8.0.0-SNAPSHOT</glassfish.version>
-                <glassfish.arquillian.version>2.1.0</glassfish.arquillian.version>
+                <glassfish.version>9.0.0-SNAPSHOT</glassfish.version>
+                <glassfish.arquillian.version>2.1.3</glassfish.arquillian.version>
                 <glassfish.port>8080</glassfish.port>
-                <glassfish.dirName>glassfish8</glassfish.dirName>
-                <glassfish.root>${maven.multiModuleProjectDirectory}/target</glassfish.root>
+                <glassfish.dirName>glassfish9</glassfish.dirName>
+                <glassfish.root>${project.build.directory}</glassfish.root>
                 
                 <glassfish.home>${glassfish.root}/${glassfish.dirName}</glassfish.home>
                 <glassfish.javax.net.debug></glassfish.javax.net.debug>
@@ -512,7 +512,7 @@
                 <security.api.update>false</security.api.update>
                 
                 <soteria.update>false</soteria.update>
-                <soteria.version>4.0.0</soteria.version>
+                <soteria.version>5.0.0</soteria.version>
                 
                 <!--
                     Exact artefact used by GlassFish that holds the API classes. The actual API
@@ -527,7 +527,7 @@
             <dependencies>
                 <dependency>
                     <groupId>ee.omnifish.arquillian</groupId>
-                    <artifactId>glassfish-client-ee10</artifactId>
+                    <artifactId>glassfish-client-ee11</artifactId>
                     <version>${glassfish.arquillian.version}</version>
                     <scope>test</scope>
                 </dependency>
@@ -544,7 +544,7 @@
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>build-helper-maven-plugin</artifactId>
-                        <version>3.6.0</version>
+                        <version>3.6.1</version>
                         <executions>
                             <execution>
                                 <id>negate-prop</id>
@@ -609,7 +609,7 @@
                                             <version>${security-api.version}</version>
                                             <type>jar</type>
                                             <overWrite>true</overWrite>
-                                            <outputDirectory>${glassfish.root}/glassfish8/glassfish/modules</outputDirectory>
+                                            <outputDirectory>${glassfish.root}/glassfish9/glassfish/modules</outputDirectory>
                                             <destFileName>jakarta.security-api.jar</destFileName>
                                         </artifactItem>
                                     </artifactItems>
@@ -632,7 +632,7 @@
                                             <version>${soteria.version}</version>
                                             <type>jar</type>
                                             <overWrite>true</overWrite>
-                                            <outputDirectory>${glassfish.root}/glassfish8/glassfish/modules</outputDirectory>
+                                            <outputDirectory>${glassfish.root}/glassfish9/glassfish/modules</outputDirectory>
                                             <destFileName>soteria.jar</destFileName>
                                         </artifactItem>
                                         <artifactItem>
@@ -641,7 +641,7 @@
                                             <version>${soteria.version}</version>
                                             <type>jar</type>
                                             <overWrite>true</overWrite>
-                                            <outputDirectory>${glassfish.root}/glassfish8/glassfish/modules</outputDirectory>
+                                            <outputDirectory>${glassfish.root}/glassfish9/glassfish/modules</outputDirectory>
                                             <destFileName>soteria.spi.bean.decorator.weld.jar</destFileName>
                                         </artifactItem>
                                     </artifactItems>
@@ -682,7 +682,7 @@
                     -->
                     <plugin>
                         <artifactId>maven-install-plugin</artifactId>
-                        <version>3.1.3</version>
+                        <version>3.1.4</version>
                         <executions>
                             <execution>
                                 <id>unpack</id>
@@ -691,7 +691,7 @@
                                     <goal>install-file</goal>
                                 </goals>
                                 <configuration>
-                                    <file>${glassfish.root}/glassfish8/glassfish/modules/jakarta.security.enterprise-api.jar</file>
+                                    <file>${glassfish.root}/glassfish9/glassfish/modules/jakarta.security.enterprise-api.jar</file>
                                     <groupId>${sigtest.api.groupId}</groupId>
                                     <artifactId>${sigtest.api.artifactId}</artifactId>
                                     <version>${sigtest.api.version}</version>
@@ -1011,45 +1011,6 @@
                                 <arquillian.launch>liberty</arquillian.launch>
                                 <arquillian.liberty.wlpHome>${project.build.directory}/wlp</arquillian.liberty.wlpHome>
                             </systemPropertyVariables>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-
-        <profile>
-            <id>payara-docker</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>io.fabric8</groupId>
-                        <artifactId>docker-maven-plugin</artifactId>
-                        <version>0.39.1</version>
-                        <configuration>
-                            <images>
-                                <image>
-                                    <alias>payara</alias>
-                                    <name>tck-samples/${project.artifactId}:payara</name>
-                                    <build>
-                                        <maintainer>Ivar Grimstad (ivar.grimstad@gmail.com)</maintainer>
-                                        <from>payara/server-web:163</from>
-                                        <assembly>
-                                            <basedir>/opt/payara41/glassfish/domains/domain1/autodeploy/</basedir>
-                                            <descriptorRef>artifact</descriptorRef>
-                                        </assembly>
-                                        <entryPoint>
-                                            <arg>/opt/payara41/bin/asadmin</arg>
-                                            <arg>start-domain</arg>
-                                            <arg>-v</arg>
-                                        </entryPoint>
-                                    </build>
-                                    <run>
-                                        <ports>
-                                            <port>8089:8080</port>
-                                        </ports>
-                                    </run>
-                                </image>
-                            </images>
                         </configuration>
                     </plugin>
                 </plugins>
