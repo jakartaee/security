@@ -1,0 +1,163 @@
+[[authorization-constraints]]
+== Authorization Constraints
+
+This chapter describes how applications specify authorization constraints for resources.
+
+Authorization constraints define whether access to an application resource is unrestricted, denied, or restricted to callers in one or more roles. The constraints described in this chapter are independent from the authentication mechanism used to establish the caller identity. Authentication establishes who the caller is; authorization constraints define whether that caller is permitted to access a resource.
+
+Jakarta EE defines several resource types for which authorization constraints can be specified. Servlet resources can be constrained by the deployment descriptor, by Servlet security annotations, and by programmatic Servlet configuration. Enterprise bean methods can be constrained using `@RolesAllowed`, `@PermitAll`, and `@DenyAll`.
+
+This specification additionally defines the meaning of `@RolesAllowed`, `@PermitAll`, and `@DenyAll` when they are applied to Jakarta REST resource classes and resource methods.
+
+
+=== Servlet constraints
+
+Servlet authorization constraints are defined by the Jakarta Servlet specification.
+
+A Jakarta Security implementation MUST preserve the behavior required by the Servlet specification for constraints defined by:
+
+* `web.xml` security constraints;
+* Servlet security annotations such as `@ServletSecurity`;
+* programmatic Servlet registration and security configuration;
+* role declarations made through the Servlet API.
+
+In the default configuration this behavior is provided via delegation to the default Policy of Jakarta Authorization.
+
+NOTE: A future version of the Servlet specification may deprecate the Servlet native syntax and API for declaring security constraints and fully put this responsibility in the hands of Jakarta Security.
+
+
+=== Enterprise bean constraints
+
+Enterprise bean authorization constraints are defined by the Jakarta Enterprise Beans and Jakarta Interceptors specifications, as applicable.
+
+A Jakarta Security implementation MUST preserve the behavior required by the Jakarta Enterprise Beans specification for constraints defined by:
+
+* `ejb-jar.xml` security constraints;
+* the common annotations `@RolesAllowed`, `@PermitAll`, and `@DenyAll`.
+
+In the default configuration this behavior is provided via delegation to the default Policy of Jakarta Authorization.
+
+
+=== Jakarta REST resource constraints
+
+Jakarta REST does not define its own syntax or API for securing REST resources. Instead, a Jakarta EE container that supports Jakarta Security and Jakarta REST MUST support the use of the following annotations as authorization constraints on Jakarta REST resource classes and resource methods:
+
+* `jakarta.annotation.security.RolesAllowed`
+* `jakarta.annotation.security.PermitAll`
+* `jakarta.annotation.security.DenyAll`
+
+These annotations define access constraints for Jakarta REST resource methods after Jakarta REST has matched the incoming request to a resource method.
+
+
+==== Resource method and resource class constraints
+
+A Jakarta REST resource method MAY be annotated with `@RolesAllowed`, `@PermitAll`, or `@DenyAll`.
+
+A Jakarta REST resource class MAY be annotated with `@RolesAllowed`, `@PermitAll`, or `@DenyAll`.
+
+A method-level annotation takes precedence over a class-level annotation. If a resource method has one of these annotations, the method-level annotation alone determines the Jakarta REST authorization constraint for that resource method.
+
+If a resource method does not have one of these annotations, and the resource class has one of these annotations, the class-level annotation determines the Jakarta REST authorization constraint for that resource method.
+
+If neither the resource method nor the resource class has one of these annotations, this specification does not define a Jakarta REST authorization constraint for that resource method. The resource may still be constrained by other applicable mechanisms, including Servlet constraints.
+
+If more than one of `@RolesAllowed`, `@PermitAll`, and `@DenyAll` is present at the same annotation target, deployment SHOULD fail. If deployment does not fail, the container MUST use the following precedence order:
+
+. `@DenyAll`
+. `@PermitAll`
+. `@RolesAllowed`
+
+
+==== `@DenyAll`
+
+A Jakarta REST resource method constrained by `@DenyAll` MUST NOT be accessible to any caller.
+
+When a request is matched to a resource method constrained by `@DenyAll`, the container MUST reject the request with a forbidden response. The response status MUST be 403.
+
+The container MUST NOT attempt to authenticate the caller solely because a matched Jakarta REST resource method is constrained by `@DenyAll`.
+
+
+==== `@PermitAll`
+
+A Jakarta REST resource method constrained by `@PermitAll` imposes no Jakarta REST role requirement on the caller.
+
+When a request is matched to a resource method constrained by `@PermitAll`, the Jakarta REST resource constraint MUST permit the request to proceed without requiring the caller to authenticate.
+
+`@PermitAll` does not override Servlet constraints, transport guarantees, or other applicable authorization constraints. If another applicable constraint requires authentication or denies access, that constraint MUST still be satisfied.
+
+According to the rules for Jakarta Security authentication mechanisms, the container MUST allow an authentication mechanism to authenticate anyway. This includes preemptive authentication, where the authentication mechanism itself decides, for example on the basis of credentials being present in the request, to authenticate the current caller even when authentication is not mandatory.
+
+If the caller has already been authenticated by another mechanism or by a previous step in request processing, the authenticated caller identity remains available according to the normal rules of the container.
+
+
+==== `@RolesAllowed`
+
+A Jakarta REST resource method constrained by `@RolesAllowed` MUST be accessible only to callers that are in at least one of the roles named by the annotation.
+
+When a request is subject to a resource method constrained by `@RolesAllowed`, and no caller identity has been established for the request, the container MUST cause the Jakarta Security authentication mechanism in service for the web application to be invoked before the resource method is invoked.
+
+If authentication does not complete successfully, the request MUST NOT proceed to the resource method. The response status and challenge, redirect, or other authentication dialog are determined by the authentication mechanism. For challenge-based mechanisms this will typically be an unauthorized response.
+
+If authentication establishes a caller identity, or if a caller identity had already been established before the Jakarta REST authorization check, the container MUST determine whether the caller is in at least one of the roles named by `@RolesAllowed`.
+
+If the caller is in at least one of the roles named by `@RolesAllowed`, the Jakarta REST resource constraint is satisfied.
+
+If the caller is not in any of the roles named by `@RolesAllowed`, the container MUST reject the request with a forbidden response. The response status MUST be 403.
+
+The role check MUST use the container's normal role-mapping rules. Groups or principals established by an `IdentityStore` participate in this role check in the same way as groups or principals established by other Jakarta Security authentication mechanisms.
+
+
+==== Empty role list
+
+If `@RolesAllowed` is present with an empty role list, the resource method is constrained but no role can satisfy the constraint.
+
+A container MUST treat an empty `@RolesAllowed` role list as equivalent to `@DenyAll`.
+
+==== Role declaration
+
+Roles named by `@RolesAllowed` on Jakarta REST resource classes or resource methods are application roles for the web application.
+
+The container MUST make these role names available to the role-mapping mechanism used for the application. This MAY be done by declaring the roles through the Servlet role declaration mechanism, by adding the roles directly to the authorization policy model, or by any other mechanism that produces equivalent role-mapping behavior.
+
+
+==== Jakarta REST matching and Servlet matching
+
+Before Jakarta REST matching occurs, the Servlet container can determine only the Servlet target to which the request is routed. For a Jakarta REST application deployed through a Servlet, this means that the Servlet mapping determines whether the request is dispatched to Jakarta REST. The Jakarta REST resource class, resource method, and URI template variables are not known until Jakarta REST performs its own resource matching.
+
+The effective Jakarta REST resource constraint is determined after Jakarta REST has matched the request to a resource method. An implementation MAY make an equivalent determination earlier only where it can do so without changing the observable authorization result.
+
+A Servlet constraint that applies to the Servlet path used by a Jakarta REST application continues to apply before Jakarta REST resource matching. A Jakarta REST resource constraint applies to the matched Jakarta REST resource method.
+
+If both a Servlet constraint and a Jakarta REST resource constraint apply to a request, both constraints MUST be satisfied.
+
+
+==== Integration with the web authorization policy
+
+A Jakarta Security implementation MUST make Jakarta REST resource constraints available to the web authorization system before the Jakarta REST resource method is invoked.
+
+For Jakarta REST resources whose effective resource path can be represented faithfully as a Servlet context-relative URL pattern, the implementation MUST translate `@DenyAll`, `@PermitAll`, and `@RolesAllowed` into web resource permissions equivalent to excluded, unchecked, and per-role web permissions respectively.
+
+When this translation is performed:
+
+* `@DenyAll` MUST be translated to an excluded permission.
+* `@PermitAll` MUST be translated to an unchecked permission.
+* `@RolesAllowed` MUST be translated to one per-role permission entry for each role named by the annotation.
+* The HTTP method represented by the Jakarta REST resource method MUST be reflected in the generated permission.
+* The generated resource name MUST be relative to the Servlet context path and MUST take into account the Servlet mapping through which the Jakarta REST application is reached.
+
+As an exception for this milestone version of the specification, if the Jakarta REST resource path cannot be represented faithfully as a web URL pattern, for example because it contains URI template variables, the implementation MAY defer enforcement of that specific constraint to Jakarta REST request processing instead of translating that specific constraint into the web authorization policy.
+
+NOTE: This is a temporary solution for this milestone version of the specification. A later milestone is expected to introduce new permission types for Jakarta REST resource paths that cannot be represented faithfully as Servlet URL patterns.
+
+
+==== Implementation integration
+
+A container MUST integrate Jakarta REST resource constraints into the container's web authorization policy model. A container MAY additionally register Jakarta REST request filters to enforce the same constraints after Jakarta REST resource matching.
+
+When Jakarta REST request filters are used as part of the implementation, the filters MUST run at the Jakarta REST authorization stage.
+
+An implementation MUST ensure that `@PermitAll` on a Jakarta REST resource does not itself force authentication. This is necessary so that token-based authentication mechanisms can distinguish an unprotected request without credentials from a protected request without credentials.
+
+An implementation MUST ensure that `@RolesAllowed` can cause authentication to be attempted when the caller is not yet authenticated and the matched Jakarta REST resource method requires a role.
+
+An implementation MUST ensure that `@DenyAll` rejects access without requiring authentication.

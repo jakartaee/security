@@ -36,5 +36,9 @@ include::identityStore.adoc[]
 
 include::securityContext.adoc[]
 
+include::authorization-constraints.adoc[]
+
+include::web-requests-security-processing.adoc[]
+
 include::bibliography.adoc[]
 

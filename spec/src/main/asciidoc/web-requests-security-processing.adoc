@@ -1,0 +1,116 @@
+[appendix]
+[[web-request-security-processing]]
+== Web Request Security Processing Model
+
+This appendix illustrates how Jakarta Security, Jakarta Authentication, and Jakarta Authorization interact during web request processing when an `HttpAuthenticationMechanism` is in service and the runtime is Jakarta Authorization-compatible.
+
+
+. The container establishes the request's web module security context.
++
+In a Jakarta Authorization-compatible runtime, this includes establishing
+the `PolicyContext` identifier corresponding to the web module.
+
+. The container evaluates transport or connection requirements.
++
+In a Jakarta Authorization-compatible runtime, this is a
+`WebUserDataPermission` check using the active Authorization policy.
+
+. If transport or connection requirements are not satisfied, the container
+rejects the request or redirects it according to Servlet transport rules
+and does not invoke `validateRequest` for authentication.
+
+. The container determines whether the request is allowed for an
+unauthenticated caller.
++
+In a Jakarta Authorization-compatible runtime, this determination is made
+by asking the active Authorization policy whether the `WebResourcePermission`
+corresponding to the request is granted to an unauthenticated caller.
++
+The unauthenticated caller is represented by the container's
+unauthenticated-caller `Subject`, or by an empty `Subject` or principal set
+where that is the container's representation.
++
+This check is made against the effective active policy. Therefore, a custom
+Authorization policy can grant the `WebResourcePermission` to an
+unauthenticated caller even when the original Servlet metadata contained an
+`auth-constraint` for the resource.
+
+. The result of the unauthenticated `WebResourcePermission` check determines
+whether authentication is mandatory.
++
+If the active Authorization policy grants the `WebResourcePermission` to the
+unauthenticated caller, authentication is not mandatory.
++
+If the active Authorization policy does not grant the `WebResourcePermission`
+to the unauthenticated caller, authentication is mandatory unless the
+container has already determined that the resource is excluded and must be
+rejected independently of authentication.
++
+Stated differently: in a Jakarta Authorization-compatible runtime, the
+custom Authorization policy can set the unauthenticated outcome. A grant to
+the unauthenticated caller prevents the container from forcing a `401`
+merely because the original Servlet metadata was role-constrained.
+
+. The container conveys the mandatory-authentication state to Jakarta
+Authentication.
++
+The `MessageInfo` map and request policy must reflect this state. Through
+the Jakarta Security bridge, `HttpMessageContext.isProtected()` must expose
+the same state to the `HttpAuthenticationMechanism`.
+
+. The container invokes Jakarta Authentication `validateRequest`.
++
+If a Jakarta Security `HttpAuthenticationMechanism` is in service, it is
+invoked through the bridge `ServerAuthModule`.
++
+`validateRequest` is invoked for every request to which the Servlet security
+model applies and whose connection requirements are satisfied, including
+requests for which authentication is not mandatory.
+
+. If `validateRequest` returns anything other than `AuthStatus.SUCCESS`, the
+container stops request processing.
++
+The request is not dispatched to the target resource.
+
+. If `validateRequest` returns `AuthStatus.SUCCESS`, the container establishes
+the request authentication results.
++
+`HttpServletRequest.getUserPrincipal()`, `getRemoteUser()`, `getAuthType()`,
+and Jakarta Security `SecurityContext` must represent the caller identity
+established by Jakarta Authentication.
++
+For an optional-authentication request where no credentials were supplied and
+the mechanism returns `SUCCESS` without authenticating a caller, the
+established caller remains the unauthenticated caller.
+
+. The container performs the final pre-dispatch resource authorization
+decision.
++
+In a Jakarta Authorization-compatible runtime, this is a
+`WebResourcePermission` check using the `Subject` established by Jakarta
+Authentication.
++
+If no authenticated identity was established, this final check is still made
+with the unauthenticated caller `Subject` or principal set.
++
+Consequently, if the custom Authorization policy grants the
+`WebResourcePermission` to the unauthenticated caller, the final authorization
+check succeeds and the request is dispatched.
+
+. If the final `WebResourcePermission` check is denied, the request is not
+dispatched.
++
+The container completes the response according to Servlet and Jakarta
+Authentication rules. Depending on the point of failure and whether
+authentication was mandatory, this may be a challenge, a forbidden response,
+or another Servlet-defined error outcome.
+
+. If the final `WebResourcePermission` check is granted, the request is
+dispatched to the filter chain and target resource.
+
+. After normal completion of the invocation, the container invokes
+`secureResponse` on the same Jakarta Authentication `ServerAuthContext` and
+with the same `MessageInfo` used for `validateRequest`.
+
+. After request processing completes, the container restores or clears any
+request-associated security context state.
