@@ -145,6 +145,8 @@ A Jakarta EE container MUST support built-in beans for the following _HttpAuthen
 * BASIC - Authenticates according to the mechanism as described in 13.6.1, "HTTP Basic Authentication", in [https://jakarta.ee/specifications/servlet/6.0/[SERVLET60]]. See also RFC 7617, "The 'Basic' HTTP Authentication Scheme" [https://tools.ietf.org/html/rfc7617[RFC7617]]. This bean is activated and configured via the _@BasicAuthenticationMechanismDefinition_ annotation.
 * FORM - Authenticates according to the mechanism as described in 13.6.3, "Form Based Authentication", in [https://jakarta.ee/specifications/servlet/6.0/[SERVLET60]]. This bean is activated and configured via the _@FormAuthenticationMechanismDefinition_ annotation.
 * Custom FORM - A variant on FORM, with the difference that continuing the authentication dialog as described in [https://jakarta.ee/specifications/servlet/6.0/[SERVLET60]], section 13.6.3, step 3, and further clarified in section 13.6.3.1, does not happen by posting back to j_security_check, but by invoking _SecurityContext.authenticate()_ with the credentials the application collected. This bean is activated and configured via the _@CustomFormAuthenticationMechanismDefinition_ annotation.
+* JWT - Authenticates according to a JSON Web Token presented by the caller. The token is obtained from an HTTP request header or from a cookie, and is
+validated using an IdentityStore. This bean is activated and configured via the _@JwtAuthenticationMechanismDefinition_ annotation.
 * OpenID Connect - Authenticates according to the Authorization Code flow and Refresh tokens as defined by the OpenID Connect specification. See [https://openid.net/specs/openid-connect-core-1_0.html#CodeFlowAuth[OPENID10FLOW]] and [https://openid.net/specs/openid-connect-core-1_0.html#RefreshTokens[OPENID10REFRESH]]. This bean is activated and configured via the _@OpenIdAuthenticationMechanismDefinition_ annotation.
 
 All of these beans MUST have the scope _@ApplicationScoped_, as defined by the CDI specification.
@@ -221,6 +223,154 @@ public @interface CustomFormAuthenticationMechanismDefinition {
 
 See also the "<<LoginToContinue Annotation>>" and "<<Custom FORM Notes>>" sections below.
 
+==== JWT Annotation
+
+The following annotation is used to configure the built-in JWT authentication mechanism.
+
+[source,java]
+----
+@Retention(RUNTIME)
+@Target(TYPE)
+@Repeatable(JwtAuthenticationMechanismDefinition.List.class)
+public @interface JwtAuthenticationMechanismDefinition {
+
+    String configJwtTokenHeader() default "Authorization";
+
+    String configJwtTokenCookie() default "Bearer";
+
+    String acceptedIssuer();
+
+    String[] allowedAudience() default {};
+
+    String publicKey() default "";
+
+    String publicKeyLocation() default "/publicKey.pem";
+
+    String decryptKeyLocation() default "/privateKey.pem";
+
+    String keyAlgorithm() default "RSA-OAEP-256";
+
+    long tokenAge() default Long.MAX_VALUE;
+
+    long clockSkew() default 0;
+
+    long keyCacheTTL() default 300;
+
+    boolean enableNamespace() default false;
+
+    String customNamespace() default "";
+
+    boolean disableTypeVerification() default false;
+
+    Class[] qualifiers() default { JwtAuthenticationMechanism.class };
+
+    @Retention(RUNTIME)
+    @Target(TYPE)
+    public @interface List {
+        JwtAuthenticationMechanismDefinition[] value();
+    }
+
+    @Qualifier
+    @Retention(RUNTIME)
+    @Target({ FIELD, METHOD, TYPE, PARAMETER })
+    public static @interface JwtAuthenticationMechanism {
+        public static final class Literal
+                extends AnnotationLiteral<JwtAuthenticationMechanism>
+                implements JwtAuthenticationMechanism {
+
+            public static final Literal INSTANCE = new Literal();
+        }
+    }
+}
+----
+
+The _configJwtTokenHeader_ attribute identifies the request header from which the token is obtained. If this value is `"Authorization"`, the mechanism obtains the token from the Authorization request header using the Bearer authentication scheme.
+
+The _configJwtTokenCookie_ attribute identifies the request cookie from which the token is obtained when cookie-based token transport is used.
+
+The _acceptedIssuer_ attribute identifies the issuer value that accepted tokens must contain. The _allowedAudience_ attribute identifies accepted audiences. If no accepted audience is configured, the audience claim is not used to reject the token.
+
+The _publicKey_ and _publicKeyLocation_ attributes configure the key material used for signature verification. The _decryptKeyLocation_ and _keyAlgorithm_ attributes configure key material and algorithm selection for encrypted tokens.
+
+The _tokenAge_ and _clockSkew_ attributes configure time-based token validation. The _keyCacheTTL_ attribute configures caching of key material loaded from a location.
+
+The _enableNamespace_, _customNamespace_, and _disableTypeVerification_ attributes configure claim-name handling and token type verification.
+
+The _qualifiers_ attribute behaves as described for the other built-in authentication mechanism definition annotations.
+
+===== Behavior
+
+The JWT authentication mechanism authenticates a caller by obtaining a JSON Web Token from the HTTP request and validating that token through the IdentityStoreHandler using an IdentityStore capable of validating JWT credentials.
+
+When _configJwtTokenHeader_ is set to `"Authorization"`, the mechanism MUST look for an Authorization request header whose value starts with `"Bearer "`. The token value is the part of the header value following `"Bearer "`.
+
+When cookie-based token transport is configured, the mechanism MUST obtain the token from the cookie identified by _configJwtTokenCookie_.
+
+If no token is present and the requested resource is protected, as reflected by _HttpMessageContext.isProtected()_, the mechanism MUST send an unauthorized response and MUST set a `WWW-Authenticate` response header using the Bearer authentication scheme. The realm value SHOULD identify the current application. If the current application has no non-root context path, the value `"application"` SHOULD be used.
+
+If no token is present and the requested resource is not protected, the mechanism MUST perform no authentication action.
+
+If a token is present, the mechanism MUST validate the token using an IdentityStore. The token MUST be passed to the IdentityStore as a Credential representing the JWT. The concrete Credential type is implementation specific in this version of the specification.
+
+If the IdentityStore returns a valid result, the mechanism MUST notify the container about the authenticated caller using the caller principal and groups returned by the IdentityStore.
+
+If the IdentityStore does not return a valid result, the mechanism MUST send an unauthorized response.
+
+===== Token validation
+
+_The token validation requirements in this section define the behavior of the JWT-capable IdentityStore used by the built-in JWT authentication mechanism. A later version of this specification may move these requirements to the Identity Store chapter if the JWT Credential and JWT IdentityStore contracts are generalized for use by other mechanisms._
+
+The validation rules defined here are intended to provide compatibility with the MicroProfile JWT authentication profile. Implementations MUST support the MP-JWT required claim set, principal-name selection rules, token rejection rules, token transport modes, and required cryptographic algorithms described in this section.
+
+A Jakarta Security implementation that provides the built-in JWT authentication mechanism MUST also provide, or otherwise make available, an IdentityStore capable of validating the JWT Credential used by that mechanism.
+
+The JWT validation requirements in this section are intentionally aligned with the MicroProfile JWT authentication profile, so that JWTs accepted by the Jakarta Security JWT authentication mechanism follow the same baseline token format, signature, encryption, caller-principal, and group-claim conventions.
+
+The IdentityStore MUST reject a token that cannot be parsed, whose signature cannot be verified, whose encrypted content cannot be decrypted, or whose required claims cannot be validated.
+
+The token MUST contain the following claims:
+
+* `iss`
+* `iat`
+* `exp`
+
+The token MUST also contain at least one of the following claims:
+
+* `upn`
+* `preferred_username`
+* `sub`
+
+The caller principal name MUST be derived from the first available string claim in the following order:
+
+* `upn`
+* `preferred_username`
+* `sub`
+
+If none of these claims is present, or if the selected claim is not a string, the token MUST be rejected.
+
+The issuer claim, `iss`, MUST match _acceptedIssuer_.
+
+If _allowedAudience_ is non-empty, the IdentityStore MUST reject a token whose audience claim, `aud`, does not contain at least one configured accepted audience.
+
+The IdentityStore MUST validate the token expiration time, `exp`, and issued-at time, `iat`. The token MUST be rejected if it has expired, taking _clockSkew_ into account. The token MUST be rejected if `iat` is later than `exp`.
+
+If _tokenAge_ is configured to a value greater than zero and other than `Long.MAX_VALUE`, the IdentityStore MUST reject a token whose age exceeds _tokenAge_, taking _clockSkew_ into account.
+
+The caller's groups MUST be derived from the token's `groups` claim when that claim is present. If the `groups` claim is absent, the token MAY still be accepted, but no caller groups are established from the JWT.
+
+For signed JWTs, implementations MUST support the `RS256` and `ES256` JWS algorithms. A signed token using any other algorithm MUST be rejected unless the implementation explicitly supports that algorithm and is configured to accept it.
+
+For encrypted JWTs, implementations MUST support the `RSA-OAEP` and `RSA-OAEP-256` JWE key management algorithms and the `A256GCM` JWE content encryption algorithm. An encrypted token using any other key management or content encryption algorithm MUST be rejected unless the implementation explicitly supports that algorithm and is configured to accept it.
+
+An encrypted JWT MUST contain either the claims directly or a nested signed JWT. If the encrypted JWT contains a nested signed JWT, the nested signed JWT MUST satisfy the signed-token requirements in this section.
+
+If _keyAlgorithm_ is non-empty, an encrypted token MUST use the configured key management algorithm.
+
+If _disableTypeVerification_ is false, the IdentityStore MUST verify the token type according to the token form being processed. A signed JWT SHOULD use a JOSE `typ` header value of `"JWT"`. An encrypted JWT that contains a nested signed JWT MUST use a JOSE `cty` header value of `"JWT"`.
+
+The public key material used for signature verification is configured using _publicKey_ or _publicKeyLocation_. Private key material used for decryption is configured using _decryptKeyLocation_. Key material loaded from a location MAY be cached according to _keyCacheTTL_.
+
+If _enableNamespace_ is true, the IdentityStore MUST apply the configured namespace rules when resolving claims. If _customNamespace_ is non-empty, the IdentityStore MUST use that namespace when resolving claims.
 
 ==== OpenID Connect Annotation
 
