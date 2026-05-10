@@ -58,6 +58,98 @@ This sub-repo contains working applications that demonstrate and test various as
   * Test URL: http://localhost:8080/app-securitycontext-auth/servlet?name=rezax (fails authentication via exception)
   * Test URL: http://localhost:8080/app-securitycontext-auth/servlet?name=rezax (fails authentication via status return code)
 
+## Running tests in parallel (`mvn -T<N>`)
+
+The default `mvn verify` already uses the GlassFish pool (provisioned by
+`glassfish-pool-maven-plugin`, started/cloned per slot, leased by each test
+JVM). Adding `-T<N>` runs reactor modules in parallel and is a large
+wall-clock win, 10x faster on average.
+
+The pool itself is parallel-safe (`PoolBootstrap.up` is JVM-wide synchronized
++ idempotent, slot leasing uses `FileChannel.tryLock`), but test modules
+have to follow a few rules to be `-T`-safe. Existing modules already comply;
+when adding a new one, check the points below.
+
+### 1. No global JNDI collisions
+
+Each test JVM gets a fresh `@Deployment` (Arquillian deploys → runs → undeploys),
+but a single pool slot's GlassFish JVM hosts many such deploys sequentially over
+its lifetime. Resource definitions (`@DataSourceDefinition`, etc.) bound under
+`java:global/<name>` are visible to GF's connector subsystem across deploys,
+so two modules using the same `java:global/<name>` can race through CDI bean
+discovery + JCA registration. Suffix the name with the module identifier so
+each module owns its own JNDI namespace.
+
+```java
+// BAD — every app-db-* module would share the same binding
+@DataSourceDefinition(name = "java:global/securityAPIDB", ...)
+
+// GOOD — module-suffixed
+@DataSourceDefinition(name = "java:global/securityAPIDB-priorityuseforexpr", ...)
+```
+
+The matching `@Resource(lookup = ...)` and any
+`@DatabaseIdentityStoreDefinition(dataSourceLookup = ...)` need to use the
+same suffixed name.
+
+### 2. No host-port collisions across modules
+
+Modules that start an embedded server bound to `localhost:<port>` (UnboundID
+LDAP, Tomcat for the Mitre OP, …) must each pick a distinct port. Under `-T`
+two modules on the same port fight: only one binds, the other silently
+fails, and tests get cryptic 500s or HTTP timeouts.
+
+Conventions in use:
+
+- LDAP modules: 33389 (`app-ldap`), 33390 (`app-ldap2`), 33391 (`app-ldap3`),
+  12389-12413 for `app-ldap-*`. Pick the next free integer when adding one.
+- Tomcat (Mitre OP) modules: 8443 + 8005 (`app-openid2`), 8444 + 8006
+  (`app-openid3`). Pick another (8445/8007, …) for any new openid-with-Mitre
+  module, and keep `server.xml` + the `ProtectedServlet` `providerURI`
+  annotation + the antrun `<replace token="http://localhost:8080" value="…">`
+  in sync.
+
+### 3. No assumption that GF runs on a known port
+
+Pool slots get ports from `adminBase + (slot-1) * portStride` (default
+14848 + N*100), and a test JVM may lease any slot. Do NOT hardcode a slot's
+HTTP/HTTPS port in app code. Use `@ArquillianResource URL base` for the
+deployed-app URL; for outbound URLs that have to be configured at deployment
+time (e.g. Soteria's `OpenIdAuthenticationMechanismDefinition.providerURI`),
+use an EL expression backed by a `@RequestScoped`/`@Dependent` CDI bean that
+reads `request.getServerName()/getServerPort()` at request time —
+`app-openid`'s `OpenIdConfig.getProviderURI()` is the reference.
+
+### 4. Pre-register every slot when an external service validates redirect URIs
+
+When a third-party server (e.g. Mitre OP) validates redirect URIs against a
+fixed allowlist, register one entry per *possible* slot. The openid-client
+deployment may end up on slot 1, 2, … N, and Mitre rejects any redirect URI
+not pre-registered. `app-openid2`/`app-openid3`'s antrun loops slot
+1..`${session.request.degreeOfConcurrency}` into `clients.sql` using the
+pool's `adminBase` + `portStride` — that property is Maven's `-TN` value
+(defaults to 1) and is also the upper bound on how far the pool can grow,
+since each Maven thread leases at most one slot at a time.
+
+### 5. Wipe Tomcat `work/` before startup
+
+If a module starts its own Tomcat in pre-integration-test, add
+`<delete dir="${tomcat.dir}/work" quiet="true"/>` to the antrun *before*
+`startup.sh`. Tomcat's `StandardManager` persists HTTP sessions to
+`work/Catalina/localhost/<webapp>/SESSIONS.ser` on shutdown and rehydrates
+them at startup; without the wipe, a re-run without `mvn clean` resurrects
+the previous run's sessions and can skip flows the test depends on (e.g.
+the OpenID consent page).
+
+### 6. Don't race on shared paths in a `<plugins>` execution
+
+Anything inheritable that writes to `${maven.multiModuleProjectDirectory}/…`
+runs once per module under `-T` and races. The parent's source-staging step
+uses a `mkdir`-based lock + marker file inside an `antrun` so first-acquirer
+does the work and others fast-exit; copy that pattern for any new shared
+preparation. Plain `maven-dependency-plugin:unpack` into a shared directory
+is NOT thread-safe for the first-extraction window even with markers.
+
 ## Running the TCK in Docker
 
 (needs updating to recent versions)

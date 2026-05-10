@@ -132,14 +132,29 @@
                                 <replace token="http://localhost:8080" value="https://localhost:8443" dir="${tomcat.dir}/webapps/openid-connect-server-webapp/WEB-INF" summary="yes">
                                     <include name="server-config.xml" />
                                 </replace>
-                                <replace token="http://localhost/" value="http://localhost:8080/openid-client/Callback" dir="${tomcat.dir}/webapps/openid-connect-server-webapp/WEB-INF/classes/db/hsql" summary="yes">
-                                    <include name="clients.sql" />
-                                </replace>
+                                <!-- 
+									 Register the openid-client Callback URL for every slot the
+                                     pool may grow to (= ${maven.degreeOfConcurrency}, ie -TN).
+                                     Mitre rejects redirect_uris not pre-registered, and the
+                                     openid-client may land on any leased slot. Slot N's HTTP
+                                     port = adminBase + (N-1)*portStride + 1.
+                                -->
+                                <exec executable="bash" failonerror="true">
+                                    <arg value="-c"/>
+                                    <arg value="set -e; F='${tomcat.dir}/webapps/openid-connect-server-webapp/WEB-INF/classes/db/hsql/clients.sql'; awk -v base=${gf.pool.adminBase} -v stride=${gf.pool.portStride} -v slots=${maven.degreeOfConcurrency} -v marker=&quot;'http://localhost/'&quot; 'index($0, marker) { for (i=1; i&lt;=slots; i++) { port = base + (i-1)*stride + 1; printf &quot;\t(%cclient%c, %chttp://localhost:%d/openid-client/Callback%c),\n&quot;, 39, 39, 39, port, 39 } next } { print }' &quot;$F&quot; &gt; &quot;${F}.new&quot; &amp;&amp; mv &quot;${F}.new&quot; &quot;$F&quot;"/>
+                                </exec>
                                 
                                 <copy file="server.xml" todir="${tomcat.dir}/conf" verbose="true" overwrite="true" force="true"/>
                                 <copy file="localhost-rsa.jks" todir="${tomcat.dir}/conf" verbose="true"/>
 
                                 <chmod dir="${tomcat.dir}/bin" perm="ugo+rx" includes="*" />
+
+                                <!--
+									 Drop Tomcat's persisted SESSIONS.ser so a re-run without
+                                     `mvn clean` doesn't resurrect Mitre's "client already
+                                     authorized" session and skip the consent page.
+                                -->
+                                <delete dir="${tomcat.dir}/work" quiet="true"/>
 
                                 <exec executable="${tomcat.dir}/bin/startup.sh" dir="${tomcat.dir}" >
                                     <env key="CATALINA_PID" value="${tomcat.pidfile}" />
@@ -172,42 +187,8 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>keytool-maven-plugin</artifactId>
-                <version>2.0.2</version>
-                <executions>
-                    <execution>
-                        <id>import-tomcat-cert</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>importCertificate</goal>
-                        </goals>
-                        <configuration>
-                            <file>${project.basedir}/tomcat.cert</file>
-                            <alias>tomcat</alias>
-                            <keystore>${trustStore.path}</keystore>
-                            <storepass>${trustStore.password}</storepass>
-                            <noprompt>true</noprompt>
-                            <trustcacerts>true</trustcacerts>
-                            <verbose>true</verbose>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>delete-tomcat-cert</id>
-                        <phase>post-integration-test</phase>
-                        <goals>
-                            <goal>deleteAlias</goal>
-                        </goals>
-                        <configuration>
-                            <alias>tomcat</alias>
-                            <keystore>${trustStore.path}</keystore>
-                            <storepass>${trustStore.password}</storepass>
-                            <verbose>true</verbose>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+
+            <!-- NOTE: Tomcat cert import lives in the parent pom (must run before pool:up clones the source GF). -->
         </plugins>
 
         <pluginManagement>

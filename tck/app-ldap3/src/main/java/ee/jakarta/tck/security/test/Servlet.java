@@ -30,7 +30,7 @@ import java.io.IOException;
  * this caller is in any of the roles {foo, bar, kaz}
  */
 @LdapIdentityStoreDefinition(
-    url = "ldap://localhost:33389/",
+    url = "ldap://localhost:33391/",
     bindDn = "uid=ldap,ou=apps,dc=jsr375,dc=net",
     bindDnPassword = "changeOnInstall",
     callerSearchBase = "dc=jsr375,dc=net",

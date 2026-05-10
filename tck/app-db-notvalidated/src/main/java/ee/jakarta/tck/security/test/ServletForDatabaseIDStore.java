@@ -33,7 +33,7 @@ import jakarta.servlet.http.HttpServletResponse;
  * credentials so any call to validate() returns NOT_VALIDATED.
  */
 @DatabaseIdentityStoreDefinition(
-    dataSourceLookup = "java:global/securityAPIDB",
+    dataSourceLookup = "java:global/securityAPIDB-notvalidated",
     callerQuery = "select password from caller where name = ?",
     groupsQuery = "select group_name from caller_groups where caller_name = ?",
     hashAlgorithm = TestPlaintextPasswordHash.class,

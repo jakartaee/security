@@ -22,7 +22,9 @@ import ee.jakarta.tck.security.test.server.OidcProvider;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Named
 @Dependent
@@ -34,6 +36,9 @@ public class OpenIdConfig {
     public static final String CLIENT_SECRET = "clientSecret";
 
     private Properties config;
+
+    @Inject
+    private HttpServletRequest request;
 
     @PostConstruct
     public void init() {
@@ -70,5 +75,15 @@ public class OpenIdConfig {
         }
 
         return OidcProvider.CLIENT_SECRET_VALUE;
+    }
+
+    /**
+     * Provider URI computed from the live request's host:port so the test runs
+     * against whatever HTTP listener the GlassFish slot has bound (the dist's
+     * default 8080, the pool's 14849, etc.) without recompiling.
+     */
+    public String getProviderURI() {
+        return "http://" + request.getServerName() + ":" + request.getServerPort()
+                + "/openid-server/webresources/oidc-provider-demo";
     }
 }

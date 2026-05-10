@@ -40,7 +40,7 @@ import javax.sql.DataSource;
  * reads parameters back from the encoded hash.
  */
 @DataSourceDefinition(
-    name = "java:global/securityAPIDB",
+    name = "java:global/securityAPIDB-hashalgorithmparam",
     className = "org.h2.jdbcx.JdbcDataSource",
     url = "jdbc:h2:~/SoteriaTestDB-db-hashalgorithmparam;DB_CLOSE_ON_EXIT=FALSE"
 )
@@ -48,7 +48,7 @@ import javax.sql.DataSource;
 @Startup
 public class DatabaseSetup {
 
-    @Resource(lookup = "java:global/securityAPIDB")
+    @Resource(lookup = "java:global/securityAPIDB-hashalgorithmparam")
     private DataSource dataSource;
 
     @PostConstruct

@@ -39,7 +39,7 @@ import jakarta.servlet.http.HttpServletResponse;
  * "two stores at different priorities" assertion semantics.
  */
 @DatabaseIdentityStoreDefinition(
-    dataSourceLookup = "java:global/securityAPIDB",
+    dataSourceLookup = "java:global/securityAPIDB-multi",
     callerQuery = "select password from caller where name = ?",
     groupsQuery = "select group_name from caller_groups where caller_name = ?",
     priority = 200,

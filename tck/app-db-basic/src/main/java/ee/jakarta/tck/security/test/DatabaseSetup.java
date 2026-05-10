@@ -30,7 +30,7 @@ import jakarta.ejb.Startup;
 import javax.sql.DataSource;
 
 @DataSourceDefinition(
-    name = "java:global/securityAPIDB",
+    name = "java:global/securityAPIDB-basic",
     className = "org.h2.jdbcx.JdbcDataSource",
     url = "jdbc:h2:~/SoteriaTestDB-db-basic;DB_CLOSE_ON_EXIT=FALSE"
 )
@@ -38,7 +38,7 @@ import javax.sql.DataSource;
 @Startup
 public class DatabaseSetup {
 
-    @Resource(lookup = "java:global/securityAPIDB")
+    @Resource(lookup = "java:global/securityAPIDB-basic")
     private DataSource dataSource;
 
     @PostConstruct

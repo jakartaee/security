@@ -34,6 +34,7 @@ import org.htmlunit.WebClient;
 import ee.jakarta.tck.security.test.client.CallbackServlet;
 import ee.jakarta.tck.security.test.client.UnsecuredServlet;
 import ee.jakarta.tck.security.test.client.UserNameServlet;
+import ee.jakarta.tck.security.test.client.defaulttests.OpenIdConfig;
 import ee.jakarta.tck.security.test.server.ApplicationConfig;
 import ee.jakarta.tck.security.test.server.OidcProvider;
 
@@ -81,6 +82,9 @@ public class OpenIdTestUtil {
                 .addClass(CallbackServlet.class)
                 .addClass(UnsecuredServlet.class)
                 .addClass(UserNameServlet.class)
+                // OpenIdConfig is the @Named CDI bean now backing every Secured*
+                // servlet's providerURI EL expression — needed by all client deployments.
+                .addClass(OpenIdConfig.class)
                 .addClasses(additionalClasses)
                 .addAsWebInfResource("beans.xml");
 

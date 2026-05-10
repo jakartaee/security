@@ -41,7 +41,7 @@ import javax.sql.DataSource;
  * and key sizes so {@code verify(...)} reads them per row.
  */
 @DataSourceDefinition(
-    name = "java:global/securityAPIDB",
+    name = "java:global/securityAPIDB-hashalgorithm",
     className = "org.h2.jdbcx.JdbcDataSource",
     url = "jdbc:h2:~/SoteriaTestDB-db-hashalgorithm;DB_CLOSE_ON_EXIT=FALSE"
 )
@@ -49,7 +49,7 @@ import javax.sql.DataSource;
 @Startup
 public class DatabaseSetup {
 
-    @Resource(lookup = "java:global/securityAPIDB")
+    @Resource(lookup = "java:global/securityAPIDB-hashalgorithm")
     private DataSource dataSource;
 
     @PostConstruct
