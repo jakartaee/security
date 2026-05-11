@@ -680,17 +680,12 @@
                     </plugin>
 
                     <!--
-						 Stage the source GF before pool:up clones slots:
-                         (a) unzip the dist (pool plugin's own unpack is disabled — see
-                             gf.pool.unpack.skip);
-                         (b) import the Mitre cert into cacerts.p12 — must be in the
-                             truststore at GF startup since the default SSLContext is
-                             loaded once and never reloads from disk;
-                         (c) set -Djavax.net.ssl.trustStorePassword on the GF JVM via
-                             domain.xml — the PKCS12 truststore reads zero trust anchors
-                             without it.
-                         Inherited because Maven -T schedules parent and children in
-                         parallel; the lock + marker make the work happen exactly once.
+						 Stage the source GF before pool:up clones slots: unzip the dist
+                         and import the Mitre cert into cacerts.p12. The cert must be in
+                         the truststore at GF startup since the default SSLContext is
+                         loaded once and never reloads from disk. Inherited because Maven
+                         -T schedules parent and children in parallel; the lock + marker
+                         make the work happen exactly once.
                     -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -705,7 +700,7 @@
                                     <target>
                                         <exec executable="bash" failonerror="true">
                                             <arg value="-c"/>
-                                            <arg value="set -e; mkdir -p '${gf.pool.dist}'; LOCK='${gf.pool.dist}/.staging.lock.d'; MARKER='${gf.pool.dist}/.staging.done'; while ! mkdir &quot;$LOCK&quot; 2&gt;/dev/null; do sleep 0.2; done; trap 'rmdir &quot;$LOCK&quot;' EXIT; if [ -f &quot;$MARKER&quot; ]; then exit 0; fi; ZIP='${settings.localRepository}/org/glassfish/main/distributions/glassfish/${glassfish.version}/glassfish-${glassfish.version}.zip'; cd '${gf.pool.dist}'; unzip -q -o &quot;$ZIP&quot;; K='${gf.pool.source}/glassfish/domains/domain1/config/cacerts.${trustStore.suffix}'; C='${maven.multiModuleProjectDirectory}/app-openid2/tomcat.cert'; D='${gf.pool.source}/glassfish/domains/domain1/config/domain.xml'; keytool -importcert -keystore &quot;$K&quot; -storepass changeit -alias tomcat -file &quot;$C&quot; -noprompt -trustcacerts; awk '/javax.net.ssl.trustStore=/{print; print &quot;        &lt;jvm-options&gt;-Djavax.net.ssl.trustStorePassword=changeit&lt;/jvm-options&gt;&quot;; next}1' &quot;$D&quot; &gt; &quot;${D}.new&quot; &amp;&amp; mv &quot;${D}.new&quot; &quot;$D&quot;; touch &quot;$MARKER&quot;"/>
+                                            <arg value="set -e; mkdir -p '${gf.pool.dist}'; LOCK='${gf.pool.dist}/.staging.lock.d'; MARKER='${gf.pool.dist}/.staging.done'; while ! mkdir &quot;$LOCK&quot; 2&gt;/dev/null; do sleep 0.2; done; trap 'rmdir &quot;$LOCK&quot;' EXIT; if [ -f &quot;$MARKER&quot; ]; then exit 0; fi; ZIP='${settings.localRepository}/org/glassfish/main/distributions/glassfish/${glassfish.version}/glassfish-${glassfish.version}.zip'; cd '${gf.pool.dist}'; unzip -q -o &quot;$ZIP&quot;; K='${gf.pool.source}/glassfish/domains/domain1/config/cacerts.${trustStore.suffix}'; C='${maven.multiModuleProjectDirectory}/app-openid2/tomcat.cert'; keytool -importcert -keystore &quot;$K&quot; -storepass changeit -alias tomcat -file &quot;$C&quot; -noprompt -trustcacerts; touch &quot;$MARKER&quot;"/>
                                         </exec>
                                     </target>
                                 </configuration>
@@ -716,6 +711,11 @@
                     <plugin>
                         <groupId>ee.omnifish.arquillian</groupId>
                         <artifactId>glassfish-pool-maven-plugin</artifactId>
+                        <configuration>
+                            <systemProperties>
+                                javax.net.ssl.trustStorePassword=${trustStore.password}
+                            </systemProperties>
+                        </configuration>
                         <executions>
                             <execution>
                                 <id>pool-up</id>
