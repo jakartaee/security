@@ -35,7 +35,7 @@ import jakarta.servlet.http.HttpServletResponse;
  * useFor {VALIDATE, PROVIDE_GROUPS}.
  */
 @DatabaseIdentityStoreDefinition(
-    dataSourceLookup = "java:global/securityAPIDB-priorityuseforexprbean",
+    dataSourceLookup = "java:global/securityAPIDB",
     callerQuery = "select password from caller where name = ?",
     groupsQuery = "select group_name from caller_groups where caller_name = ?",
     useFor = { ValidationType.VALIDATE },

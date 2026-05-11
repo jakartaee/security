@@ -40,7 +40,7 @@ import javax.sql.DataSource;
  * Pbkdf2 self-describing hash format.
  */
 @DataSourceDefinition(
-    name = "java:global/securityAPIDB-invalidhashalgorithmparam",
+    name = "java:global/securityAPIDB",
     className = "org.h2.jdbcx.JdbcDataSource",
     url = "jdbc:h2:~/SoteriaTestDB-db-invalidhashalgorithmparam;DB_CLOSE_ON_EXIT=FALSE"
 )
@@ -48,7 +48,7 @@ import javax.sql.DataSource;
 @Startup
 public class DatabaseSetup {
 
-    @Resource(lookup = "java:global/securityAPIDB-invalidhashalgorithmparam")
+    @Resource(lookup = "java:global/securityAPIDB")
     private DataSource dataSource;
 
     @PostConstruct

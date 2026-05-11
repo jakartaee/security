@@ -33,7 +33,7 @@ import jakarta.servlet.http.HttpServletResponse;
  * "Exception received." in the response body.
  */
 @DatabaseIdentityStoreDefinition(
-    dataSourceLookup = "java:global/securityAPIDB-invalidcallerquery",
+    dataSourceLookup = "java:global/securityAPIDB",
     callerQuery = "select invalid from caller where name = ?",
     groupsQuery = "select group_name from caller_groups where caller_name = ?",
     hashAlgorithm = TestPlaintextPasswordHash.class)

@@ -36,7 +36,7 @@ import jakarta.servlet.http.HttpServletResponse;
  * {@link IdentityStore1}.
  */
 @DatabaseIdentityStoreDefinition(
-    dataSourceLookup = "java:global/securityAPIDB-priorityuseforexpr",
+    dataSourceLookup = "java:global/securityAPIDB",
     callerQuery = "select password from caller where name = ?",
     groupsQuery = "select group_name from caller_groups where caller_name = ?",
     useFor = { ValidationType.VALIDATE },

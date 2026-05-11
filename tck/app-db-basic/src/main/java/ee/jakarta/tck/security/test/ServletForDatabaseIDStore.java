@@ -28,7 +28,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @DatabaseIdentityStoreDefinition(
-    dataSourceLookup = "java:global/securityAPIDB-basic",
+    dataSourceLookup = "java:global/securityAPIDB",
     callerQuery = "select password from caller where name = ?",
     groupsQuery = "select group_name from caller_groups where caller_name = ?",
     hashAlgorithm = TestPlaintextPasswordHash.class)

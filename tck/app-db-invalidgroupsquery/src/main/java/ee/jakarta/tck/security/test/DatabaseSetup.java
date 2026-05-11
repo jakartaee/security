@@ -30,7 +30,7 @@ import jakarta.ejb.Startup;
 import javax.sql.DataSource;
 
 @DataSourceDefinition(
-    name = "java:global/securityAPIDB-invalidgroupsquery",
+    name = "java:global/securityAPIDB",
     className = "org.h2.jdbcx.JdbcDataSource",
     url = "jdbc:h2:~/SoteriaTestDB-db-invalidgroupsquery;DB_CLOSE_ON_EXIT=FALSE"
 )
@@ -38,7 +38,7 @@ import javax.sql.DataSource;
 @Startup
 public class DatabaseSetup {
 
-    @Resource(lookup = "java:global/securityAPIDB-invalidgroupsquery")
+    @Resource(lookup = "java:global/securityAPIDB")
     private DataSource dataSource;
 
     @PostConstruct

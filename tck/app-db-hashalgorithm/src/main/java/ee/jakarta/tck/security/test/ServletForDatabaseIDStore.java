@@ -35,7 +35,7 @@ import jakarta.servlet.http.HttpServletResponse;
  * iterations, and salt/key sizes per row.
  */
 @DatabaseIdentityStoreDefinition(
-    dataSourceLookup = "java:global/securityAPIDB-hashalgorithm",
+    dataSourceLookup = "java:global/securityAPIDB",
     callerQuery = "select password from caller where name = ?",
     groupsQuery = "select group_name from caller_groups where caller_name = ?",
     hashAlgorithm = Pbkdf2PasswordHash.class)
