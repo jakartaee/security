@@ -214,6 +214,7 @@
              startup; pool-plugin's unpack would happen too late, hence we do it manually.
         -->
         <gf.pool.unpack.skip>true</gf.pool.unpack.skip>
+        <gf.pool.restartOnRelease>false</gf.pool.restartOnRelease>
 
         <buildDirectory>${project.basedir}/target</buildDirectory>
 
@@ -763,6 +764,7 @@
                                 <gf.pool.source>${gf.pool.source}</gf.pool.source>
                                 <gf.pool.adminBase>${gf.pool.adminBase}</gf.pool.adminBase>
                                 <gf.pool.portStride>${gf.pool.portStride}</gf.pool.portStride>
+                                <gf.pool.restartOnRelease>${gf.pool.restartOnRelease}</gf.pool.restartOnRelease>
                                 <javax.net.ssl.trustStore>${trustStore.path}</javax.net.ssl.trustStore>
                                 <javax.net.ssl.trustStorePassword>${trustStore.password}</javax.net.ssl.trustStorePassword>
                             </systemPropertyVariables>
