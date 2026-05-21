@@ -195,7 +195,7 @@
 
         <!-- GlassFish + arquillian-glassfish-server-pool wiring (used by glassfish-ci-managed) -->
         <glassfish.version>9.0.0-SNAPSHOT</glassfish.version>
-        <glassfish.arquillian.version>2.1.4-SNAPSHOT</glassfish.arquillian.version>
+        <glassfish.arquillian.version>2.2.0-SNAPSHOT</glassfish.arquillian.version>
         <security.api.update>false</security.api.update>
         <soteria.update>false</soteria.update>
         <soteria.version>5.0.0</soteria.version>
