@@ -192,7 +192,30 @@
         <licenseFile>${project.basedir}/LICENSE_EFTL.md</licenseFile>
         <security-api.version>5.0.0-SNAPSHOT</security-api.version>
         <arquillian.version>1.10.1.Final</arquillian.version>
-        
+
+        <!-- GlassFish + arquillian-glassfish-server-pool wiring (used by glassfish-ci-managed) -->
+        <glassfish.version>9.0.0-SNAPSHOT</glassfish.version>
+        <glassfish.arquillian.version>2.2.0</glassfish.arquillian.version>
+        <security.api.update>false</security.api.update>
+        <soteria.update>false</soteria.update>
+        <soteria.version>5.0.0</soteria.version>
+
+        <!-- GlassFish pool layout -->
+        <gf.pool.size>1</gf.pool.size>
+        <gf.pool.dir>${maven.multiModuleProjectDirectory}/target/pool</gf.pool.dir>
+        <gf.pool.dist>${maven.multiModuleProjectDirectory}/target/dist</gf.pool.dist>
+        <gf.pool.source>${gf.pool.dist}/glassfish9</gf.pool.source>
+        <gf.pool.adminBase>14848</gf.pool.adminBase>
+        <gf.pool.portStride>100</gf.pool.portStride>
+        <!--
+			 Source-staging is owned by the parent's antrun below (so it can also import
+             the Mitre cert into cacerts.p12 before the slot clone). GF caches the default
+             SSLContext on first SSL use, so the cert MUST be in the truststore at GF
+             startup; pool-plugin's unpack would happen too late, hence we do it manually.
+        -->
+        <gf.pool.unpack.skip>true</gf.pool.unpack.skip>
+        <gf.pool.restartOnRelease>false</gf.pool.restartOnRelease>
+
         <buildDirectory>${project.basedir}/target</buildDirectory>
 
         <!-- Used for OpenID testing with Mitre -->
@@ -400,6 +423,49 @@
                     <artifactId>maven-site-plugin</artifactId>
                     <version>3.21.0</version>
                 </plugin>
+                <plugin>
+                    <groupId>ee.omnifish.arquillian</groupId>
+                    <artifactId>glassfish-pool-maven-plugin</artifactId>
+                    <version>${glassfish.arquillian.version}</version>
+                    <configuration>
+                        <poolDir>${gf.pool.dir}</poolDir>
+                        <poolSource>${gf.pool.source}</poolSource>
+                        <poolSize>${gf.pool.size}</poolSize>
+                        <adminPortBase>${gf.pool.adminBase}</adminPortBase>
+                        <portStride>${gf.pool.portStride}</portStride>
+                        <stageDir>${gf.pool.dist}</stageDir>
+                        <unpackSkip>${gf.pool.unpack.skip}</unpackSkip>
+                        <distribution>
+                            <groupId>org.glassfish.main.distributions</groupId>
+                            <artifactId>glassfish</artifactId>
+                            <version>${glassfish.version}</version>
+                            <type>zip</type>
+                        </distribution>
+                        <overlays>
+                            <overlay>
+                                <groupId>jakarta.security.enterprise</groupId>
+                                <artifactId>jakarta.security.enterprise-api</artifactId>
+                                <version>${security-api.version}</version>
+                                <destFileName>jakarta.security-api.jar</destFileName>
+                                <skip>${security.api.noupdate}</skip>
+                            </overlay>
+                            <overlay>
+                                <groupId>org.glassfish.soteria</groupId>
+                                <artifactId>soteria</artifactId>
+                                <version>${soteria.version}</version>
+                                <destFileName>soteria.jar</destFileName>
+                                <skip>${soteria.noupdate}</skip>
+                            </overlay>
+                            <overlay>
+                                <groupId>org.glassfish.soteria</groupId>
+                                <artifactId>soteria.spi.bean.decorator.weld</artifactId>
+                                <version>${soteria.version}</version>
+                                <destFileName>soteria.spi.bean.decorator.weld.jar</destFileName>
+                                <skip>${soteria.noupdate}</skip>
+                            </overlay>
+                        </overlays>
+                    </configuration>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
@@ -457,6 +523,8 @@
                 <version>3.5.5</version>
                 <executions>
                     <execution>
+                        <id>aggregate-failsafe-report</id>
+                        <inherited>false</inherited>
                         <phase>post-integration-test</phase>
                         <goals>
                             <goal>failsafe-report-only</goal>
@@ -466,6 +534,26 @@
                 <configuration>
                     <aggregate>true</aggregate>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <!-- Override the cyclonedx execution inherited from org.eclipse.ee4j:project's 'sbom' profile to run once at root. Skip with -DskipSBOM. -->
+                <groupId>org.cyclonedx</groupId>
+                <artifactId>cyclonedx-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>default</id>
+                        <phase>none</phase>
+                    </execution>
+                    <execution>
+                        <id>aggregate-bom-root</id>
+                        <inherited>false</inherited>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>makeAggregateBom</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
@@ -496,24 +584,10 @@
             </activation>
 
             <properties>
-                <glassfish.version>9.0.0-SNAPSHOT</glassfish.version>
-                <glassfish.arquillian.version>2.1.3</glassfish.arquillian.version>
-                <glassfish.port>8080</glassfish.port>
-                <glassfish.dirName>glassfish9</glassfish.dirName>
-                <glassfish.root>${project.build.directory}</glassfish.root>
-                
-                <glassfish.home>${glassfish.root}/${glassfish.dirName}</glassfish.home>
-                <glassfish.javax.net.debug></glassfish.javax.net.debug>
-
-                <trustStore.suffix>p12</trustStore.suffix>
-                <trustStore.path>${glassfish.home}/glassfish/domains/domain1/config/cacerts.${trustStore.suffix}</trustStore.path>
+	            <trustStore.suffix>p12</trustStore.suffix>
+                <trustStore.path>${gf.pool.dir}/slot-1/glassfish/glassfish/domains/domain1/config/cacerts.${trustStore.suffix}</trustStore.path>
                 <trustStore.password>changeit</trustStore.password>
-                
-                <security.api.update>false</security.api.update>
-                
-                <soteria.update>false</soteria.update>
-                <soteria.version>5.0.0</soteria.version>
-                
+
                 <!--
                     Exact artefact used by GlassFish that holds the API classes. The actual API
                     jar in the GlassFish root folder is installed to these coordinates below.
@@ -533,7 +607,7 @@
                 </dependency>
                 <dependency>
                     <groupId>ee.omnifish.arquillian</groupId>
-                    <artifactId>arquillian-glassfish-server-managed</artifactId>
+                    <artifactId>arquillian-glassfish-server-pool</artifactId>
                     <version>${glassfish.arquillian.version}</version>
                     <scope>test</scope>
                 </dependency>
@@ -563,135 +637,115 @@
                                     </properties>
                                 </configuration>
                             </execution>
+                            <!--
+								 Expose Maven's -TN value (default 1) as a top-level project
+                                 property so antrun's <exec> args can interpolate it; Maven
+                                 only resolves ${session.request.X} bean expressions when
+                                 reading typed Plexus parameters (like this <source> String).
+                            -->
+                            <execution>
+                                <id>expose-degree-of-concurrency</id>
+                                <phase>initialize</phase>
+                                <goals>
+                                    <goal>bsh-property</goal>
+                                </goals>
+                                <configuration>
+                                    <source>
+                                        maven.degreeOfConcurrency = ${session.request.degreeOfConcurrency};
+                                    </source>
+                                    <properties>
+                                        <property>maven.degreeOfConcurrency</property>
+                                    </properties>
+                                </configuration>
+                            </execution>
                         </executions>
                     </plugin>
-                    
+
+                    <!--
+						 Resolve the GF dist into the local Maven repo so the antrun below
+                         can extract it. dependency:get's resolver is thread-safe under -T.
+                    -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-dependency-plugin</artifactId>
                         <executions>
                             <execution>
-                                <id>unpack</id>
-                                <phase>process-test-classes</phase>
-                                <goals>
-                                    <goal>unpack</goal>
-                                </goals>
+                                <id>resolve-glassfish-dist</id>
+                                <phase>validate</phase>
+                                <goals><goal>get</goal></goals>
                                 <configuration>
-                                    <skip>${skipITs}</skip>
-                                    <outputDirectory>${glassfish.root}</outputDirectory>
-                                    <markersDirectory>${glassfish.root}/dependency-maven-plugin-markers</markersDirectory>
-                                    <artifactItems>
-                                        <artifactItem>
-                                            <groupId>org.glassfish.main.distributions</groupId>
-                                            <artifactId>glassfish</artifactId>
-                                            <version>${glassfish.version}</version>
-                                            <type>zip</type>
-                                            <overWrite>true</overWrite>
-                                            <outputDirectory>${glassfish.root}</outputDirectory>
-                                        </artifactItem>
-                                    </artifactItems>
-                                </configuration>
-                            </execution>
-                            
-                            <!-- Optionally update Security API jar in GlassFish -->
-                            <execution>
-                                <id>update-security-api</id>
-                                <phase>process-test-classes</phase>
-                                <goals>
-                                    <goal>copy</goal>
-                                </goals>
-                                <configuration>
-                                    <skip>${security.api.noupdate}</skip>
-                                    <artifactItems>
-                                        <artifactItem>
-                                            <groupId>jakarta.security.enterprise</groupId>
-                                            <artifactId>jakarta.security.enterprise-api</artifactId>
-                                            <version>${security-api.version}</version>
-                                            <type>jar</type>
-                                            <overWrite>true</overWrite>
-                                            <outputDirectory>${glassfish.root}/glassfish9/glassfish/modules</outputDirectory>
-                                            <destFileName>jakarta.security-api.jar</destFileName>
-                                        </artifactItem>
-                                    </artifactItems>
-                                </configuration>
-                            </execution>
-
-                            <!-- Optionally update Security IMPL (Soteria) jar in GlassFish -->
-                            <execution>
-                                <id>update-security-impl</id>
-                                <phase>process-test-classes</phase>
-                                <goals>
-                                    <goal>copy</goal>
-                                </goals>
-                                <configuration>
-                                    <skip>${soteria.noupdate}</skip>
-                                    <artifactItems>
-                                        <artifactItem>
-                                            <groupId>org.glassfish.soteria</groupId>
-                                            <artifactId>soteria</artifactId>
-                                            <version>${soteria.version}</version>
-                                            <type>jar</type>
-                                            <overWrite>true</overWrite>
-                                            <outputDirectory>${glassfish.root}/glassfish9/glassfish/modules</outputDirectory>
-                                            <destFileName>soteria.jar</destFileName>
-                                        </artifactItem>
-                                        <artifactItem>
-                                            <groupId>org.glassfish.soteria</groupId>
-                                            <artifactId>soteria.spi.bean.decorator.weld</artifactId>
-                                            <version>${soteria.version}</version>
-                                            <type>jar</type>
-                                            <overWrite>true</overWrite>
-                                            <outputDirectory>${glassfish.root}/glassfish9/glassfish/modules</outputDirectory>
-                                            <destFileName>soteria.spi.bean.decorator.weld.jar</destFileName>
-                                        </artifactItem>
-                                    </artifactItems>
+                                    <artifact>org.glassfish.main.distributions:glassfish:${glassfish.version}:zip</artifact>
                                 </configuration>
                             </execution>
                         </executions>
                     </plugin>
+
+                    <!--
+						 Stage the source GF before pool:up clones slots: unzip the dist
+                         and import the Mitre cert into cacerts.p12. The cert must be in
+                         the truststore at GF startup since the default SSLContext is
+                         loaded once and never reloads from disk. Inherited because Maven
+                         -T schedules parent and children in parallel; the lock + marker
+                         make the work happen exactly once.
+                    -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-antrun-plugin</artifactId>
                         <version>3.0.0</version>
                         <executions>
                             <execution>
-                                <id>set-port</id>
-                                <phase>pre-integration-test</phase>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
+                                <id>prepare-source-glassfish</id>
+                                <phase>validate</phase>
+                                <goals><goal>run</goal></goals>
                                 <configuration>
-                                    <skip>${skipITs}</skip>
                                     <target>
-                                        <echo level="info">Replacing in ${glassfish.home}</echo>
-                                        <replace token="8080"
-                                            value="${glassfish.port}"
-                                            dir="${glassfish.home}/glassfish/domains/domain1/config/"
-                                            summary="yes">
-                                            <include name="domain.xml" />
-                                        </replace>
+                                        <exec executable="bash" failonerror="true">
+                                            <arg value="-c"/>
+                                            <arg value="set -e; mkdir -p '${gf.pool.dist}'; LOCK='${gf.pool.dist}/.staging.lock.d'; MARKER='${gf.pool.dist}/.staging.done'; while ! mkdir &quot;$LOCK&quot; 2&gt;/dev/null; do sleep 0.2; done; trap 'rmdir &quot;$LOCK&quot;' EXIT; if [ -f &quot;$MARKER&quot; ]; then exit 0; fi; ZIP='${settings.localRepository}/org/glassfish/main/distributions/glassfish/${glassfish.version}/glassfish-${glassfish.version}.zip'; cd '${gf.pool.dist}'; unzip -q -o &quot;$ZIP&quot;; K='${gf.pool.source}/glassfish/domains/domain1/config/cacerts.${trustStore.suffix}'; C='${maven.multiModuleProjectDirectory}/app-openid2/tomcat.cert'; keytool -importcert -keystore &quot;$K&quot; -storepass changeit -alias tomcat -file &quot;$C&quot; -noprompt -trustcacerts; touch &quot;$MARKER&quot;"/>
+                                        </exec>
                                     </target>
                                 </configuration>
                             </execution>
                         </executions>
                     </plugin>
-                    
+
+                    <plugin>
+                        <groupId>ee.omnifish.arquillian</groupId>
+                        <artifactId>glassfish-pool-maven-plugin</artifactId>
+                        <configuration>
+                            <systemProperties>
+                                javax.net.ssl.trustStorePassword=${trustStore.password}
+                            </systemProperties>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>pool-up</id>
+                                <phase>initialize</phase>
+                                <goals><goal>up</goal></goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
                     <!--
-                        Installs the jakarta.security.enterprise.jar from GF on the filesystem to the
-                        coordinates expected by the signature test.
+						 Install the jakarta.security.enterprise-api.jar from the pooled GF
+                         under the coordinates security-signaturetest declares. Aggregator
+                         goal: bind once at the root. security-signaturetest is the last
+                         reactor module, so the artifact is in the local repo by the time
+                         its dep resolution runs.
                     -->
                     <plugin>
                         <artifactId>maven-install-plugin</artifactId>
                         <version>3.1.4</version>
                         <executions>
                             <execution>
-                                <id>unpack</id>
-                                <phase>pre-integration-test</phase>
+                                <id>install-vendor-api</id>
+                                <inherited>false</inherited>
+                                <phase>initialize</phase>
                                 <goals>
                                     <goal>install-file</goal>
                                 </goals>
                                 <configuration>
-                                    <file>${glassfish.root}/glassfish9/glassfish/modules/jakarta.security.enterprise-api.jar</file>
+                                    <file>${gf.pool.source}/glassfish/modules/jakarta.security.enterprise-api.jar</file>
                                     <groupId>${sigtest.api.groupId}</groupId>
                                     <artifactId>${sigtest.api.artifactId}</artifactId>
                                     <version>${sigtest.api.version}</version>
@@ -700,19 +754,19 @@
                             </execution>
                         </executions>
                     </plugin>
-                    
+
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-failsafe-plugin</artifactId>
                         <configuration>
                             <systemPropertyVariables>
-                                <glassfish.home>${glassfish.home}</glassfish.home>
+                                <gf.pool.dir>${gf.pool.dir}</gf.pool.dir>
+                                <gf.pool.source>${gf.pool.source}</gf.pool.source>
+                                <gf.pool.adminBase>${gf.pool.adminBase}</gf.pool.adminBase>
+                                <gf.pool.portStride>${gf.pool.portStride}</gf.pool.portStride>
+                                <gf.pool.restartOnRelease>${gf.pool.restartOnRelease}</gf.pool.restartOnRelease>
                                 <javax.net.ssl.trustStore>${trustStore.path}</javax.net.ssl.trustStore>
                                 <javax.net.ssl.trustStorePassword>${trustStore.password}</javax.net.ssl.trustStorePassword>
-                                <glassfish.systemProperties>
-                                    javax.net.debug=${glassfish.javax.net.debug}
-                                    javax.net.ssl.trustStorePassword=${trustStore.password}
-                                </glassfish.systemProperties>
                             </systemPropertyVariables>
                         </configuration>
                     </plugin>

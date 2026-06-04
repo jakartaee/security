@@ -15,7 +15,7 @@
 
 -->
 
-<Server port="8005" shutdown="SHUTDOWN">
+<Server port="8006" shutdown="SHUTDOWN">
 
     <Listener className="org.apache.catalina.startup.VersionLoggerListener" />
     <Listener className="org.apache.catalina.core.AprLifecycleListener" />
@@ -32,7 +32,7 @@
   </GlobalNamingResources>
 
     <Service name="Catalina">
-        <Connector port="8443"
+        <Connector port="8444"
             protocol="org.apache.coyote.http11.Http11NioProtocol"
             maxThreads="150" SSLEnabled="true">
             <SSLHostConfig>

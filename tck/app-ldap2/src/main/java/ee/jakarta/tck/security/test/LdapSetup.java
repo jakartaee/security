@@ -28,7 +28,7 @@ import jakarta.ejb.Singleton;
 import jakarta.ejb.Startup;
 
 /**
- * Starts up the embedded Unboundid LDAP server on port 33389 and loads a test directory
+ * Starts up the embedded Unboundid LDAP server on port 33390 and loads a test directory
  * into it containing the same caller- and roles names as the Database and Embedded idenity
  * stores are using.
  *
@@ -45,7 +45,7 @@ public class LdapSetup {
         try {
             InMemoryDirectoryServerConfig config = new InMemoryDirectoryServerConfig("dc=net");
             config.setListenerConfigs(
-                    new InMemoryListenerConfig("myListener", null, 33389, null, null, null));
+                    new InMemoryListenerConfig("myListener", null, 33390, null, null, null));
 
             directoryServer = new InMemoryDirectoryServer(config);
 

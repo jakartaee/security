@@ -22,6 +22,19 @@
 
     <defaultProtocol type="Servlet 3.0"/>
 
+    <!--
+        Pool container. Leases one of the pre-warmed GlassFish slots provisioned
+        by glassfish-pool-maven-plugin. The slot's adminPort/httpPort/etc. are
+        filled in at start() time from the slot's published ports.properties; the
+        only required configuration is poolDir, which is forwarded to the test
+        JVM as the gf.pool.dir system property by the glassfish-ci-managed profile.
+    -->
+    <container qualifier="glassfish-pool" default="true">
+        <configuration>
+            <property name="poolDir">${gf.pool.dir}</property>
+        </configuration>
+    </container>
+
     <container qualifier="liberty">
         <configuration>
             <property name="deployType">xml</property>

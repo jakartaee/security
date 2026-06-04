@@ -73,9 +73,11 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.ResponseBuilder;
+import jakarta.ws.rs.core.UriInfo;
 
 /**
  * @author Gaurav Gupta
@@ -96,6 +98,18 @@ public class OidcProvider {
     private static final String KID_VALUE = "sample_kid";
 
     private static final String HTTPS_HOST = "https://localhost:";
+
+    /**
+     * Hardcoded base URL inside the static openid-configuration.json template
+     * and the JWT issuer claim. Rewritten at request time to {@link #issuer()}
+     * so the metadata and tokens match whatever HTTP listener GlassFish is
+     * actually bound to (the dist's default 8080, the pool's 14849, etc.).
+     */
+    private static final String TEMPLATE_BASE_URL =
+            "http://localhost:8080/openid-server/webresources/oidc-provider-demo";
+
+    @Context
+    private UriInfo uriInfo;
 
     private static String nonce;
 
@@ -133,21 +147,20 @@ public class OidcProvider {
             }
         } catch (IOException ex) {}
 
-        if (oidcProviderHttpsPort != null && !oidcProviderHttpsPort.isEmpty()) {
-            String httpsHostAndPort = HTTPS_HOST + oidcProviderHttpsPort;
-            result = useHttpsHostAndPort(result, "http://localhost:8080/openid-server/webresources/oidc-provider-demo/auth", httpsHostAndPort);
-            result = useHttpsHostAndPort(result, "http://localhost:8080/openid-server/webresources/oidc-provider-demo/token", httpsHostAndPort);
-            result = useHttpsHostAndPort(result, "http://localhost:8080/openid-server/webresources/oidc-provider-demo/userinfo", httpsHostAndPort);
-            result = useHttpsHostAndPort(result, "http://localhost:8080/openid-server/webresources/oidc-provider-demo/revoke", httpsHostAndPort);
-            result = useHttpsHostAndPort(result, "http://localhost:8080/openid-server/webresources/oidc-provider-demo/certs", httpsHostAndPort);
-        }
+        // Rewrite every TEMPLATE_BASE_URL/<path> in the metadata to either the live
+        // HTTPS host:port (when configured) or the live HTTP base. Done in one pass
+        // so the issuer URL also tracks the live request.
+        String liveBase = (oidcProviderHttpsPort != null && !oidcProviderHttpsPort.isEmpty())
+                ? HTTPS_HOST + oidcProviderHttpsPort + "/openid-server/webresources/oidc-provider-demo"
+                : issuer();
+        result = result.replace(TEMPLATE_BASE_URL, liveBase);
 
         return Response.ok(result).header("Access-Control-Allow-Origin", "*").build();
     }
 
-    private String useHttpsHostAndPort(String result, String endpoint, String httpsHostAndPort) {
-        String path = endpoint.substring(21);
-        return result.replace(endpoint, httpsHostAndPort + path);
+    /** Live request's base URL for this resource — used as both metadata issuer and JWT iss claim. */
+    private String issuer() {
+        return uriInfo.getBaseUriBuilder().path("oidc-provider-demo").build().toString();
     }
 
     @GET
@@ -209,7 +222,7 @@ public class OidcProvider {
                     .build();
 
             JWTClaimsSet.Builder jwtClaimsBuilder = new JWTClaimsSet.Builder()
-                    .issuer("http://localhost:8080/openid-server/webresources/oidc-provider-demo")
+                    .issuer(issuer())
                     .subject(getSubject())
                     .audience(List.of(CLIENT_ID_VALUE))
                     .expirationTime(new Date(now.getTime() + 1000 * 60 * 10))

@@ -37,7 +37,7 @@ import jakarta.servlet.http.HttpServletResponse;
  */
 @WebServlet("/Secured")
 @OpenIdAuthenticationMechanismDefinition(
-    providerURI = "http://localhost:8080/openid-server/webresources/oidc-provider-demo",
+    providerURI = "${openIdConfig.providerURI}",
     clientId = CLIENT_ID_VALUE,
     clientSecret = CLIENT_SECRET_VALUE,
     redirectURI = "${baseURL}/Callback")
