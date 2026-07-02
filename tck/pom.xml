@@ -49,6 +49,8 @@
     -->
     <modules>
         <module>common</module>
+        
+        <module>app-rest-rolesallowed</module>
 
         <module>app-securitycontext</module>
         <module>app-securitycontext-auth</module>
@@ -195,7 +197,7 @@
 
         <!-- GlassFish + arquillian-glassfish-server-pool wiring (used by glassfish-ci-managed) -->
         <glassfish.version>9.0.0-SNAPSHOT</glassfish.version>
-        <glassfish.arquillian.version>2.2.0</glassfish.arquillian.version>
+        <glassfish.arquillian.version>2.2.2-SNAPSHOT</glassfish.arquillian.version>
         <security.api.update>false</security.api.update>
         <soteria.update>false</soteria.update>
         <soteria.version>5.0.0</soteria.version>
@@ -713,6 +715,7 @@
                         <groupId>ee.omnifish.arquillian</groupId>
                         <artifactId>glassfish-pool-maven-plugin</artifactId>
                         <configuration>
+                            <suspend>${glassfish.suspend}</suspend>
                             <systemProperties>
                                 javax.net.ssl.trustStorePassword=${trustStore.password}
                             </systemProperties>
