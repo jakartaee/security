@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -82,7 +82,7 @@ public class Servlet extends HttpServlet {
         response.getWriter().write("context user has role \"bar\": " + securityContext.isCallerInRole("bar") + "\n");
         response.getWriter().write("context user has role \"kaz\": " + securityContext.isCallerInRole("kaz") + "\n");
 
-        response.getWriter().write("has access to /protectedServlet: " + securityContext.hasAccessToWebResource("/protectedServlet") + "\n");
+        response.getWriter().write("has access to /protectedServlet: " + securityContext.hasAccessToWebResource("/protectedServlet", "GET") + "\n");
 
         // This method test a method that was removed from the API, but is present in the RI
         Set<String> roles = testEJB.getAllDeclaredCallerRoles();
